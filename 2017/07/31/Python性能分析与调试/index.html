@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="HatBoy" />
+
+
+
+<meta name="description" content="Python性能分析与调试">
+<meta name="keywords" content="Python,调试">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python性能分析与调试">
+<meta property="og:url" content="http://www.hatboy.net/2017/07/31/Python性能分析与调试/index.html">
+<meta property="og:site_name" content="HatBoy的个人主页">
+<meta property="og:description" content="Python性能分析与调试">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-07-31T02:33:13.760Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Python性能分析与调试">
+<meta name="twitter:description" content="Python性能分析与调试">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="HatBoy的个人主页" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>Python性能分析与调试 | HatBoy的个人主页</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: true
+    }
+</script>
+
+
+    <script>
+        yiliaConfig.jquery_ui = [true, "//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js", "//cdn.bootcss.com/jqueryui/1.10.4/css/jquery-ui.min.css"];
+    </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/avatar.jpg" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">HatBoy</a></h1>
+        </hgroup>
+
+        
+
+        
+            <form id="search-form">
+            <input type="text" id="local-search-input" name="q" placeholder="search..." class="search form-control" autocomplete="off" autocorrect="off" searchonload="true" />
+            <i class="fa fa-times" onclick="resetSearch()"></i>
+            </form>
+            <div id="local-search-result"></div>
+            <p class='no-result'>No results found <i class='fa fa-spinner fa-pulse'></i></p>
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="mailto:hatboy-dj@qq.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" href="https://github.com/HatBoy/" title="GitHub"></a>
+                            
+                                <a class="fa CSDN" href="http://blog.csdn.net/dj1174232716" title="CSDN"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Cython/">Cython</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/">Python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/调试/">调试</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+
+                
+                
+                <section class="switch-part switch-part3">
+                
+                    <div id="js-aboutme">爱Python,爱海贼</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">HatBoy</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/avatar.jpg" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">HatBoy</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="mailto:hatboy-dj@qq.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="https://github.com/HatBoy/" title="GitHub"></a>
+                            
+                                <a class="fa CSDN" target="_blank" href="http://blog.csdn.net/dj1174232716" title="CSDN"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-Python性能分析与调试" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/07/31/Python性能分析与调试/" class="article-date">
+      <time datetime="2017-07-31T02:28:38.000Z" itemprop="datePublished">2017-07-31</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Python性能分析与调试
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/">Python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/调试/">调试</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <excerpt in="" index="" |="" 首页摘要="">
+
+<p>Python性能分析与调试</p>
+<a id="more"></a>
+<the rest="" of="" contents="" |="" 余下全文="">
+
+<p>调试能查找并修复软件中的Bug的行为,性能分析,是为软件程序构建一个特殊的配置,并在此基础上收集内存使用情况和时间复杂度星信息。下面我们来看看有那些分析或调试Python的模块或方法：</p>
+<h2 id="Python测试库"><a href="#Python测试库" class="headerlink" title="Python测试库"></a>Python测试库</h2><h3 id="IPython：IPython内建的命令可以对整个-py脚本进行时间和性能测。"><a href="#IPython：IPython内建的命令可以对整个-py脚本进行时间和性能测。" class="headerlink" title="IPython：IPython内建的命令可以对整个.py脚本进行时间和性能测。"></a>IPython：IPython内建的命令可以对整个.py脚本进行时间和性能测。</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">:%timeit   range(<span class="number">45</span>)   <span class="comment">#用timeit分析一小段代码的性能</span></div><div class="line">:%run  test.py         <span class="comment">#查找脚本中的Bug</span></div><div class="line">:%run  -t   test.py    <span class="comment">#对脚本进行时间测试</span></div><div class="line">:%run  -p  test.py    <span class="comment">#对都脚本进行性能测试</span></div><div class="line"></div><div class="line">:%debug        <span class="comment">#如果程序已经崩溃,debug命令会在启动调试器,并在错误所在行自动设置一个断点,然后进入调试模式.</span></div><div class="line">ipdb &gt; list       <span class="comment">#list或者l命令列出代码</span></div><div class="line">ipdb &gt; bt        <span class="comment">#查看调用栈</span></div><div class="line">ipdb &gt; u         <span class="comment">#在调用栈中返回上一级</span></div><div class="line">ipdb &gt; d         <span class="comment">#在调用栈中进入下一级</span></div><div class="line"></div><div class="line"><span class="comment">#除此之外还可以在调试模式中执行任意代码</span></div><div class="line">ipdb &gt; print(a)</div><div class="line"></div><div class="line"><span class="comment">#如果不需要完整的IPython调试器,也可以通过以下方式开启一个IPython</span></div><div class="line"><span class="keyword">import</span>  IPython</div><div class="line">IPython.embed()</div></pre></td></tr></table></figure>
+<h3 id="time：python标准库中自带的模块-简单的计时器。"><a href="#time：python标准库中自带的模块-简单的计时器。" class="headerlink" title="time：python标准库中自带的模块,简单的计时器。"></a>time：python标准库中自带的模块,简单的计时器。</h3><h3 id="timeit：Python标准库中自带的模块-是一个用来测试代码执行时间的模块-容易实现和理解但过于简单。"><a href="#timeit：Python标准库中自带的模块-是一个用来测试代码执行时间的模块-容易实现和理解但过于简单。" class="headerlink" title="timeit：Python标准库中自带的模块,是一个用来测试代码执行时间的模块.容易实现和理解但过于简单。"></a>timeit：Python标准库中自带的模块,是一个用来测试代码执行时间的模块.容易实现和理解但过于简单。</h3><h3 id="pstats：Python标准库中自带的模块-可以使用Stats对象以编程的方式检查分析结果。"><a href="#pstats：Python标准库中自带的模块-可以使用Stats对象以编程的方式检查分析结果。" class="headerlink" title="pstats：Python标准库中自带的模块,可以使用Stats对象以编程的方式检查分析结果。"></a>pstats：Python标准库中自带的模块,可以使用Stats对象以编程的方式检查分析结果。</h3><h3 id="profile：Python标准库中自带的分析模块-使用简单。"><a href="#profile：Python标准库中自带的分析模块-使用简单。" class="headerlink" title="profile：Python标准库中自带的分析模块,使用简单。"></a>profile：Python标准库中自带的分析模块,使用简单。</h3><h3 id="hotshot：Python标准库中自带的分析模块和profile类似-但是用C语言写的-速度更快。"><a href="#hotshot：Python标准库中自带的分析模块和profile类似-但是用C语言写的-速度更快。" class="headerlink" title="hotshot：Python标准库中自带的分析模块和profile类似,但是用C语言写的,速度更快。"></a>hotshot：Python标准库中自带的分析模块和profile类似,但是用C语言写的,速度更快。</h3><h3 id="line-profiler：第三方模块line-profiler可以对代码进行分析-有非常直接和详细的报告-能够追踪第三方库里的函数，但-速度慢。"><a href="#line-profiler：第三方模块line-profiler可以对代码进行分析-有非常直接和详细的报告-能够追踪第三方库里的函数，但-速度慢。" class="headerlink" title="line_profiler：第三方模块line_profiler可以对代码进行分析.有非常直接和详细的报告,能够追踪第三方库里的函数，但 速度慢。"></a>line_profiler：第三方模块line_profiler可以对代码进行分析.有非常直接和详细的报告,能够追踪第三方库里的函数，但 速度慢。</h3><h3 id="cProfile：cProfile是从Python2-5版本开始引入的c语言扩展模块-该模块可以用来进行确定性能分析-速度快-但是信息相对有限-需要进一步调试。"><a href="#cProfile：cProfile是从Python2-5版本开始引入的c语言扩展模块-该模块可以用来进行确定性能分析-速度快-但是信息相对有限-需要进一步调试。" class="headerlink" title="cProfile：cProfile是从Python2.5版本开始引入的c语言扩展模块,该模块可以用来进行确定性能分析.速度快,但是信息相对有限,需要进一步调试。"></a>cProfile：cProfile是从Python2.5版本开始引入的c语言扩展模块,该模块可以用来进行确定性能分析.速度快,但是信息相对有限,需要进一步调试。</h3><h3 id="memory-profiler：一个不错的内存分析器。"><a href="#memory-profiler：一个不错的内存分析器。" class="headerlink" title="memory_profiler：一个不错的内存分析器。"></a>memory_profiler：一个不错的内存分析器。</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#安装</span></div><div class="line">$ sudo  easy_install  memory_profiler</div><div class="line"></div><div class="line"><span class="comment">#改善memory_profiler的性能</span></div><div class="line">$ sudo  easy_install  psutil</div><div class="line"></div><div class="line"><span class="comment">#分析代码</span></div><div class="line">$ python  -m  memory_profiler  test.py</div></pre></td></tr></table></figure>
+<h3 id="objgraph：检查内存泄漏-快速生成对象图。"><a href="#objgraph：检查内存泄漏-快速生成对象图。" class="headerlink" title="objgraph：检查内存泄漏,快速生成对象图。"></a>objgraph：检查内存泄漏,快速生成对象图。</h3><h3 id="pytracemalloc：很好用的内存分析第三方模块-开销小-输出详细。"><a href="#pytracemalloc：很好用的内存分析第三方模块-开销小-输出详细。" class="headerlink" title="pytracemalloc：很好用的内存分析第三方模块,开销小,输出详细。"></a>pytracemalloc：很好用的内存分析第三方模块,开销小,输出详细。</h3><h3 id="trace：Python标准库中自带的追踪模块。"><a href="#trace：Python标准库中自带的追踪模块。" class="headerlink" title="trace：Python标准库中自带的追踪模块。"></a>trace：Python标准库中自带的追踪模块。</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#使用</span></div><div class="line">$ python  -mtrace  trace  bug.py</div></pre></td></tr></table></figure>
+<h3 id="faulthandler：Python3标准库中自带的模块-用来显示发生段错误的原因。"><a href="#faulthandler：Python3标准库中自带的模块-用来显示发生段错误的原因。" class="headerlink" title="faulthandler：Python3标准库中自带的模块,用来显示发生段错误的原因。"></a>faulthandler：Python3标准库中自带的模块,用来显示发生段错误的原因。</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#使用</span></div><div class="line"><span class="keyword">import</span>  faulthandler</div><div class="line">faulthandler.enable()</div></pre></td></tr></table></figure>
+<h3 id="pdb：Python标准库中自带的调试模块。"><a href="#pdb：Python标准库中自带的调试模块。" class="headerlink" title="pdb：Python标准库中自带的调试模块。"></a>pdb：Python标准库中自带的调试模块。</h3><p>pdb的直接替代者ipdb和pudb,都可通过$ sudo  easy_install  安装<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#开启调试器</span></div><div class="line"><span class="keyword">import</span>  pdb</div><div class="line">pdb.set_trace()</div><div class="line"></div><div class="line"><span class="comment">#或者</span></div><div class="line">$  python  -mpdb   bug.py</div></pre></td></tr></table></figure></p>
+<h3 id="pudb：pudb是一个基于控制台的Python调试器-安装简单-且支持可视化全屏操作-支持方向键和Vi命令-也能在需要的时候与IPython集成。"><a href="#pudb：pudb是一个基于控制台的Python调试器-安装简单-且支持可视化全屏操作-支持方向键和Vi命令-也能在需要的时候与IPython集成。" class="headerlink" title="pudb：pudb是一个基于控制台的Python调试器,安装简单,且支持可视化全屏操作,支持方向键和Vi命令,也能在需要的时候与IPython集成。"></a>pudb：pudb是一个基于控制台的Python调试器,安装简单,且支持可视化全屏操作,支持方向键和Vi命令,也能在需要的时候与IPython集成。</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#安装</span></div><div class="line">$sudo easy_install pudb</div><div class="line"></div><div class="line"><span class="comment">#启动调试器</span></div><div class="line">$python -m pudb bug.py</div><div class="line"></div><div class="line"><span class="comment">#或者</span></div><div class="line">$pudb  bug.py</div></pre></td></tr></table></figure>
+<p>用户界面的上方是最重要的调试命令,还能在界面中看到被调试的代码,变量,栈和已定义的断点,键q可以退出大多数的菜单,键n可以使调试器移到下一行,也可以用方向键或者vi编辑器风格的j键和k键,把光标移动到适当位置并执行特定的操作,通过键b设置断点。</p>
+<h3 id="Pyflakes：Pylakes是一个代码分析包-可以用来分析代码-并发现各种潜在的问题-例如-引入但没有用到的模块-没有用到的变量。"><a href="#Pyflakes：Pylakes是一个代码分析包-可以用来分析代码-并发现各种潜在的问题-例如-引入但没有用到的模块-没有用到的变量。" class="headerlink" title="Pyflakes：Pylakes是一个代码分析包,可以用来分析代码,并发现各种潜在的问题,例如:引入但没有用到的模块,没有用到的变量。"></a>Pyflakes：Pylakes是一个代码分析包,可以用来分析代码,并发现各种潜在的问题,例如:引入但没有用到的模块,没有用到的变量。</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#安装</span></div><div class="line">$sudo easy_install pyflakes</div><div class="line"></div><div class="line"><span class="comment">#分析代码</span></div><div class="line">$pyflakes   bug.py</div></pre></td></tr></table></figure>
+<h3 id="Pylint：Pylint是另外一个开源的静态代码分析器-比Pyflakes复杂-且允许用户做更多的事-但分析速度比Pyflakes慢。"><a href="#Pylint：Pylint是另外一个开源的静态代码分析器-比Pyflakes复杂-且允许用户做更多的事-但分析速度比Pyflakes慢。" class="headerlink" title="Pylint：Pylint是另外一个开源的静态代码分析器,比Pyflakes复杂,且允许用户做更多的事,但分析速度比Pyflakes慢。"></a>Pylint：Pylint是另外一个开源的静态代码分析器,比Pyflakes复杂,且允许用户做更多的事,但分析速度比Pyflakes慢。</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#安装</span></div><div class="line">$sudo  easy_install  pylint</div><div class="line"></div><div class="line"><span class="comment">#分析代码</span></div><div class="line">$pylint  bug.py</div></pre></td></tr></table></figure>
+<p>Pylint默认输出纯文本的分析结果,但如果有需要可以指定其输出HTML格式的信息.消息类型有以下几种：</p>
+<ul>
+<li>[R]：重构类型,建议进行重构</li>
+<li>[C]：惯例类型,违反了代码风格</li>
+<li>[W]：警告类型,针对小问题的警告信息</li>
+<li>[E]：错误类型,错误或者潜在的bug </li>
+<li>[F]+致命错误类型,发生了致命错误,因此不能进行进一步的分析</li>
+</ul>
+<h3 id="Pychecker：一个老牌的静态分析工具-开发状态已经不太活跃-Pychecker试图引入每一个模块-并对其进行处理-通过代码分析-可以发现各种问题。"><a href="#Pychecker：一个老牌的静态分析工具-开发状态已经不太活跃-Pychecker试图引入每一个模块-并对其进行处理-通过代码分析-可以发现各种问题。" class="headerlink" title="Pychecker：一个老牌的静态分析工具,开发状态已经不太活跃,Pychecker试图引入每一个模块,并对其进行处理,通过代码分析,可以发现各种问题。"></a>Pychecker：一个老牌的静态分析工具,开发状态已经不太活跃,Pychecker试图引入每一个模块,并对其进行处理,通过代码分析,可以发现各种问题。</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#安装：下载源代码编译安装</span></div><div class="line"></div><div class="line"><span class="comment">#分析代码</span></div><div class="line">$ pychecker  bug.py</div></pre></td></tr></table></figure>
+<h3 id="docstrings-doctest-：docstrings是嵌入在代码中的字符串-其内容看上去有点像交互式的会话-这些字符串可用来检验某些假设-或者仅仅把他们看作是一些规范代码-需要用doctest模块运行这些测试。"><a href="#docstrings-doctest-：docstrings是嵌入在代码中的字符串-其内容看上去有点像交互式的会话-这些字符串可用来检验某些假设-或者仅仅把他们看作是一些规范代码-需要用doctest模块运行这些测试。" class="headerlink" title="docstrings ( doctest ) ：docstrings是嵌入在代码中的字符串,其内容看上去有点像交互式的会话,这些字符串可用来检验某些假设,或者仅仅把他们看作是一些规范代码,需要用doctest模块运行这些测试。"></a>docstrings ( doctest ) ：docstrings是嵌入在代码中的字符串,其内容看上去有点像交互式的会话,这些字符串可用来检验某些假设,或者仅仅把他们看作是一些规范代码,需要用doctest模块运行这些测试。</h3><h3 id="unittest：doctest模块简单易用-unittest-基于Java的流行测试框架JUnit-则更灵活和强大-unittest模块会区分由异引发的错误和调用函数而导致的失败。"><a href="#unittest：doctest模块简单易用-unittest-基于Java的流行测试框架JUnit-则更灵活和强大-unittest模块会区分由异引发的错误和调用函数而导致的失败。" class="headerlink" title="unittest：doctest模块简单易用,unittest(基于Java的流行测试框架JUnit)则更灵活和强大.unittest模块会区分由异引发的错误和调用函数而导致的失败。"></a>unittest：doctest模块简单易用,unittest(基于Java的流行测试框架JUnit)则更灵活和强大.unittest模块会区分由异引发的错误和调用函数而导致的失败。</h3><h3 id="mock：模拟对象-mock-是真实对象的替代物-用来测试真实对象的部分行为-创建一个模拟对象并用它来测试一段代码。"><a href="#mock：模拟对象-mock-是真实对象的替代物-用来测试真实对象的部分行为-创建一个模拟对象并用它来测试一段代码。" class="headerlink" title="mock：模拟对象(mock)是真实对象的替代物,用来测试真实对象的部分行为.创建一个模拟对象并用它来测试一段代码。"></a>mock：模拟对象(mock)是真实对象的替代物,用来测试真实对象的部分行为.创建一个模拟对象并用它来测试一段代码。</h3><h3 id="lettuce：基于BDD-行为驱动开发-方式的测试-BDD方式背后隐藏的想法是-让不会编程的人-能够以某种方式-编写测试-代码的主体部分-Lettuce框架就是基于BDD的测试框架。"><a href="#lettuce：基于BDD-行为驱动开发-方式的测试-BDD方式背后隐藏的想法是-让不会编程的人-能够以某种方式-编写测试-代码的主体部分-Lettuce框架就是基于BDD的测试框架。" class="headerlink" title="lettuce：基于BDD(行为驱动开发)方式的测试,BDD方式背后隐藏的想法是,让不会编程的人,能够以某种方式,编写测试 代码的主体部分.Lettuce框架就是基于BDD的测试框架。"></a>lettuce：基于BDD(行为驱动开发)方式的测试,BDD方式背后隐藏的想法是,让不会编程的人,能够以某种方式,编写测试 代码的主体部分.Lettuce框架就是基于BDD的测试框架。</h3><p>测试方式 ：首先在tests目录中建立一个features目录,在features目录中,要包含一个factorial.feature文件和一个steps.py文件,steps.py文件的内容是功能描述和测试代码.执行测试时,首先进入tests目录,然后键入命令$lettuce。</p>
+<h2 id="标准的Linux测试工具："><a href="#标准的Linux测试工具：" class="headerlink" title="标准的Linux测试工具："></a>标准的Linux测试工具：</h2><h3 id="time：简单的代码运行时间测试工具。"><a href="#time：简单的代码运行时间测试工具。" class="headerlink" title="time：简单的代码运行时间测试工具。"></a>time：简单的代码运行时间测试工具。</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#使用方式</span></div><div class="line">$  time  python  test.py</div></pre></td></tr></table></figure>
+<p>三个输出变量分别代表：</p>
+<ul>
+<li>real：表示实际的程序运行时间</li>
+<li>user：表示在用户态的CPU总时间</li>
+<li>sys：表示在内核态的CPU总时间</li>
+</ul>
+<h3 id="strace：用来追踪fork-出来的子进程。"><a href="#strace：用来追踪fork-出来的子进程。" class="headerlink" title="strace：用来追踪fork()出来的子进程。"></a>strace：用来追踪fork()出来的子进程。</h3><h3 id="ltrace：与trace类似-不同的是它输出的是库函数的调用。"><a href="#ltrace：与trace类似-不同的是它输出的是库函数的调用。" class="headerlink" title="ltrace：与trace类似,不同的是它输出的是库函数的调用。"></a>ltrace：与trace类似,不同的是它输出的是库函数的调用。</h3><h3 id="lsof：lsof可以用来指出你在ltrace-strace中看到的句柄数值的意义。"><a href="#lsof：lsof可以用来指出你在ltrace-strace中看到的句柄数值的意义。" class="headerlink" title="lsof：lsof可以用来指出你在ltrace/strace中看到的句柄数值的意义。"></a>lsof：lsof可以用来指出你在ltrace/strace中看到的句柄数值的意义。</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#使用方式</span></div><div class="line">$ lsof  -p <span class="number">1234</span></div></pre></td></tr></table></figure>
+<h3 id="top-htop：进程查看-htop更详细。"><a href="#top-htop：进程查看-htop更详细。" class="headerlink" title="top/htop：进程查看,htop更详细。"></a>top/htop：进程查看,htop更详细。</h3><h3 id="dstat：服务器监控。"><a href="#dstat：服务器监控。" class="headerlink" title="dstat：服务器监控。"></a>dstat：服务器监控。</h3><h3 id="gdb：复杂而又强大的工具-用来追踪代码。"><a href="#gdb：复杂而又强大的工具-用来追踪代码。" class="headerlink" title="gdb：复杂而又强大的工具,用来追踪代码。"></a>gdb：复杂而又强大的工具,用来追踪代码。</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#安装 </span></div><div class="line">$ sudo apt-get install  gdb  python-dbg</div><div class="line"></div><div class="line"><span class="comment">#使用方式 </span></div><div class="line">$ gdb  -p <span class="number">1234</span></div></pre></td></tr></table></figure>
+</the></excerpt>
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2017/07/31/Python性能分析与调试/">Python性能分析与调试</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">HatBoy</a></p>
+        <p><span>发布时间:</span>2017-07-31, 10:28:38</p>
+        <p><span>最后更新:</span>2017-07-31, 10:33:13</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2017/07/31/Python性能分析与调试/" title="Python性能分析与调试">http://www.hatboy.net/2017/07/31/Python性能分析与调试/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://www.hatboy.net/2017/07/31/Python性能分析与调试/　　作者: HatBoy" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2017/07/17/Cython读书笔记-三-深入Cython/">
+                    Cython读书笔记(三):深入Cython
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Python测试库"><span class="toc-number">1.</span> <span class="toc-text">Python测试库</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#IPython：IPython内建的命令可以对整个-py脚本进行时间和性能测。"><span class="toc-number">1.1.</span> <span class="toc-text">IPython：IPython内建的命令可以对整个.py脚本进行时间和性能测。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#time：python标准库中自带的模块-简单的计时器。"><span class="toc-number">1.2.</span> <span class="toc-text">time：python标准库中自带的模块,简单的计时器。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#timeit：Python标准库中自带的模块-是一个用来测试代码执行时间的模块-容易实现和理解但过于简单。"><span class="toc-number">1.3.</span> <span class="toc-text">timeit：Python标准库中自带的模块,是一个用来测试代码执行时间的模块.容易实现和理解但过于简单。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#pstats：Python标准库中自带的模块-可以使用Stats对象以编程的方式检查分析结果。"><span class="toc-number">1.4.</span> <span class="toc-text">pstats：Python标准库中自带的模块,可以使用Stats对象以编程的方式检查分析结果。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#profile：Python标准库中自带的分析模块-使用简单。"><span class="toc-number">1.5.</span> <span class="toc-text">profile：Python标准库中自带的分析模块,使用简单。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#hotshot：Python标准库中自带的分析模块和profile类似-但是用C语言写的-速度更快。"><span class="toc-number">1.6.</span> <span class="toc-text">hotshot：Python标准库中自带的分析模块和profile类似,但是用C语言写的,速度更快。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#line-profiler：第三方模块line-profiler可以对代码进行分析-有非常直接和详细的报告-能够追踪第三方库里的函数，但-速度慢。"><span class="toc-number">1.7.</span> <span class="toc-text">line_profiler：第三方模块line_profiler可以对代码进行分析.有非常直接和详细的报告,能够追踪第三方库里的函数，但 速度慢。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#cProfile：cProfile是从Python2-5版本开始引入的c语言扩展模块-该模块可以用来进行确定性能分析-速度快-但是信息相对有限-需要进一步调试。"><span class="toc-number">1.8.</span> <span class="toc-text">cProfile：cProfile是从Python2.5版本开始引入的c语言扩展模块,该模块可以用来进行确定性能分析.速度快,但是信息相对有限,需要进一步调试。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#memory-profiler：一个不错的内存分析器。"><span class="toc-number">1.9.</span> <span class="toc-text">memory_profiler：一个不错的内存分析器。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#objgraph：检查内存泄漏-快速生成对象图。"><span class="toc-number">1.10.</span> <span class="toc-text">objgraph：检查内存泄漏,快速生成对象图。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#pytracemalloc：很好用的内存分析第三方模块-开销小-输出详细。"><span class="toc-number">1.11.</span> <span class="toc-text">pytracemalloc：很好用的内存分析第三方模块,开销小,输出详细。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#trace：Python标准库中自带的追踪模块。"><span class="toc-number">1.12.</span> <span class="toc-text">trace：Python标准库中自带的追踪模块。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#faulthandler：Python3标准库中自带的模块-用来显示发生段错误的原因。"><span class="toc-number">1.13.</span> <span class="toc-text">faulthandler：Python3标准库中自带的模块,用来显示发生段错误的原因。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#pdb：Python标准库中自带的调试模块。"><span class="toc-number">1.14.</span> <span class="toc-text">pdb：Python标准库中自带的调试模块。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#pudb：pudb是一个基于控制台的Python调试器-安装简单-且支持可视化全屏操作-支持方向键和Vi命令-也能在需要的时候与IPython集成。"><span class="toc-number">1.15.</span> <span class="toc-text">pudb：pudb是一个基于控制台的Python调试器,安装简单,且支持可视化全屏操作,支持方向键和Vi命令,也能在需要的时候与IPython集成。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Pyflakes：Pylakes是一个代码分析包-可以用来分析代码-并发现各种潜在的问题-例如-引入但没有用到的模块-没有用到的变量。"><span class="toc-number">1.16.</span> <span class="toc-text">Pyflakes：Pylakes是一个代码分析包,可以用来分析代码,并发现各种潜在的问题,例如:引入但没有用到的模块,没有用到的变量。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Pylint：Pylint是另外一个开源的静态代码分析器-比Pyflakes复杂-且允许用户做更多的事-但分析速度比Pyflakes慢。"><span class="toc-number">1.17.</span> <span class="toc-text">Pylint：Pylint是另外一个开源的静态代码分析器,比Pyflakes复杂,且允许用户做更多的事,但分析速度比Pyflakes慢。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Pychecker：一个老牌的静态分析工具-开发状态已经不太活跃-Pychecker试图引入每一个模块-并对其进行处理-通过代码分析-可以发现各种问题。"><span class="toc-number">1.18.</span> <span class="toc-text">Pychecker：一个老牌的静态分析工具,开发状态已经不太活跃,Pychecker试图引入每一个模块,并对其进行处理,通过代码分析,可以发现各种问题。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#docstrings-doctest-：docstrings是嵌入在代码中的字符串-其内容看上去有点像交互式的会话-这些字符串可用来检验某些假设-或者仅仅把他们看作是一些规范代码-需要用doctest模块运行这些测试。"><span class="toc-number">1.19.</span> <span class="toc-text">docstrings ( doctest ) ：docstrings是嵌入在代码中的字符串,其内容看上去有点像交互式的会话,这些字符串可用来检验某些假设,或者仅仅把他们看作是一些规范代码,需要用doctest模块运行这些测试。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#unittest：doctest模块简单易用-unittest-基于Java的流行测试框架JUnit-则更灵活和强大-unittest模块会区分由异引发的错误和调用函数而导致的失败。"><span class="toc-number">1.20.</span> <span class="toc-text">unittest：doctest模块简单易用,unittest(基于Java的流行测试框架JUnit)则更灵活和强大.unittest模块会区分由异引发的错误和调用函数而导致的失败。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#mock：模拟对象-mock-是真实对象的替代物-用来测试真实对象的部分行为-创建一个模拟对象并用它来测试一段代码。"><span class="toc-number">1.21.</span> <span class="toc-text">mock：模拟对象(mock)是真实对象的替代物,用来测试真实对象的部分行为.创建一个模拟对象并用它来测试一段代码。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#lettuce：基于BDD-行为驱动开发-方式的测试-BDD方式背后隐藏的想法是-让不会编程的人-能够以某种方式-编写测试-代码的主体部分-Lettuce框架就是基于BDD的测试框架。"><span class="toc-number">1.22.</span> <span class="toc-text">lettuce：基于BDD(行为驱动开发)方式的测试,BDD方式背后隐藏的想法是,让不会编程的人,能够以某种方式,编写测试 代码的主体部分.Lettuce框架就是基于BDD的测试框架。</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#标准的Linux测试工具："><span class="toc-number">2.</span> <span class="toc-text">标准的Linux测试工具：</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#time：简单的代码运行时间测试工具。"><span class="toc-number">2.1.</span> <span class="toc-text">time：简单的代码运行时间测试工具。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#strace：用来追踪fork-出来的子进程。"><span class="toc-number">2.2.</span> <span class="toc-text">strace：用来追踪fork()出来的子进程。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ltrace：与trace类似-不同的是它输出的是库函数的调用。"><span class="toc-number">2.3.</span> <span class="toc-text">ltrace：与trace类似,不同的是它输出的是库函数的调用。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#lsof：lsof可以用来指出你在ltrace-strace中看到的句柄数值的意义。"><span class="toc-number">2.4.</span> <span class="toc-text">lsof：lsof可以用来指出你在ltrace/strace中看到的句柄数值的意义。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#top-htop：进程查看-htop更详细。"><span class="toc-number">2.5.</span> <span class="toc-text">top/htop：进程查看,htop更详细。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#dstat：服务器监控。"><span class="toc-number">2.6.</span> <span class="toc-text">dstat：服务器监控。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#gdb：复杂而又强大的工具-用来追踪代码。"><span class="toc-number">2.7.</span> <span class="toc-text">gdb：复杂而又强大的工具,用来追踪代码。</span></a></li></ol></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"Python性能分析与调试　| HatBoy的个人主页　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+    
+        <section class="youyan" id="comments">
+    <script>
+        var loadComment = function(){
+            var d = document, s = d.createElement('script');
+            s.src = 'http://v2.uyan.cc/code/uyan.js?uid=2137879';
+            (d.head || d.body).appendChild(s);
+        }
+    </script>
+    
+    <script> loadComment(); </script>
+
+    <div id="uyan_frame"></div>
+</section>
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2017/07/17/Cython读书笔记-三-深入Cython/" title="下一篇: Cython读书笔记(三):深入Cython">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/07/31/Python性能分析与调试/">Python性能分析与调试</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/17/Cython读书笔记-三-深入Cython/">Cython读书笔记(三):深入Cython</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/03/Cython读书笔记-二-编译和运行Cython代码/">Cython读书笔记(二):编译和运行Cython代码</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/02/Cython读书笔记-一-Cython简介/">Cython读书笔记(一):Cython简介</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2017 HatBoy
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+
+
+
+
+    <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script src="//cdn.bootcss.com/mathjax/2.6.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+            
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>
