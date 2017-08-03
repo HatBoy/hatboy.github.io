@@ -430,19 +430,27 @@
 
 
     
-        <section class="youyan" id="comments">
+        <section id="comments">
+    <style> aside.comment-bar { margin: auto 30px; }</style>
+    <div id="disqus_thread"></div>
     <script>
+        var disqus_config = function(){
+            this.page.url = 'http://www.hatboy.net/2017/07/03/Cython读书笔记-二-编译和运行Cython代码/';
+            this.page.identifier = '2017/07/03/Cython读书笔记-二-编译和运行Cython代码/';
+        };
         var loadComment = function(){
             var d = document, s = d.createElement('script');
-            s.src = 'http://v2.uyan.cc/code/uyan.js?uid=2137879';
+            s.src = '//disqus_VOk78HDgvr.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
             (d.head || d.body).appendChild(s);
         }
     </script>
     
     <script> loadComment(); </script>
 
-    <div id="uyan_frame"></div>
 </section>
+
+
     
 
 
