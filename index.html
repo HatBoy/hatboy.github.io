@@ -91,6 +91,16 @@
 
 
 
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "//hm.baidu.com/hm.js?94c5bc16a94e5db3e2942494f0be64dd";
+            var s = document.getElementsByTagName("script")[0]; 
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
 
 </head>
 <body>
@@ -130,6 +140,11 @@
                             <div class="ribbon"></div>
                         </div>
                         
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
                         
                         <div class="icon-wrap icon-me hide" data-idx="3">
                             <div class="user"></div>
@@ -144,6 +159,8 @@
                     <ul class="tips-inner">
                         <li>菜单</li>
                         <li>标签</li>
+                        
+                        <li>友情链接</li>
                         
                         
                         <li>关于我</li>
@@ -176,6 +193,8 @@
                             
                                 <a class="fa GitHub" href="https://github.com/HatBoy/" title="GitHub"></a>
                             
+                                <a class="fa 码云博客" href="http://hatboy.gitee.io/" title="码云博客"></a>
+                            
                                 <a class="fa CSDN" href="http://blog.csdn.net/dj1174232716" title="CSDN"></a>
                             
                         </ul>
@@ -185,18 +204,38 @@
                 
                 <section class="switch-part switch-part2">
                     <div class="widget tagcloud" id="js-tagcloud">
-                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Cython/">Cython</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/">Python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/调试/">调试</a></li></ul>
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Cython/">Cython</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/">Python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python模块tips/">Python模块tips</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python语法/">Python语法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/asyncio/">asyncio</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/异步并发/">异步并发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/调试/">调试</a></li></ul>
                     </div>
                 </section>
                 
                 
                 
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://fmxfmx.gitee.io/">FMX</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://jewelz.me/">Jewelz</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://www.zhihu.com/people/talentisan/activities">轻狂书生</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://threetop.top/">ZCC</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://blog.csdn.net/u012017783">ZCC的CSDN</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://zcc888.gitee.io/">ZCC的博客</a>
+                    
+                    </div>
+                </section>
+                
 
                 
                 
-                <section class="switch-part switch-part3">
+                <section class="switch-part switch-part4">
                 
-                    <div id="js-aboutme">爱Python,爱海贼</div>
+                    <div id="js-aboutme">一枚爱Python,爱海贼,爱健身,喜欢好玩有趣事物的程序员……</div>
                 </section>
                 
             </div>
@@ -240,6 +279,8 @@
                             
                                 <a class="fa GitHub" target="_blank" href="https://github.com/HatBoy/" title="GitHub"></a>
                             
+                                <a class="fa 码云博客" target="_blank" href="http://hatboy.gitee.io/" title="码云博客"></a>
+                            
                                 <a class="fa CSDN" target="_blank" href="http://blog.csdn.net/dj1174232716" title="CSDN"></a>
                             
                         </ul>
@@ -250,11 +291,11 @@
 </nav>
       <div class="body-wrap">
   
-    <article id="post-第六章-组织Cython代码" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-asyncio：异步IO、事件循环和并发" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2017/08/16/第六章-组织Cython代码/" class="article-date">
-      <time datetime="2017-08-16T01:32:01.000Z" itemprop="datePublished">2017-08-16</time>
+      <a href="/2017/12/21/asyncio：异步IO、事件循环和并发/" class="article-date">
+      <time datetime="2017-12-21T10:49:14.000Z" itemprop="datePublished">2017-12-21</time>
 </a>
 
 
@@ -269,7 +310,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2017/08/16/第六章-组织Cython代码/">第六章 组织Cython代码</a>
+      <a class="article-title" href="/2017/12/21/asyncio：异步IO、事件循环和并发/">asyncio：异步IO、事件循环和并发</a>
     </h1>
   
 
@@ -281,7 +322,7 @@
           
               <excerpt in="" index="" |="" 首页摘要="">
 
-<p>如何组织一个Cython项目结构？</p>
+<p>asyncio：异步IO、事件循环和并发</p></excerpt>
           
       
     </div>
@@ -292,12 +333,12 @@
 
       
     <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Cython/">Cython</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/">Python</a></li></ul>
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/">Python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/asyncio/">asyncio</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/异步并发/">异步并发</a></li></ul>
     </div>
 
       
         <p class="article-more-link">
-          <a href="/2017/08/16/第六章-组织Cython代码/#more">阅读全文 >></a>
+          <a href="/2017/12/21/asyncio：异步IO、事件循环和并发/#more">阅读全文 >></a>
         </p>
       
       <div class="clearfix"></div>
@@ -316,11 +357,11 @@
 
 
   
-    <article id="post-第五章-Cython和扩展类型" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-asyncio之调试asyncio" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2017/08/10/第五章-Cython和扩展类型/" class="article-date">
-      <time datetime="2017-08-10T09:08:07.000Z" itemprop="datePublished">2017-08-10</time>
+      <a href="/2017/12/21/asyncio之调试asyncio/" class="article-date">
+      <time datetime="2017-12-21T10:46:12.000Z" itemprop="datePublished">2017-12-21</time>
 </a>
 
 
@@ -335,7 +376,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2017/08/10/第五章-Cython和扩展类型/">第五章 Cython和扩展类型</a>
+      <a class="article-title" href="/2017/12/21/asyncio之调试asyncio/">asyncio之调试asyncio</a>
     </h1>
   
 
@@ -347,7 +388,7 @@
           
               <excerpt in="" index="" |="" 首页摘要="">
 
-<p>前面几章介绍了Cython如何和Python一起工作，侧重于基础数据类型和函数，Cython也能在Python类上面做一样好，本章我们将继续学习。</p>
+<p>调试asyncio</p></excerpt>
           
       
     </div>
@@ -358,12 +399,12 @@
 
       
     <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Cython/">Cython</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/">Python</a></li></ul>
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/">Python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/asyncio/">asyncio</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/异步并发/">异步并发</a></li></ul>
     </div>
 
       
         <p class="article-more-link">
-          <a href="/2017/08/10/第五章-Cython和扩展类型/#more">阅读全文 >></a>
+          <a href="/2017/12/21/asyncio之调试asyncio/#more">阅读全文 >></a>
         </p>
       
       <div class="clearfix"></div>
@@ -382,11 +423,11 @@
 
 
   
-    <article id="post-第四章-Cython实践：N-body模拟" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-asyncio之协程结合线程和进程" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2017/07/31/第四章-Cython实践：N-body模拟/" class="article-date">
-      <time datetime="2017-07-31T03:07:21.000Z" itemprop="datePublished">2017-07-31</time>
+      <a href="/2017/12/21/asyncio之协程结合线程和进程/" class="article-date">
+      <time datetime="2017-12-21T10:45:01.000Z" itemprop="datePublished">2017-12-21</time>
 </a>
 
 
@@ -401,7 +442,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/31/第四章-Cython实践：N-body模拟/">第四章 Cython实践：N-body模拟</a>
+      <a class="article-title" href="/2017/12/21/asyncio之协程结合线程和进程/">asyncio之协程结合线程和进程</a>
     </h1>
   
 
@@ -413,7 +454,7 @@
           
               <excerpt in="" index="" |="" 首页摘要="">
 
-<p>Cython实践</p>
+<p>协程结合线程和进程</p></excerpt>
           
       
     </div>
@@ -424,12 +465,12 @@
 
       
     <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Cython/">Cython</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/">Python</a></li></ul>
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/">Python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/asyncio/">asyncio</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/异步并发/">异步并发</a></li></ul>
     </div>
 
       
         <p class="article-more-link">
-          <a href="/2017/07/31/第四章-Cython实践：N-body模拟/#more">阅读全文 >></a>
+          <a href="/2017/12/21/asyncio之协程结合线程和进程/#more">阅读全文 >></a>
         </p>
       
       <div class="clearfix"></div>
@@ -448,11 +489,11 @@
 
 
   
-    <article id="post-Python性能分析与调试" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-asyncio之接收Unix信号" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2017/07/31/Python性能分析与调试/" class="article-date">
-      <time datetime="2017-07-31T02:28:38.000Z" itemprop="datePublished">2017-07-31</time>
+      <a href="/2017/12/21/asyncio之接收Unix信号/" class="article-date">
+      <time datetime="2017-12-21T10:43:34.000Z" itemprop="datePublished">2017-12-21</time>
 </a>
 
 
@@ -467,7 +508,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/31/Python性能分析与调试/">Python性能分析与调试</a>
+      <a class="article-title" href="/2017/12/21/asyncio之接收Unix信号/">asyncio之接收Unix信号</a>
     </h1>
   
 
@@ -479,7 +520,7 @@
           
               <excerpt in="" index="" |="" 首页摘要="">
 
-<p>Python性能分析与调试</p>
+<p>接收Unix信号</p></excerpt>
           
       
     </div>
@@ -490,12 +531,12 @@
 
       
     <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/">Python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/调试/">调试</a></li></ul>
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/">Python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/asyncio/">asyncio</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/异步并发/">异步并发</a></li></ul>
     </div>
 
       
         <p class="article-more-link">
-          <a href="/2017/07/31/Python性能分析与调试/#more">阅读全文 >></a>
+          <a href="/2017/12/21/asyncio之接收Unix信号/#more">阅读全文 >></a>
         </p>
       
       <div class="clearfix"></div>
@@ -514,11 +555,11 @@
 
 
   
-    <article id="post-第三章-深入Cython" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-asyncio之使用子进程" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2017/07/17/第三章-深入Cython/" class="article-date">
-      <time datetime="2017-07-17T02:31:00.000Z" itemprop="datePublished">2017-07-17</time>
+      <a href="/2017/12/21/asyncio之使用子进程/" class="article-date">
+      <time datetime="2017-12-21T10:41:49.000Z" itemprop="datePublished">2017-12-21</time>
 </a>
 
 
@@ -533,7 +574,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/17/第三章-深入Cython/">第三章 深入Cython</a>
+      <a class="article-title" href="/2017/12/21/asyncio之使用子进程/">asyncio之使用子进程</a>
     </h1>
   
 
@@ -545,7 +586,7 @@
           
               <excerpt in="" index="" |="" 首页摘要="">
 
-<p>本章将深入Cython的学习</p>
+<p>使用子进程</p></excerpt>
           
       
     </div>
@@ -556,12 +597,12 @@
 
       
     <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Cython/">Cython</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/">Python</a></li></ul>
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/">Python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/asyncio/">asyncio</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/异步并发/">异步并发</a></li></ul>
     </div>
 
       
         <p class="article-more-link">
-          <a href="/2017/07/17/第三章-深入Cython/#more">阅读全文 >></a>
+          <a href="/2017/12/21/asyncio之使用子进程/#more">阅读全文 >></a>
         </p>
       
       <div class="clearfix"></div>
@@ -580,11 +621,11 @@
 
 
   
-    <article id="post-第二章-编译和运行Cython代码" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-asyncio之与DNS服务进行交互" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2017/07/03/第二章-编译和运行Cython代码/" class="article-date">
-      <time datetime="2017-07-03T09:00:00.000Z" itemprop="datePublished">2017-07-03</time>
+      <a href="/2017/12/21/asyncio之与DNS服务进行交互/" class="article-date">
+      <time datetime="2017-12-21T10:40:33.000Z" itemprop="datePublished">2017-12-21</time>
 </a>
 
 
@@ -599,7 +640,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/03/第二章-编译和运行Cython代码/">第二章 编译和运行Cython代码</a>
+      <a class="article-title" href="/2017/12/21/asyncio之与DNS服务进行交互/">asyncio之与DNS服务进行交互</a>
     </h1>
   
 
@@ -611,7 +652,7 @@
           
               <excerpt in="" index="" |="" 首页摘要="">
 
-<p>本章介绍几种Cython的编译方式让他可以同Python一起运行</p>
+<p>DNS服务进行交互</p></excerpt>
           
       
     </div>
@@ -622,12 +663,12 @@
 
       
     <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Cython/">Cython</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/">Python</a></li></ul>
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/">Python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/asyncio/">asyncio</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/异步并发/">异步并发</a></li></ul>
     </div>
 
       
         <p class="article-more-link">
-          <a href="/2017/07/03/第二章-编译和运行Cython代码/#more">阅读全文 >></a>
+          <a href="/2017/12/21/asyncio之与DNS服务进行交互/#more">阅读全文 >></a>
         </p>
       
       <div class="clearfix"></div>
@@ -646,11 +687,11 @@
 
 
   
-    <article id="post-第一章-Cython简介" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-asyncio之使用SSL" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2017/07/02/第一章-Cython简介/" class="article-date">
-      <time datetime="2017-07-02T12:52:19.000Z" itemprop="datePublished">2017-07-02</time>
+      <a href="/2017/12/21/asyncio之使用SSL/" class="article-date">
+      <time datetime="2017-12-21T10:39:18.000Z" itemprop="datePublished">2017-12-21</time>
 </a>
 
 
@@ -665,7 +706,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/02/第一章-Cython简介/">第一章 Cython简介</a>
+      <a class="article-title" href="/2017/12/21/asyncio之使用SSL/">asyncio之使用SSL</a>
     </h1>
   
 
@@ -677,7 +718,7 @@
           
               <excerpt in="" index="" |="" 首页摘要="">
 
-<p>Cython的简单介绍</p>
+<p>使用SSL</p></excerpt>
           
       
     </div>
@@ -688,12 +729,12 @@
 
       
     <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Cython/">Cython</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/">Python</a></li></ul>
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/">Python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/asyncio/">asyncio</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/异步并发/">异步并发</a></li></ul>
     </div>
 
       
         <p class="article-more-link">
-          <a href="/2017/07/02/第一章-Cython简介/#more">阅读全文 >></a>
+          <a href="/2017/12/21/asyncio之使用SSL/#more">阅读全文 >></a>
         </p>
       
       <div class="clearfix"></div>
@@ -712,6 +753,208 @@
 
 
   
+    <article id="post-asyncio之使用协程和流的异步I-O" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/12/21/asyncio之使用协程和流的异步I-O/" class="article-date">
+      <time datetime="2017-12-21T10:37:56.000Z" itemprop="datePublished">2017-12-21</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/12/21/asyncio之使用协程和流的异步I-O/">asyncio之使用协程和流的异步I/O</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+              <excerpt in="" index="" |="" 首页摘要="">
+
+<p>使用协程和流的异步I/O</p></excerpt>
+          
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/">Python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/asyncio/">asyncio</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/异步并发/">异步并发</a></li></ul>
+    </div>
+
+      
+        <p class="article-more-link">
+          <a href="/2017/12/21/asyncio之使用协程和流的异步I-O/#more">阅读全文 >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-asyncio之协议抽象类的异步I-O" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/12/21/asyncio之协议抽象类的异步I-O/" class="article-date">
+      <time datetime="2017-12-21T10:36:43.000Z" itemprop="datePublished">2017-12-21</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/12/21/asyncio之协议抽象类的异步I-O/">asyncio之协议抽象类的异步I/O</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+              <excerpt in="" index="" |="" 首页摘要="">
+
+<p>协议抽象类的异步I/O</p></excerpt>
+          
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/">Python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/asyncio/">asyncio</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/异步并发/">异步并发</a></li></ul>
+    </div>
+
+      
+        <p class="article-more-link">
+          <a href="/2017/12/21/asyncio之协议抽象类的异步I-O/#more">阅读全文 >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-asyncio之同步原语" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/12/21/asyncio之同步原语/" class="article-date">
+      <time datetime="2017-12-21T10:35:32.000Z" itemprop="datePublished">2017-12-21</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/12/21/asyncio之同步原语/">asyncio之同步原语</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+              <excerpt in="" index="" |="" 首页摘要="">
+
+<p>同步原语</p></excerpt>
+          
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/">Python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/asyncio/">asyncio</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/异步并发/">异步并发</a></li></ul>
+    </div>
+
+      
+        <p class="article-more-link">
+          <a href="/2017/12/21/asyncio之同步原语/#more">阅读全文 >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+  
+    <nav id="page-nav">
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
+    </nav>
   
 </div>
       <footer id="footer">
@@ -751,10 +994,6 @@
 <script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
 
 
-    
-
-     
-
 
 
 
@@ -787,22 +1026,8 @@ MathJax.Hub.Queue(function() {
 <script>
     // Open in New Window
     
-        var oOpenInNew = {
-            
-            
-            
-            
-            
-            
-             archives: ".archive-article-title", 
-             miniArchives: "a.post-list-link", 
-            
-            
-             socail: ".social a" 
-        }
-        for (var x in oOpenInNew) {
-            $(oOpenInNew[x]).attr("target", "_blank");
-        }
+        $("a").attr("target", "_blank");
+        $("#scroll a, #toc a").removeAttr("target");
     
 </script>
 

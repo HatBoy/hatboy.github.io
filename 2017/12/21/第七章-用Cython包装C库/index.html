@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="HatBoy" />
+
+
+
+<meta name="description" content="用Cython包装C库">
+<meta name="keywords" content="Python,Cython">
+<meta property="og:type" content="article">
+<meta property="og:title" content="第七章 用Cython包装C库">
+<meta property="og:url" content="https://hatboy.github.io/2017/12/21/第七章-用Cython包装C库/index.html">
+<meta property="og:site_name" content="HatBoy的个人主页">
+<meta property="og:description" content="用Cython包装C库">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-12-21T10:18:40.763Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="第七章 用Cython包装C库">
+<meta name="twitter:description" content="用Cython包装C库">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="HatBoy的个人主页" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>第七章 用Cython包装C库 | HatBoy的个人主页</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: true
+    }
+</script>
+
+
+    <script>
+        yiliaConfig.jquery_ui = [true, "//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js", "//cdn.bootcss.com/jqueryui/1.10.4/css/jquery-ui.min.css"];
+    </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "//hm.baidu.com/hm.js?94c5bc16a94e5db3e2942494f0be64dd";
+            var s = document.getElementsByTagName("script")[0]; 
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/avatar.jpg" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">HatBoy</a></h1>
+        </hgroup>
+
+        
+
+        
+            <form id="search-form">
+            <input type="text" id="local-search-input" name="q" placeholder="search..." class="search form-control" autocomplete="off" autocorrect="off" searchonload="true" />
+            <i class="fa fa-times" onclick="resetSearch()"></i>
+            </form>
+            <div id="local-search-result"></div>
+            <p class='no-result'>No results found <i class='fa fa-spinner fa-pulse'></i></p>
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="mailto:hatboy-dj@qq.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" href="https://github.com/HatBoy/" title="GitHub"></a>
+                            
+                                <a class="fa 码云博客" href="http://hatboy.gitee.io/" title="码云博客"></a>
+                            
+                                <a class="fa CSDN" href="http://blog.csdn.net/dj1174232716" title="CSDN"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Cython/">Cython</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/">Python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python模块tips/">Python模块tips</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python语法/">Python语法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/asyncio/">asyncio</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/异步并发/">异步并发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/调试/">调试</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://fmxfmx.gitee.io/">FMX</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://jewelz.me/">Jewelz</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://www.zhihu.com/people/talentisan/activities">轻狂书生</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://threetop.top/">ZCC</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://blog.csdn.net/u012017783">ZCC的CSDN</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://zcc888.gitee.io/">ZCC的博客</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">一枚爱Python,爱海贼,爱健身,喜欢好玩有趣事物的程序员……</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">HatBoy</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/avatar.jpg" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">HatBoy</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="mailto:hatboy-dj@qq.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="https://github.com/HatBoy/" title="GitHub"></a>
+                            
+                                <a class="fa 码云博客" target="_blank" href="http://hatboy.gitee.io/" title="码云博客"></a>
+                            
+                                <a class="fa CSDN" target="_blank" href="http://blog.csdn.net/dj1174232716" title="CSDN"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-第七章-用Cython包装C库" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/12/21/第七章-用Cython包装C库/" class="article-date">
+      <time datetime="2017-12-21T10:17:35.000Z" itemprop="datePublished">2017-12-21</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      第七章 用Cython包装C库
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Cython/">Cython</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/">Python</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <excerpt in="" index="" |="" 首页摘要="">
+
+<p>用Cython包装C库</p>
+<a id="more"></a>
+<the rest="" of="" contents="" |="" 余下全文="">
+
+<p>前面我们学习了如何使用Cython通过静态编译将Python性能得到提升，本章我们将关注逆向问题：从C库开始，如何让它能够被Python访问。这样的任务通常是交给专业的工具如SWIG、SIP、Boost.Python、ctypes、cffi或者其他的。Cython虽然不会像某些工具那样自动化处理，但是它提供了简单的包装外部库的方法。Cython也可以让C级别的Cython结构被外部的C访问，这对于我们想要将Python嵌入到C语言中很有用。</p>
+<h2 id="在Cython中声明外部C代码"><a href="#在Cython中声明外部C代码" class="headerlink" title="在Cython中声明外部C代码"></a>在Cython中声明外部C代码</h2><p>为了用Cython包装C库，首先要在Cython中声明要是用的C组件的接口，最后，Cython提供了extern语句块。这些声明意在告诉Cython我们要用的C组件来自哪个特殊的C头文件，语法如下：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">cdef extern <span class="keyword">from</span> <span class="string">"header_name"</span>:</div><div class="line">    indented declarations <span class="keyword">from</span> header file</div></pre></td></tr></table></figure></p>
+<p>包含extern语句块有如下作用：</p>
+<ul>
+<li>cython编译器会在生成的源文件头部添加一句#include “header_name”代码</li>
+<li>代码块中的类型、函数和其他的对象声明都可以从Cython访问</li>
+<li>Cython会在编译的时候检查C声明的类型使用是否正确，不正确会报错<br>extern语块中声明的变量和函数都有一个简单的类C风格的语法，他们使用Cython特殊的语法声明struct和union，在第三章有简单介绍过。<br>Cython支持extern关键字，可以通过cdef添加任何C声明，语法如下：<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cdef extern external_declaration</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>当我们用这种方式使用extern，Cython将放置这些声明如变量、struct、union或者其他C声明到有extern修饰符的生成的源码中，Cython的extern声明必须匹配C的声明。这种风格的声明是不推荐的，他和直接在C中使用extern有相同的缺点，建议优先使用extern语块。<br>对于一个特殊的头文件如果有必要有一个#include预处理指令，但是不需要声明，声明语块可以是空：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">cdef extern <span class="keyword">from</span> <span class="string">"header.h"</span>:</div><div class="line">    <span class="keyword">pass</span></div></pre></td></tr></table></figure></p>
+<p>相反，如果头文件不是必要的，也许已经被其他的头文件包含了，但是我们希望与外部有接口，我们可以抑制生成#include语块：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">cdef extern <span class="keyword">from</span> *:</div><div class="line">    declarations</div></pre></td></tr></table></figure></p>
+<p>在我们进入声明块的细节之前，extern是什么也不会做的。</p>
+<h2 id="Cython不会自动包装"><a href="#Cython不会自动包装" class="headerlink" title="Cython不会自动包装"></a>Cython不会自动包装</h2><p>extern语块的目的是简单，但是可能会被误导。在Cython中，extern语块和extern声明的存在是为了确保我们以一种正确的类型方式调用和使用的声明的C函数，变量和结构体。extern语块不会自动的为声明的对象生成包装器，extern语块只会在C代码前面添加一行#include “header.h”代码。我们还是要编写def，cdef和cpdef函数调用extern语块中声明的C函数。如果我们不这样做，extern语块中声明的外部C函数就不会被Python代码访问到。Cython不会解析C文件和自动包装C库。<br>使用Cython包装有上百个函数，结构体和其他结构的庞大的C项目任务很艰难，但是已经不少成功的先例了，他们选择Cython作为包装工具有下面一些原因：</p>
+<ul>
+<li>Cython生成的包装代码是高度优化的，比其他的工具的速度快一个数量级</li>
+<li>通常的目标是定制，改进，简化或者相反Pythonize化包装的接口，所以一个自动包装的工具不会提供太多的好处</li>
+<li>Cython是一门高级的Python-like语言，不限于特定领域的接口命令，使复杂的包装任务更加容易</li>
+</ul>
+<h2 id="声明外部的C函数和typedef"><a href="#声明外部的C函数和typedef" class="headerlink" title="声明外部的C函数和typedef"></a>声明外部的C函数和typedef</h2><p>extern语块中最常见的声明是C函数和typedef，这些声明几乎直接从C中转换过来。通常，唯一要修改的有下面几点：</p>
+<ul>
+<li>将typedef换成ctypedef</li>
+<li>移除不必要的和不支持的关键字，如restrict和volatile</li>
+<li>确保返回的函数类型和名称在单独的一行声明过</li>
+<li>移除行结束分号<br>在参数列表的开始括号之后，可以在若干行上分割一个长函数声明，就像在Python中一样。下面例子中，header.h中有简单的C声明和宏定义：<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/*header.h*/</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> M_PI 3.1415926</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> MAX(a, b) ((a) &gt;= (b) ? (a) : (b))</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">double</span> <span class="title">hypot</span><span class="params">(<span class="keyword">double</span>, <span class="keyword">double</span>)</span></span>;</div><div class="line"></div><div class="line"><span class="keyword">typedef</span> <span class="keyword">int</span> integral;</div><div class="line"><span class="keyword">typedef</span> <span class="keyword">double</span> real;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">func</span><span class="params">(integral, integral, real)</span></span>;</div><div class="line"></div><div class="line"><span class="function">real *<span class="title">func_arrays</span><span class="params">(integral[], integral[][<span class="number">10</span>], real **)</span></span>;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>Cython中extern语块对他们的声明如下：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">cdef extern <span class="keyword">from</span> <span class="string">"header.h"</span>:</div><div class="line">    double M_PI</div><div class="line">    float MAX(float a, float b)</div><div class="line"></div><div class="line">    double hypot(double x, double y)</div><div class="line"></div><div class="line">    ctypedef int integral</div><div class="line">    ctypedef double real</div><div class="line"></div><div class="line">    void func(integral a, integral b, real c)</div><div class="line"></div><div class="line">    real *func_arrays(integral[] i, integral[][<span class="number">10</span>] j, real **k)</div></pre></td></tr></table></figure></p>
+<p>Cython支持全方位的C声明，甚至是函数指针，当然，简单的类型声明，大部分情况下我们可以直接复制粘贴C函数声明到extern语块中，删除分号就可以了。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#复杂指针声明案例</span></div><div class="line">cdef extern <span class="keyword">from</span> <span class="string">"header.h"</span>:</div><div class="line">    void (*signal(void(*)(int)))(int)</div><div class="line"></div><div class="line"><span class="comment">#也可以这样声明</span></div><div class="line">cdef extern <span class="keyword">from</span> <span class="string">"header.h"</span>:</div><div class="line">    ctypedef void (*void_int_fptr)(int)</div><div class="line">    void_int_fptr signal(void_int_fptr)</div></pre></td></tr></table></figure></p>
+<h2 id="声明和包装C的struct，union和enum"><a href="#声明和包装C的struct，union和enum" class="headerlink" title="声明和包装C的struct，union和enum"></a>声明和包装C的struct，union和enum</h2><p>为了在extern语块中声明额外的struct，union和enum结构，我们可以使用第三章提到的语法，但是可以省略cdef关键字，如下：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">cdef extern <span class="keyword">from</span> <span class="string">"header_name"</span>:</div><div class="line">    struct struct_name:</div><div class="line">        struct_members</div><div class="line"></div><div class="line">    union union_name:</div><div class="line">        union_members</div><div class="line"></div><div class="line">    enum enum_name:</div><div class="line">        enum_members</div><div class="line"></div><div class="line"><span class="comment">#对应的C代码是</span></div><div class="line">struct struct_name &#123;</div><div class="line">    struct_members</div><div class="line">&#125;;</div><div class="line"></div><div class="line">union union_name &#123;</div><div class="line">    union_members</div><div class="line">&#125;;</div><div class="line"></div><div class="line">enum enum_name &#123;</div><div class="line">    enum_members</div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
+<p>Cython会为生成等价的struct，union和enum结构，相应的，typedef的版本如下：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">cdef extern <span class="keyword">from</span> <span class="string">"header_name"</span>:</div><div class="line">    ctypedef struct struct_alias:</div><div class="line">        struct_members</div><div class="line"></div><div class="line">    ctypedef union union_alias:</div><div class="line">        union_members</div><div class="line"></div><div class="line">    ctypedef enum enum_alias:</div><div class="line">        enum_members</div><div class="line"></div><div class="line"><span class="comment">#对应的C代码是</span></div><div class="line">typedef struct struct_name &#123;</div><div class="line">    struct_members</div><div class="line">&#125; struct_alias;</div><div class="line"></div><div class="line">typedef union union_name &#123;</div><div class="line">    union_members</div><div class="line">&#125; union_alias;</div><div class="line"></div><div class="line">typedef enum enum_name &#123;</div><div class="line">    enum_members</div><div class="line">&#125; enum_alias;</div></pre></td></tr></table></figure></p>
+<p>在typedef的版本中，Cython只会使用类型别名来进行声明，但是不会生成定义中的struct，union和enum。<br>在Cython中静态声明一个struct变量，使用cdef和struct名称或者typedef别名，Cython在任何情况下都会为我们做正确的事情。<br>定义struct，union和enum时，属性字段是必须的，如果struct没有属性字段，可以使用pass代替。</p>
+<h2 id="包装C函数"><a href="#包装C函数" class="headerlink" title="包装C函数"></a>包装C函数</h2><p>当我们声明了我们想使用的额外的函数，我们还需要包装他们成一个def函数，cpdef函数或者是cdef class，让他们能被Python访问。<br>如下面例子：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#mt.pxd</span></div><div class="line">cdef extern <span class="keyword">from</span> <span class="string">"mt19937ar.h"</span>:</div><div class="line">    void init_genrand(unsigned long s)</div><div class="line">    double genrand_real1()</div><div class="line"></div><div class="line"><span class="comment">#mt_random.pyx</span></div><div class="line">cimport mt</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">init_state</span><span class="params">(unsigned long s)</span>:</span></div><div class="line">    init_genrand(s)</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">rand</span><span class="params">()</span>:</span></div><div class="line">    <span class="keyword">return</span> genrand_real1()</div><div class="line"></div><div class="line"><span class="comment">#setup.py</span></div><div class="line"><span class="keyword">from</span> distutils.core <span class="keyword">import</span> setup, Extension</div><div class="line"><span class="keyword">from</span> Cython.Build <span class="keyword">import</span> cythonize</div><div class="line"></div><div class="line">ext = Extension(<span class="string">"mt_random"</span>, sources=[<span class="string">"mt_random.pyx"</span>, <span class="string">"mt19937ar.c"</span>])</div><div class="line"></div><div class="line">setup(name=<span class="string">"mersenne_random"</span>, ext_modules = cythonize([ext]))</div><div class="line"></div><div class="line"><span class="comment">#编译</span></div><div class="line">$ python setup.py build_ext --inplace</div></pre></td></tr></table></figure></p>
+<p>为了使它们一起编译，我们使用了distutils脚本，另外我们还必须包含mt19937ar.c源文件，然后使用第二章讲到的内容进行编译。如果命令执行成功，会生成一个mt_random.so或者mt_random.pyd文件，这取决于编译系统是Linux，Mac OS还是Windows。然后就可以在ipython中使用它们：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">In [<span class="number">1</span>]: <span class="keyword">import</span> mt_random</div><div class="line">In [<span class="number">2</span>]: mt_random.init_state(<span class="number">42</span>)</div><div class="line">In [<span class="number">3</span>]: mt_random.rand()</div><div class="line">Out[<span class="number">3</span>]: <span class="number">0.37454011439684315</span></div><div class="line"></div><div class="line">In [<span class="number">4</span>]: mt_random.init_genrand(<span class="number">42</span>)</div><div class="line">Traceback (most recent call last):</div><div class="line">File <span class="string">"&lt;ipython-input-2-34528a64a483&gt;"</span>, line <span class="number">1</span>, <span class="keyword">in</span> &lt;module&gt;</div><div class="line">mt_random.init_genrand(<span class="number">42</span>)</div><div class="line">AttributeError: <span class="string">'module'</span> object has no attribute <span class="string">'init_genrand'</span></div><div class="line">In [<span class="number">5</span>]: mt_random.genrand_real1()</div><div class="line">Traceback (most recent call last):</div><div class="line">File <span class="string">"&lt;ipython-input-3-23619324ba3f&gt;"</span>, line <span class="number">1</span>, <span class="keyword">in</span> &lt;module&gt;</div><div class="line">mt_random.genrand_real1()</div><div class="line">AttributeError: <span class="string">'module'</span> object has no attribute <span class="string">'genrand_real1'</span></div></pre></td></tr></table></figure></p>
+<p>我们不能直接在Python中使用init_genrand或者genrand_real1函数。</p>
+<h2 id="使用扩展类型包装C语言struct"><a href="#使用扩展类型包装C语言struct" class="headerlink" title="使用扩展类型包装C语言struct"></a>使用扩展类型包装C语言struct</h2><p>我们的C代码有些面一些声明函数:<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> _<span class="title">mt_state</span> <span class="title">mt_state</span>;</span></div><div class="line"></div><div class="line"><span class="function">mt_state *<span class="title">make_mt</span><span class="params">(<span class="keyword">unsigned</span> <span class="keyword">long</span> s)</span></span>;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">free_mt</span><span class="params">(mt_state *state)</span></span>;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">double</span> <span class="title">genrand_real1</span><span class="params">(mt_state *state)</span></span>;</div></pre></td></tr></table></figure></p>
+<p>Cython的extern语句声明他们只需要简单的复制粘贴就好了：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">cdef extern <span class="keyword">from</span> <span class="string">"mt19937ar-struct.h"</span>:</div><div class="line">    ctypedef struct mt_state</div><div class="line">    mt_state *make_mt(unsigned long s)</div><div class="line">    void free_mt(mt_state *state)</div><div class="line">    double genrand_real1(mt_state *state)</div></pre></td></tr></table></figure></p>
+<p>因为mt_state是透明的，Cython不必访问他的任何字段，所以用ctypedef声明就够了，本质上，mt_state是一个命名占位符。<br>但是extern语块中的声明Python都不能访问，所以有必要将他们包装成扩展类型，这里命名为MT。因为初始化一个MT对象之前创建mt_state的堆分配操作必须发生在C层面，所以要在正确的地方实现<strong>cinit</strong>()方法和相对应的<strong>dealloc</strong>()方法释放资源。然后我们定义def或者cpdef方法调用相应的C函数。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#mt_random_type.pyx</span></div><div class="line">cdef <span class="class"><span class="keyword">class</span> <span class="title">MT</span>:</span></div><div class="line">    cdef mt_state *_thisptr</div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__cinit__</span><span class="params">(self, unsigned long s)</span>:</span></div><div class="line">        self._thisptr = make_mt(s)</div><div class="line">        <span class="keyword">if</span> self._thisptr == NULL:</div><div class="line">            msg = <span class="string">"Insufficient memory."</span></div><div class="line">            <span class="keyword">raise</span> MemoryError(msg)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__dealloc__</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">if</span> self._thisptr != NULL:</div><div class="line">        free_mt(self._thisptr)</div><div class="line"></div><div class="line">    cpdef double rand(self):</div><div class="line">        <span class="keyword">return</span> genrand_real1(self._thisptr)</div></pre></td></tr></table></figure></p>
+<p>为了使用这个扩展类型的包装，我们必须编译它为一个扩展模块。我们编译这个包装的mt_random_type.pyx文件和mt19937ar-struct.c源代码。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#setup_mt_type.py</span></div><div class="line"><span class="keyword">from</span> distutils.core <span class="keyword">import</span> setup, Extension</div><div class="line"><span class="keyword">from</span> Cython.Build <span class="keyword">import</span> cythonize</div><div class="line"></div><div class="line">ext_type = Extension(<span class="string">"mt_random_type"</span>, sources=[<span class="string">"mt_random_type.pyx"</span>, <span class="string">"mt19937ar-struct.c"</span>])</div><div class="line"></div><div class="line">setup( name=<span class="string">"mersenne_random"</span>, ext_modules = cythonize([ext_type]) )</div><div class="line"></div><div class="line"><span class="comment">#进行编译</span></div><div class="line">$ python setup_mt_type.py build_ext --inplace</div></pre></td></tr></table></figure></p>
+<p>然后可以导入使用：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">In [<span class="number">1</span>]: <span class="keyword">from</span> mt_random_type <span class="keyword">import</span> MT</div><div class="line">In [<span class="number">2</span>]: mt1, mt2 = MT(<span class="number">0</span>), MT(<span class="number">0</span>)</div><div class="line">In [<span class="number">3</span>]: mt1.rand() == mt2.rand()</div><div class="line">Out[<span class="number">3</span>]: <span class="keyword">True</span></div></pre></td></tr></table></figure></p>
+<p>在Cython中包装C struct，上面的例子是比较常见和推荐的模式，struct指针只在内部使用，定义<strong>cinit</strong>()和<strong>dealloc</strong>()方法用来初始化和自动释放内存，定义对应的cpdef方法供Python访问，甚至可以在Python子类中被重写。</p>
+<h2 id="常量，其他修饰符和控制Cython生成的内容"><a href="#常量，其他修饰符和控制Cython生成的内容" class="headerlink" title="常量，其他修饰符和控制Cython生成的内容"></a>常量，其他修饰符和控制Cython生成的内容</h2><p>在第三章提到过，Cython语言理解const关键字，但是def关键字声明没有用，它要在特定情况下在extern语块中声明保证Cython生成正确的代码。const关键字在声明函数参数的时候没有必要，可以省略掉，当我们声明typedef用到了const或者一个函数的返回值用到了const的时候可能需要保留。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#C语言中的声明</span></div><div class="line">typedef const int * const_int_ptr;</div><div class="line">const double *returns_ptr_to_const(const_int_ptr);</div><div class="line"></div><div class="line"><span class="comment">#Cython中的声明</span></div><div class="line">cdef extern <span class="keyword">from</span> <span class="string">"header.h"</span>:</div><div class="line">    ctypedef const int * const_int_ptr</div><div class="line">    const double *returns_ptr_to_const(const_int_ptr)</div></pre></td></tr></table></figure></p>
+<p>其他C级别的修饰符，如volatile和restrict应该在extern语块中删除，他们会导致编译时错误。<br>有时候在Cython中使用函数，struct或者typedef的别名很有用，它允许我们在Cython中引用C级别中的一个名字但是不同于在C中的实际的名字。假设我们想包装使用C语言中的print函数，但是会和Cython中的print造成冲突，我们就可以使用别名：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">cdef extern <span class="keyword">from</span> <span class="string">"printer.h"</span>:</div><div class="line">    void _print <span class="string">"print"</span>(fmt_str, arg)</div></pre></td></tr></table></figure></p>
+<p>在Cython中调用_print函数就是调用C中的print函数，同样的typedefs，structs，unions和enums也可以这样使用。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">cdef extern <span class="keyword">from</span> <span class="string">"pathological.h"</span>:</div><div class="line">    <span class="comment"># typedef void * class</span></div><div class="line">    ctypedef void * klass <span class="string">"class"</span></div><div class="line"></div><div class="line">    <span class="comment"># int finally(void) function</span></div><div class="line">    int _finally <span class="string">"finally"</span>()</div><div class="line"></div><div class="line">    <span class="comment"># struct del &#123; int a, b; &#125;;</span></div><div class="line">    struct _del <span class="string">"del"</span>:</div><div class="line">        int a, b</div><div class="line"></div><div class="line">    <span class="comment"># enum yield &#123; ALOT; SOME; ALITTLE; &#125;;</span></div><div class="line">    enum _yield <span class="string">"yield"</span>:</div><div class="line">        ALOT</div><div class="line">        SOME</div><div class="line">        ALITTLE</div></pre></td></tr></table></figure></p>
+<p>在任何情况下，引号中的字符串表示C语言中的代码，Cython没有检查引号中的内容，所以这个特性可以用来控制C级别的声明，注意不要滥用。</p>
+<h2 id="暴露Cython代码给C使用"><a href="#暴露Cython代码给C使用" class="headerlink" title="暴露Cython代码给C使用"></a>暴露Cython代码给C使用</h2><p>正如我们在第三章看到的，Cython允许我们使用cdef关键字声明C级别的函数、变量和结构体，看到了我们如何在Cython中直接使用C级别的结构。假设，在一个应用中，一个外部的C函数调用cdef Cython函数是很有用的，本质上是用C语言包装Python。虽然这情况种使用需求很小，但是确实有需求，Cython提供了两种机制来支持这个需求。</p>
+<p>第一种机制是通过public关键字，我们已经看到public关键字可以声明扩展类型的属性外不可见性。这里我们看看他不同的用途。如果我们添加public关键字到C级别的cdef类型，变量或者函数声明，然后这个结构可以被编译的C代码访问或者被扩展模块链接。<br>如下面例子：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#transcendentals.pyx</span></div><div class="line">cdef public double PI = <span class="number">3.1415926</span></div><div class="line"></div><div class="line">cdef public double get_e():</div><div class="line">    <span class="keyword">print</span> <span class="string">"calling get_e()"</span></div><div class="line">    <span class="keyword">return</span> <span class="number">2.718281828</span></div></pre></td></tr></table></figure></p>
+<p>当我们从transcendentals.pyx生成扩展模块时，public修饰的结构会被cython编译器输出一个transcendentals.h头文件添加到transcendentals.c中。这个头文件声明了对Cython源码的公共C接口。它必须被包含在外部的C代码中，如果外部的C代码想调用get_e()函数或者使用变量PI。<br>外部的C代码调用我们的Cython代码必须同时确保使用Py_Initialize初始化Python解释器和使用inittranscendentals初始化模块，在我们使用任何public结构之前。<br>代码如下：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//main.c</span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"Python.h"</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"transcendentals.h"</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;math.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> **argv)</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    Py_Initialize();</div><div class="line">    inittranscendentals();</div><div class="line">    <span class="built_in">printf</span>(<span class="string">"pi**e: %f\n"</span>, <span class="built_in">pow</span>(PI, get_e()));</div><div class="line">    Py_Finalize();</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>编译运行过程：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#</span><span class="bash">首先编译transcendentals.pyx代码生成transcendentals.c</span></div><div class="line"><span class="meta">$</span><span class="bash"> cython transcendentals.pyx</span></div><div class="line"></div><div class="line"><span class="meta">#</span><span class="bash">然后编译我们的main.c代码</span></div><div class="line"><span class="meta">$</span><span class="bash"> gcc $(python-config --cflags) $(python-config --ldflags) transcendentals.c main.c</span></div><div class="line"></div><div class="line"><span class="meta">#</span><span class="bash">然后运行结果</span></div><div class="line"><span class="meta">$</span><span class="bash"> ./a.out</span></div><div class="line">calling get_e()</div><div class="line">pi**e: 22.459157</div></pre></td></tr></table></figure></p>
+<p>第二个机制是使用api关键字，它只能连接到C级别的函数和扩展类型。<br>例子如下：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">cdef api double get_e():</div><div class="line">    <span class="keyword">print</span> <span class="string">"calling get_e()"</span></div><div class="line">    <span class="keyword">return</span> <span class="number">2.718281828</span></div></pre></td></tr></table></figure></p>
+<p>api和public修饰符都可以运用于同一个对象。<br>和public关键字的使用方法类似，api关键字会导致cython编译器生成transcendentals_api.h头文件，它可以被外部的C代码使用，用来调用api声明的函数和方法的Cython代码。这种方法更灵活，它使用Python的导入机制动态地导入API声明的函数，而无需显式地编译扩展模块源或链接到动态库。唯一的要求是import_transcendentals应该在使用get_e()之前被调用。<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//main.c</span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"transcendentals_api.h"</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> **argv)</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    import_transcendentals();</div><div class="line">    <span class="built_in">printf</span>(<span class="string">"e: %f\n"</span>, get_e());</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>注意，通过api关键字的方法并不能访问变量PI，我们应该通过函数来使用变量PI，api关键字只能访问函数和扩展类型。这是api机制通过动态运行时导入提供的灵活性的折中。</p>
+<h2 id="错误检查并引发异常"><a href="#错误检查并引发异常" class="headerlink" title="错误检查并引发异常"></a>错误检查并引发异常</h2><p>外部C函数通过返回代码或错误标志来传递错误状态是很常见的。为了正确的包装这些函数，我们我们必须在包装函数中测试这些情况，并在发出错误时，显式地抛出一个Python异常。使用一个expect子句自动将C错误返回代码转换为Python异常是很方便的，但这样做是行不通的，这不是expect的目的。当一个外部的C函数设置C错误状态Cython不能自动检测。然而，expect子句可以和cdef回调结合使用。</p>
+<h2 id="回调"><a href="#回调" class="headerlink" title="回调"></a>回调</h2><p>正如我们前面看到的，Cython支持C函数指针。使用此功能，我们可以包装C函数通过函数指针回调。回调可以是一个纯C函数，它不调用Python或C API，或者它可以调用任意的Python代码，这取决于用例。这个强大的特性允许我们传递运行时创建的Python函数来控制底层C函数的行为。跨语言的回调工作很复杂，特别是当它涉及到适当的异常处理。<br>具体细节不讲解，举例说明：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#想要包装C标准库中的qsort函数</span></div><div class="line">cdef extern <span class="keyword">from</span> <span class="string">"stdlib.h"</span>:</div><div class="line">    void qsort(void *array, size_t count, size_t size, int (*compare)(const void *, const void *))</div><div class="line"></div><div class="line"><span class="comment">#我们创建pysort函数用来排序Python的数字序列，通过调用C的qsort和不同的比较函数</span></div><div class="line">cdef extern <span class="keyword">from</span> <span class="string">"stdlib.h"</span>:</div><div class="line">    void *malloc(size_t size)</div><div class="line">    void free(void *ptr)</div><div class="line"></div><div class="line">ctypedef int (*qsort_cmp)(const void *, const void *)</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">pyqsort</span><span class="params">(list x, reverse=False)</span>:</span></div><div class="line">    cdef:</div><div class="line">        int *array</div><div class="line">        int i, N</div><div class="line">    <span class="comment">#分配C数组</span></div><div class="line">    N = len(x)</div><div class="line">    array = &lt;int*&gt;malloc(sizeof(int) * N)</div><div class="line">    <span class="keyword">if</span> array == NULL:</div><div class="line">        <span class="keyword">raise</span> MemoryError(<span class="string">"Unable to allocate array."</span>)</div><div class="line">    <span class="comment">#用Python数组填充C数组</span></div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(N):</div><div class="line">        array[i] = x[i]</div><div class="line"></div><div class="line">    cdef qsort_cmp cmp_callback</div><div class="line"></div><div class="line">    <span class="comment">#选择一个适当的回调函数</span></div><div class="line">    <span class="keyword">if</span> reverse:</div><div class="line">        cmp_callback = reverse_int_compare</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        cmp_callback = int_compare</div><div class="line">    <span class="comment">#调用qsort排序数组</span></div><div class="line">    qsort(&lt;void*&gt;array, &lt;size_t&gt;N, sizeof(int), cmp_callback)</div><div class="line">    </div><div class="line">    <span class="comment">#将结果转换成Python的序列类型，并释放资源</span></div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(N):</div><div class="line">        x[i] = array[i]</div><div class="line">    free(array)</div><div class="line"></div><div class="line"><span class="comment">#比较回调函数</span></div><div class="line">cdef int int_compare(const void *a, const void *b):</div><div class="line">    cdef int ia, ib</div><div class="line">    ia = (&lt;int*&gt;a)[<span class="number">0</span>]</div><div class="line">    ib = (&lt;int*&gt;b)[<span class="number">0</span>]</div><div class="line">    <span class="keyword">return</span> ia - ib</div><div class="line"></div><div class="line"><span class="comment">#逆向比较回调</span></div><div class="line">cdef int reverse_int_compare(const void *a, const void *b):</div><div class="line">    <span class="keyword">return</span> -int_compare(a, b)</div></pre></td></tr></table></figure></p>
+<p>编译运行结果：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">In [<span class="number">1</span>]: <span class="keyword">import</span> pyximport; pyximport.install()</div><div class="line">Out[<span class="number">1</span>]: (<span class="keyword">None</span>, &lt;pyximport.pyximport.PyxImporter at <span class="number">0x101c7c650</span>&gt;)</div><div class="line">In [<span class="number">2</span>]: <span class="keyword">from</span> pyqsort <span class="keyword">import</span> pyqsort</div><div class="line">In [3]: pyqsort?</div><div class="line">Type: builtin_function_or_method</div><div class="line">String Form:&lt;built-<span class="keyword">in</span> function pyqsort&gt;</div><div class="line">Docstring: &lt;no docstring&gt;</div><div class="line">In [<span class="number">4</span>]: <span class="keyword">from</span> random <span class="keyword">import</span> shuffle</div><div class="line">In [<span class="number">5</span>]: intlist = range(<span class="number">10</span>)</div><div class="line">In [<span class="number">6</span>]: shuffle(intlist)</div><div class="line">In [<span class="number">7</span>]: <span class="keyword">print</span> intlist</div><div class="line">[<span class="number">2</span>, <span class="number">1</span>, <span class="number">3</span>, <span class="number">7</span>, <span class="number">6</span>, <span class="number">4</span>, <span class="number">0</span>, <span class="number">9</span>, <span class="number">5</span>, <span class="number">8</span>]</div><div class="line">In [<span class="number">8</span>]: pyqsort(intlist)</div><div class="line">In [<span class="number">9</span>]: <span class="keyword">print</span> intlist</div><div class="line">[<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>]</div><div class="line">In [<span class="number">10</span>]: pyqsort(intlist, reverse=<span class="keyword">True</span>)</div><div class="line">In [<span class="number">11</span>]: <span class="keyword">print</span> intlist</div><div class="line">[<span class="number">9</span>, <span class="number">8</span>, <span class="number">7</span>, <span class="number">6</span>, <span class="number">5</span>, <span class="number">4</span>, <span class="number">3</span>, <span class="number">2</span>, <span class="number">1</span>, <span class="number">0</span>]</div></pre></td></tr></table></figure></p>
+<h2 id="回调和异常传播"><a href="#回调和异常传播" class="headerlink" title="回调和异常传播"></a>回调和异常传播</h2><p>到目前为止，任何cmp抛出的异常都会被忽略掉，为了解决这个限制，我们可以在声明cdef回调函数的使用使用except <em>语句，并且except </em>语句是函数声明的一部分，最终我们上面的qsort函数声明会变成下面这样：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">cdef extern <span class="keyword">from</span> <span class="string">"stdlib.h"</span>:</div><div class="line">    void qsort(void *array, size_t count, size_t size, int (*compare)(const void *, const void *) <span class="keyword">except</span> *)</div><div class="line"></div><div class="line">ctypedef int (*qsort_cmp)(const void *, const void *) <span class="keyword">except</span> *</div><div class="line"></div><div class="line">cdef int int_compare(const void *a, const void *b) <span class="keyword">except</span> *:</div><div class="line">    <span class="comment"># ...</span></div><div class="line"></div><div class="line">cdef int reverse_int_compare(const void *a, const void *b) <span class="keyword">except</span> *:</div><div class="line">    <span class="comment"># ...</span></div><div class="line"></div><div class="line">cdef int py_cmp_wrapper(const void *a, const void *b) <span class="keyword">except</span> *:</div><div class="line">    <span class="comment"># ...</span></div><div class="line"></div><div class="line">cdef int reverse_py_cmp_wrapper(const void *a, const void *b) <span class="keyword">except</span> *:</div></pre></td></tr></table></figure></p>
+<p>因为我们使用了except *子句，每一次的回调之后都会检查异常，这就意味着将花费更多的开销，然而为此改进错误处理是值得的。</p>
+</the></excerpt>
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2017/12/21/第七章-用Cython包装C库/">第七章 用Cython包装C库</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">HatBoy</a></p>
+        <p><span>发布时间:</span>2017-12-21, 18:17:35</p>
+        <p><span>最后更新:</span>2017-12-21, 18:18:40</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2017/12/21/第七章-用Cython包装C库/" title="第七章 用Cython包装C库">https://hatboy.github.io/2017/12/21/第七章-用Cython包装C库/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://hatboy.github.io/2017/12/21/第七章-用Cython包装C库/　　作者: HatBoy" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2017/12/21/Python-importlib讲解/">
+                    Python importlib讲解
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2017/08/16/第六章-组织Cython代码/">
+                    第六章 组织Cython代码
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#在Cython中声明外部C代码"><span class="toc-number">1.</span> <span class="toc-text">在Cython中声明外部C代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Cython不会自动包装"><span class="toc-number">2.</span> <span class="toc-text">Cython不会自动包装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#声明外部的C函数和typedef"><span class="toc-number">3.</span> <span class="toc-text">声明外部的C函数和typedef</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#声明和包装C的struct，union和enum"><span class="toc-number">4.</span> <span class="toc-text">声明和包装C的struct，union和enum</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#包装C函数"><span class="toc-number">5.</span> <span class="toc-text">包装C函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用扩展类型包装C语言struct"><span class="toc-number">6.</span> <span class="toc-text">使用扩展类型包装C语言struct</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#常量，其他修饰符和控制Cython生成的内容"><span class="toc-number">7.</span> <span class="toc-text">常量，其他修饰符和控制Cython生成的内容</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#暴露Cython代码给C使用"><span class="toc-number">8.</span> <span class="toc-text">暴露Cython代码给C使用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#错误检查并引发异常"><span class="toc-number">9.</span> <span class="toc-text">错误检查并引发异常</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#回调"><span class="toc-number">10.</span> <span class="toc-text">回调</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#回调和异常传播"><span class="toc-number">11.</span> <span class="toc-text">回调和异常传播</span></a></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"第七章 用Cython包装C库　| HatBoy的个人主页　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2017/12/21/Python-importlib讲解/" title="上一篇: Python importlib讲解">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2017/08/16/第六章-组织Cython代码/" title="下一篇: 第六章 组织Cython代码">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio：异步IO、事件循环和并发/">asyncio：异步IO、事件循环和并发</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之调试asyncio/">asyncio之调试asyncio</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之协程结合线程和进程/">asyncio之协程结合线程和进程</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之接收Unix信号/">asyncio之接收Unix信号</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之使用子进程/">asyncio之使用子进程</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之与DNS服务进行交互/">asyncio之与DNS服务进行交互</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之使用SSL/">asyncio之使用SSL</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之使用协程和流的异步I-O/">asyncio之使用协程和流的异步I/O</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之协议抽象类的异步I-O/">asyncio之协议抽象类的异步I/O</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之同步原语/">asyncio之同步原语</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之用控制结构组建协程/">asyncio之用控制结构组建协程</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之并发执行Tasks/">asyncio之并发执行Tasks</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之异步生产结果/">asyncio之异步生产结果</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之定时调度常规函数/">asyncio之定时调度常规函数</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之使用协程处理多任务/">asyncio之使用协程处理多任务</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之异步并发的概念/">asyncio之异步并发的概念</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/Python上下文管理器/">Python上下文管理器</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/Python-importlib讲解/">Python importlib讲解</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/第七章-用Cython包装C库/">第七章 用Cython包装C库</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/16/第六章-组织Cython代码/">第六章 组织Cython代码</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/10/第五章-Cython和扩展类型/">第五章 Cython和扩展类型</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/31/第四章-Cython实践：N-body模拟/">第四章 Cython实践：N-body模拟</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/31/Python性能分析与调试/">Python性能分析与调试</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/17/第三章-深入Cython/">第三章 深入Cython</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/03/第二章-编译和运行Cython代码/">第二章 编译和运行Cython代码</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/02/第一章-Cython简介/">第一章 Cython简介</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2017 HatBoy
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+
+
+
+
+    <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script src="//cdn.bootcss.com/mathjax/2.6.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        $("a").attr("target", "_blank");
+        $("#scroll a, #toc a").removeAttr("target");
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

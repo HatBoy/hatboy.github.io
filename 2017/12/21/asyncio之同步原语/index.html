@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="HatBoy" />
+
+
+
+<meta name="description" content="同步原语">
+<meta name="keywords" content="Python,asyncio,异步并发">
+<meta property="og:type" content="article">
+<meta property="og:title" content="asyncio之同步原语">
+<meta property="og:url" content="https://hatboy.github.io/2017/12/21/asyncio之同步原语/index.html">
+<meta property="og:site_name" content="HatBoy的个人主页">
+<meta property="og:description" content="同步原语">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-12-21T10:36:26.014Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="asyncio之同步原语">
+<meta name="twitter:description" content="同步原语">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="HatBoy的个人主页" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>asyncio之同步原语 | HatBoy的个人主页</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: true
+    }
+</script>
+
+
+    <script>
+        yiliaConfig.jquery_ui = [true, "//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js", "//cdn.bootcss.com/jqueryui/1.10.4/css/jquery-ui.min.css"];
+    </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "//hm.baidu.com/hm.js?94c5bc16a94e5db3e2942494f0be64dd";
+            var s = document.getElementsByTagName("script")[0]; 
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/avatar.jpg" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">HatBoy</a></h1>
+        </hgroup>
+
+        
+
+        
+            <form id="search-form">
+            <input type="text" id="local-search-input" name="q" placeholder="search..." class="search form-control" autocomplete="off" autocorrect="off" searchonload="true" />
+            <i class="fa fa-times" onclick="resetSearch()"></i>
+            </form>
+            <div id="local-search-result"></div>
+            <p class='no-result'>No results found <i class='fa fa-spinner fa-pulse'></i></p>
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="mailto:hatboy-dj@qq.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" href="https://github.com/HatBoy/" title="GitHub"></a>
+                            
+                                <a class="fa 码云博客" href="http://hatboy.gitee.io/" title="码云博客"></a>
+                            
+                                <a class="fa CSDN" href="http://blog.csdn.net/dj1174232716" title="CSDN"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Cython/">Cython</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/">Python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python模块tips/">Python模块tips</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python语法/">Python语法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/asyncio/">asyncio</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/异步并发/">异步并发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/调试/">调试</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://fmxfmx.gitee.io/">FMX</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://jewelz.me/">Jewelz</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://www.zhihu.com/people/talentisan/activities">轻狂书生</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://threetop.top/">ZCC</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://blog.csdn.net/u012017783">ZCC的CSDN</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://zcc888.gitee.io/">ZCC的博客</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">一枚爱Python,爱海贼,爱健身,喜欢好玩有趣事物的程序员……</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">HatBoy</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/avatar.jpg" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">HatBoy</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="mailto:hatboy-dj@qq.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="https://github.com/HatBoy/" title="GitHub"></a>
+                            
+                                <a class="fa 码云博客" target="_blank" href="http://hatboy.gitee.io/" title="码云博客"></a>
+                            
+                                <a class="fa CSDN" target="_blank" href="http://blog.csdn.net/dj1174232716" title="CSDN"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-asyncio之同步原语" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/12/21/asyncio之同步原语/" class="article-date">
+      <time datetime="2017-12-21T10:35:32.000Z" itemprop="datePublished">2017-12-21</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      asyncio之同步原语
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/">Python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/asyncio/">asyncio</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/异步并发/">异步并发</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <excerpt in="" index="" |="" 首页摘要="">
+
+<p>同步原语</p>
+<a id="more"></a>
+<the rest="" of="" contents="" |="" 余下全文="">
+
+<p>尽管asyncio程序通常是单线程运行的，它们仍然可以构建并发程序。基于来自I/O和其他外部事件的延迟和中断，每个协程或Task可能以不可预知的顺序执行。为了支持并发安全，asyncio实现了一些低级的原子操作，类似于threading和multiprocessing模块中的。</p>
+<h3 id="Locks"><a href="#Locks" class="headerlink" title="Locks"></a>Locks</h3><p>Lock可以用来保护对共享资源的访问，只有锁的持有者可以使用该资源。多次尝试获取锁的操作将被阻止，因此一次只有一个持有者。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> asyncio</div><div class="line"><span class="keyword">import</span> functools</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">unlock</span><span class="params">(lock)</span>:</span></div><div class="line">    print(<span class="string">'callback releasing lock'</span>)</div><div class="line">    lock.release()</div><div class="line"></div><div class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">def</span> <span class="title">coro1</span><span class="params">(lock)</span>:</span></div><div class="line">    print(<span class="string">'coro1 waiting for the lock'</span>)</div><div class="line">    <span class="keyword">with</span> <span class="keyword">await</span> lock:</div><div class="line">        print(<span class="string">'coro1 acquired lock'</span>)</div><div class="line">    print(<span class="string">'coro1 released lock'</span>)</div><div class="line"></div><div class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">def</span> <span class="title">coro2</span><span class="params">(lock)</span>:</span></div><div class="line">    print(<span class="string">'coro2 waiting for the lock'</span>)</div><div class="line">    <span class="keyword">await</span> lock</div><div class="line">    <span class="keyword">try</span>:</div><div class="line">        print(<span class="string">'coro2 acquired lock'</span>)</div><div class="line">    <span class="keyword">finally</span>:</div><div class="line">        print(<span class="string">'coro2 released lock'</span>)</div><div class="line">        lock.release()</div><div class="line"></div><div class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">(loop)</span>:</span></div><div class="line">    <span class="comment"># 创建并获取一个共享锁</span></div><div class="line">    lock = asyncio.Lock()</div><div class="line">    print(<span class="string">'acquiring the lock before starting coroutines'</span>)</div><div class="line">    <span class="keyword">await</span> lock.acquire()</div><div class="line">    print(<span class="string">'lock acquired: &#123;&#125;'</span>.format(lock.locked()))</div><div class="line"></div><div class="line">    <span class="comment"># 安排一个回调来解锁锁</span></div><div class="line">    loop.call_later(<span class="number">0.1</span>, functools.partial(unlock, lock))</div><div class="line"></div><div class="line">    <span class="comment"># 运行想要使用锁的协程</span></div><div class="line">    print(<span class="string">'waiting for coroutines'</span>)</div><div class="line">    <span class="keyword">await</span> asyncio.wait([coro1(lock), coro2(lock)]),</div><div class="line"></div><div class="line">event_loop = asyncio.get_event_loop()</div><div class="line"><span class="keyword">try</span>:</div><div class="line">    event_loop.run_until_complete(main(event_loop))</div><div class="line"><span class="keyword">finally</span>:</div><div class="line">    event_loop.close()</div></pre></td></tr></table></figure></p>
+<p>锁可以直接被调用，使用await获取锁，当任务完成时调用release()方法释放锁。它们也可以使用with await关键字作为异步上下文管理器。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">$ python3 asyncio_lock.py</div><div class="line"></div><div class="line">acquiring the lock before starting coroutines</div><div class="line">lock acquired: <span class="keyword">True</span></div><div class="line">waiting <span class="keyword">for</span> coroutines</div><div class="line">coro1 waiting <span class="keyword">for</span> the lock</div><div class="line">coro2 waiting <span class="keyword">for</span> the lock</div><div class="line">callback releasing lock</div><div class="line">coro1 acquired lock</div><div class="line">coro1 released lock</div><div class="line">coro2 acquired lock</div><div class="line">coro2 released lock</div></pre></td></tr></table></figure></p>
+<h3 id="Events"><a href="#Events" class="headerlink" title="Events"></a>Events</h3><p>asyncio.Event是基于threading.Event的，用于允许多个消费者等待发生的事情，而不寻找与通知相关联的特定值。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> asyncio</div><div class="line"><span class="keyword">import</span> functools</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">set_event</span><span class="params">(event)</span>:</span></div><div class="line">    print(<span class="string">'setting event in callback'</span>)</div><div class="line">    event.set()</div><div class="line"></div><div class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">def</span> <span class="title">coro1</span><span class="params">(event)</span>:</span></div><div class="line">    print(<span class="string">'coro1 waiting for event'</span>)</div><div class="line">    <span class="keyword">await</span> event.wait()</div><div class="line">    print(<span class="string">'coro1 triggered'</span>)</div><div class="line"></div><div class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">def</span> <span class="title">coro2</span><span class="params">(event)</span>:</span></div><div class="line">    print(<span class="string">'coro2 waiting for event'</span>)</div><div class="line">    <span class="keyword">await</span> event.wait()</div><div class="line">    print(<span class="string">'coro2 triggered'</span>)</div><div class="line"></div><div class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">(loop)</span>:</span></div><div class="line">    event = asyncio.Event()</div><div class="line">    print(<span class="string">'event start state: &#123;&#125;'</span>.format(event.is_set()))</div><div class="line"></div><div class="line">    loop.call_later(<span class="number">0.1</span>, functools.partial(set_event, event))</div><div class="line"></div><div class="line">    <span class="keyword">await</span> asyncio.wait([coro1(event), coro2(event)])</div><div class="line">    print(<span class="string">'event end state: &#123;&#125;'</span>.format(event.is_set()))</div><div class="line"></div><div class="line"></div><div class="line">event_loop = asyncio.get_event_loop()</div><div class="line"><span class="keyword">try</span>:</div><div class="line">    event_loop.run_until_complete(main(event_loop))</div><div class="line"><span class="keyword">finally</span>:</div><div class="line">    event_loop.close()</div></pre></td></tr></table></figure></p>
+<p>和Lock一样，coro1()和coro2()都在等待Event被设置，不同之处在于两者都可以在事件状态改变时立即开始，并且他们不需要获取对event对象的唯一保持。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">$ python3 asyncio_event.py</div><div class="line"></div><div class="line">event start state: <span class="keyword">False</span></div><div class="line">coro2 waiting <span class="keyword">for</span> event</div><div class="line">coro1 waiting <span class="keyword">for</span> event</div><div class="line">setting event <span class="keyword">in</span> callback</div><div class="line">coro2 triggered</div><div class="line">coro1 triggered</div><div class="line">event end state: <span class="keyword">True</span></div></pre></td></tr></table></figure></p>
+<h3 id="Conditions"><a href="#Conditions" class="headerlink" title="Conditions"></a>Conditions</h3><p>Condition的工作方式跟Event的很类似，除了不是通知所有等待的协程，唤醒的等待者的数量是通过notify()参数来控制的。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> asyncio</div><div class="line"></div><div class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">def</span> <span class="title">consumer</span><span class="params">(condition, n)</span>:</span></div><div class="line">    <span class="keyword">with</span> <span class="keyword">await</span> condition:</div><div class="line">        print(<span class="string">'consumer &#123;&#125; is waiting'</span>.format(n))</div><div class="line">        <span class="keyword">await</span> condition.wait()</div><div class="line">        print(<span class="string">'consumer &#123;&#125; triggered'</span>.format(n))</div><div class="line">    print(<span class="string">'ending consumer &#123;&#125;'</span>.format(n))</div><div class="line"></div><div class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">def</span> <span class="title">manipulate_condition</span><span class="params">(condition)</span>:</span></div><div class="line">    print(<span class="string">'starting manipulate_condition'</span>)</div><div class="line"></div><div class="line">    <span class="comment"># 暂停让消费者开始</span></div><div class="line">    <span class="keyword">await</span> asyncio.sleep(<span class="number">0.1</span>)</div><div class="line"></div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, <span class="number">3</span>):</div><div class="line">        <span class="keyword">with</span> <span class="keyword">await</span> condition:</div><div class="line">            print(<span class="string">'notifying &#123;&#125; consumers'</span>.format(i))</div><div class="line">            condition.notify(n=i)</div><div class="line">        <span class="keyword">await</span> asyncio.sleep(<span class="number">0.1</span>)</div><div class="line"></div><div class="line">    <span class="keyword">with</span> <span class="keyword">await</span> condition:</div><div class="line">        print(<span class="string">'notifying remaining consumers'</span>)</div><div class="line">        condition.notify_all()</div><div class="line"></div><div class="line">    print(<span class="string">'ending manipulate_condition'</span>)</div><div class="line"></div><div class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">(loop)</span>:</span></div><div class="line">    <span class="comment"># 创建一个condition</span></div><div class="line">    condition = asyncio.Condition()</div><div class="line">    <span class="comment"># 设置任务监视condition</span></div><div class="line">    consumers = [consumer(condition, i) <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">5</span>)]</div><div class="line">    <span class="comment"># 安排一个任务来操作condition变量</span></div><div class="line">    loop.create_task(manipulate_condition(condition))</div><div class="line">    <span class="comment"># 等待消费者运行结束</span></div><div class="line">    <span class="keyword">await</span> asyncio.wait(consumers)</div><div class="line"></div><div class="line">event_loop = asyncio.get_event_loop()</div><div class="line"><span class="keyword">try</span>:</div><div class="line">    result = event_loop.run_until_complete(main(event_loop))</div><div class="line"><span class="keyword">finally</span>:</div><div class="line">    event_loop.close()</div></pre></td></tr></table></figure></p>
+<p>这个例子中我们启动了五个监视Condition的消费者，每一个都使用 wait()方法等待让他们继续运行的通知。manipulate_condition()通知了一个消费者然后两个消费者，最后所有的消费者。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">$ python3 asyncio_condition.py</div><div class="line"></div><div class="line">starting manipulate_condition</div><div class="line">consumer <span class="number">3</span> <span class="keyword">is</span> waiting</div><div class="line">consumer <span class="number">1</span> <span class="keyword">is</span> waiting</div><div class="line">consumer <span class="number">2</span> <span class="keyword">is</span> waiting</div><div class="line">consumer <span class="number">0</span> <span class="keyword">is</span> waiting</div><div class="line">consumer <span class="number">4</span> <span class="keyword">is</span> waiting</div><div class="line">notifying <span class="number">1</span> consumers</div><div class="line">consumer <span class="number">3</span> triggered</div><div class="line">ending consumer <span class="number">3</span></div><div class="line">notifying <span class="number">2</span> consumers</div><div class="line">consumer <span class="number">1</span> triggered</div><div class="line">ending consumer <span class="number">1</span></div><div class="line">consumer <span class="number">2</span> triggered</div><div class="line">ending consumer <span class="number">2</span></div><div class="line">notifying remaining consumers</div><div class="line">ending manipulate_condition</div><div class="line">consumer <span class="number">0</span> triggered</div><div class="line">ending consumer <span class="number">0</span></div><div class="line">consumer <span class="number">4</span> triggered</div><div class="line">ending consumer <span class="number">4</span></div></pre></td></tr></table></figure></p>
+<h3 id="Queues"><a href="#Queues" class="headerlink" title="Queues"></a>Queues</h3><p>asyncio.Queue提供了协程的先入先出的数据结构，类似于多线程的queue.Queue和多进程的multiprocessing.Queue。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> asyncio</div><div class="line"></div><div class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">def</span> <span class="title">consumer</span><span class="params">(n, q)</span>:</span></div><div class="line">    print(<span class="string">'consumer &#123;&#125;: starting'</span>.format(n))</div><div class="line">    <span class="keyword">while</span> <span class="keyword">True</span>:</div><div class="line">        print(<span class="string">'consumer &#123;&#125;: waiting for item'</span>.format(n))</div><div class="line">        item = <span class="keyword">await</span> q.get()</div><div class="line">        print(<span class="string">'consumer &#123;&#125;: has item &#123;&#125;'</span>.format(n, item))</div><div class="line">        <span class="keyword">if</span> item <span class="keyword">is</span> <span class="keyword">None</span>:</div><div class="line">            <span class="comment"># None是停止的信号</span></div><div class="line">            q.task_done()</div><div class="line">            <span class="keyword">break</span></div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            <span class="keyword">await</span> asyncio.sleep(<span class="number">0.01</span> * item)</div><div class="line">            q.task_done()</div><div class="line">    print(<span class="string">'consumer &#123;&#125;: ending'</span>.format(n))</div><div class="line"></div><div class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">def</span> <span class="title">producer</span><span class="params">(q, num_workers)</span>:</span></div><div class="line">    print(<span class="string">'producer: starting'</span>)</div><div class="line">    <span class="comment"># 添加一些数字到队列模拟任务</span></div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(num_workers * <span class="number">3</span>):</div><div class="line">        <span class="keyword">await</span> q.put(i)</div><div class="line">        print(<span class="string">'producer: added task &#123;&#125; to the queue'</span>.format(i))</div><div class="line">    <span class="comment"># 添加None到队列表示停止信号</span></div><div class="line">    print(<span class="string">'producer: adding stop signals to the queue'</span>)</div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(num_workers):</div><div class="line">        <span class="keyword">await</span> q.put(<span class="keyword">None</span>)</div><div class="line">    print(<span class="string">'producer: waiting for queue to empty'</span>)</div><div class="line">    <span class="keyword">await</span> q.join()</div><div class="line">    print(<span class="string">'producer: ending'</span>)</div><div class="line"></div><div class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">(loop, num_consumers)</span>:</span></div><div class="line">    <span class="comment"># 创建具有固定大小的队列，直到有空位之前队列都会被阻塞</span></div><div class="line">    q = asyncio.Queue(maxsize=num_consumers)</div><div class="line">    <span class="comment"># 调度消费者任务</span></div><div class="line">    consumers = [loop.create_task(consumer(i, q)) <span class="keyword">for</span> i <span class="keyword">in</span> range(num_consumers)]</div><div class="line">    <span class="comment"># 调度生产者任务</span></div><div class="line">    prod = loop.create_task(producer(q, num_consumers))</div><div class="line">    <span class="comment"># 等待所有协程完成</span></div><div class="line">    <span class="keyword">await</span> asyncio.wait(consumers + [prod])</div><div class="line"></div><div class="line">event_loop = asyncio.get_event_loop()</div><div class="line"><span class="keyword">try</span>:</div><div class="line">    event_loop.run_until_complete(main(event_loop, <span class="number">2</span>))</div><div class="line"><span class="keyword">finally</span>:</div><div class="line">    event_loop.close()</div></pre></td></tr></table></figure></p>
+<p>通过put()函数添加元素，get()函数获取元素都是异步操作，因为队列大小可能是固定的（阻塞添加），或者队列可能是空的（阻塞调用来获取项目）。</p>
+<p><strong>本文翻译自《The Python3 Standard Library By Example》asyncio相关章节</strong></p>
+</the></excerpt>
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2017/12/21/asyncio之同步原语/">asyncio之同步原语</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">HatBoy</a></p>
+        <p><span>发布时间:</span>2017-12-21, 18:35:32</p>
+        <p><span>最后更新:</span>2017-12-21, 18:36:26</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2017/12/21/asyncio之同步原语/" title="asyncio之同步原语">https://hatboy.github.io/2017/12/21/asyncio之同步原语/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://hatboy.github.io/2017/12/21/asyncio之同步原语/　　作者: HatBoy" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2017/12/21/asyncio之协议抽象类的异步I-O/">
+                    asyncio之协议抽象类的异步I/O
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2017/12/21/asyncio之用控制结构组建协程/">
+                    asyncio之用控制结构组建协程
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Locks"><span class="toc-number">1.</span> <span class="toc-text">Locks</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Events"><span class="toc-number">2.</span> <span class="toc-text">Events</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Conditions"><span class="toc-number">3.</span> <span class="toc-text">Conditions</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Queues"><span class="toc-number">4.</span> <span class="toc-text">Queues</span></a></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"asyncio之同步原语　| HatBoy的个人主页　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2017/12/21/asyncio之协议抽象类的异步I-O/" title="上一篇: asyncio之协议抽象类的异步I/O">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2017/12/21/asyncio之用控制结构组建协程/" title="下一篇: asyncio之用控制结构组建协程">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio：异步IO、事件循环和并发/">asyncio：异步IO、事件循环和并发</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之调试asyncio/">asyncio之调试asyncio</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之协程结合线程和进程/">asyncio之协程结合线程和进程</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之接收Unix信号/">asyncio之接收Unix信号</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之使用子进程/">asyncio之使用子进程</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之与DNS服务进行交互/">asyncio之与DNS服务进行交互</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之使用SSL/">asyncio之使用SSL</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之使用协程和流的异步I-O/">asyncio之使用协程和流的异步I/O</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之协议抽象类的异步I-O/">asyncio之协议抽象类的异步I/O</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之同步原语/">asyncio之同步原语</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之用控制结构组建协程/">asyncio之用控制结构组建协程</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之并发执行Tasks/">asyncio之并发执行Tasks</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之异步生产结果/">asyncio之异步生产结果</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之定时调度常规函数/">asyncio之定时调度常规函数</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之使用协程处理多任务/">asyncio之使用协程处理多任务</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之异步并发的概念/">asyncio之异步并发的概念</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/Python上下文管理器/">Python上下文管理器</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/Python-importlib讲解/">Python importlib讲解</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/第七章-用Cython包装C库/">第七章 用Cython包装C库</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/16/第六章-组织Cython代码/">第六章 组织Cython代码</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/10/第五章-Cython和扩展类型/">第五章 Cython和扩展类型</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/31/第四章-Cython实践：N-body模拟/">第四章 Cython实践：N-body模拟</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/31/Python性能分析与调试/">Python性能分析与调试</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/17/第三章-深入Cython/">第三章 深入Cython</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/03/第二章-编译和运行Cython代码/">第二章 编译和运行Cython代码</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/02/第一章-Cython简介/">第一章 Cython简介</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2017 HatBoy
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+
+
+
+
+    <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script src="//cdn.bootcss.com/mathjax/2.6.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        $("a").attr("target", "_blank");
+        $("#scroll a, #toc a").removeAttr("target");
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

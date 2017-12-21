@@ -23,10 +23,12 @@
 <meta property="og:site_name" content="HatBoy的个人主页">
 <meta property="og:description" content="前面几章介绍了Cython如何和Python一起工作，侧重于基础数据类型和函数，Cython也能在Python类上面做一样好，本章我们将继续学习。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-08-11T01:04:52.025Z">
+<meta property="og:image" content="https://hatboy.github.io/2017/08/10/第五章-Cython和扩展类型/1.png">
+<meta property="og:updated_time" content="2017-12-21T10:14:31.798Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="第五章 Cython和扩展类型">
 <meta name="twitter:description" content="前面几章介绍了Cython如何和Python一起工作，侧重于基础数据类型和函数，Cython也能在Python类上面做一样好，本章我们将继续学习。">
+<meta name="twitter:image" content="https://hatboy.github.io/2017/08/10/第五章-Cython和扩展类型/1.png">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -91,6 +93,16 @@
 
 
 
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "//hm.baidu.com/hm.js?94c5bc16a94e5db3e2942494f0be64dd";
+            var s = document.getElementsByTagName("script")[0]; 
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
 
 </head>
 <body>
@@ -130,6 +142,11 @@
                             <div class="ribbon"></div>
                         </div>
                         
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
                         
                         <div class="icon-wrap icon-me hide" data-idx="3">
                             <div class="user"></div>
@@ -144,6 +161,8 @@
                     <ul class="tips-inner">
                         <li>菜单</li>
                         <li>标签</li>
+                        
+                        <li>友情链接</li>
                         
                         
                         <li>关于我</li>
@@ -176,6 +195,8 @@
                             
                                 <a class="fa GitHub" href="https://github.com/HatBoy/" title="GitHub"></a>
                             
+                                <a class="fa 码云博客" href="http://hatboy.gitee.io/" title="码云博客"></a>
+                            
                                 <a class="fa CSDN" href="http://blog.csdn.net/dj1174232716" title="CSDN"></a>
                             
                         </ul>
@@ -185,18 +206,38 @@
                 
                 <section class="switch-part switch-part2">
                     <div class="widget tagcloud" id="js-tagcloud">
-                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Cython/">Cython</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/">Python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/调试/">调试</a></li></ul>
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Cython/">Cython</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/">Python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python模块tips/">Python模块tips</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python语法/">Python语法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/asyncio/">asyncio</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/异步并发/">异步并发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/调试/">调试</a></li></ul>
                     </div>
                 </section>
                 
                 
                 
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://fmxfmx.gitee.io/">FMX</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://jewelz.me/">Jewelz</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://www.zhihu.com/people/talentisan/activities">轻狂书生</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://threetop.top/">ZCC</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://blog.csdn.net/u012017783">ZCC的CSDN</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://zcc888.gitee.io/">ZCC的博客</a>
+                    
+                    </div>
+                </section>
+                
 
                 
                 
-                <section class="switch-part switch-part3">
+                <section class="switch-part switch-part4">
                 
-                    <div id="js-aboutme">爱Python,爱海贼</div>
+                    <div id="js-aboutme">一枚爱Python,爱海贼,爱健身,喜欢好玩有趣事物的程序员……</div>
                 </section>
                 
             </div>
@@ -239,6 +280,8 @@
                                 <a class="fa Email" target="_blank" href="mailto:hatboy-dj@qq.com" title="Email"></a>
                             
                                 <a class="fa GitHub" target="_blank" href="https://github.com/HatBoy/" title="GitHub"></a>
+                            
+                                <a class="fa 码云博客" target="_blank" href="http://hatboy.gitee.io/" title="码云博客"></a>
                             
                                 <a class="fa CSDN" target="_blank" href="http://blog.csdn.net/dj1174232716" title="CSDN"></a>
                             
@@ -321,7 +364,7 @@
 <h2 id="特殊方法甚至是更加特别"><a href="#特殊方法甚至是更加特别" class="headerlink" title="特殊方法甚至是更加特别"></a>特殊方法甚至是更加特别</h2><p>当Cython扩展类提供支持操作符重载是，我们必须定义一些特殊方法。前面我们已经讲到了<strong>cinit</strong>、<strong>init</strong>、<strong>dealloc</strong>特殊方法，看到了如何处理C级别的初始化，Python级别的初始化和终止。扩展类型不支持<strong>del</strong>特殊方法，<strong>dealloc</strong>替代了他的功能。</p>
 <h3 id="算数方法"><a href="#算数方法" class="headerlink" title="算数方法"></a>算数方法</h3><p>在纯Python中，为了完全重载+操作符号，需要重写<strong>add</strong>和<strong>radd</strong>特殊方法，但是Cython只需要重载<strong>add</strong>就够了，他实现了<strong>add</strong>和<strong>radd</strong>的功能。下面有一个简单的例子：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">cdef <span class="class"><span class="keyword">class</span> <span class="title">E</span>:</span></div><div class="line">    <span class="string">"""Extension type that supports addition."""</span></div><div class="line">    cdef int data</div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, d)</span>:</span></div><div class="line">        self.data = d</div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__add__</span><span class="params">(x, y)</span>:</span></div><div class="line">        <span class="comment"># Regular __add__ behavior</span></div><div class="line">        <span class="keyword">if</span> isinstance(x, E):</div><div class="line">            <span class="keyword">if</span> isinstance(y, int):</div><div class="line">                <span class="keyword">return</span> (&lt;E&gt;x).data + y</div><div class="line">        <span class="comment"># __radd__ behavior</span></div><div class="line">        <span class="keyword">elif</span> isinstance(y, E):</div><div class="line">            <span class="keyword">if</span> isinstance(x, int):</div><div class="line">                <span class="keyword">return</span> (&lt;E&gt;y).data + x</div><div class="line">        <span class="keyword">else</span>:</div><div class="line">             <span class="keyword">return</span> <span class="built_in">NotImplemented</span></div></pre></td></tr></table></figure></p>
 <p>Cython不会自动的转换传入<strong>add</strong>中的参数类型，需要检查实例，确保能成功访问每一个E实例对象的data属性。</p>
-<h3 id="丰富的比较操作符"><a href="#丰富的比较操作符" class="headerlink" title="丰富的比较操作符"></a>丰富的比较操作符</h3><p>Cython扩展类型不支持比较操作的特殊方法，如<strong>eq</strong>、<strong>lt</strong>和<strong>le</strong>等特殊方法。但是Cython提供了一个单独的特殊方法<strong>richcmp</strong>(x, y, op)，通过第三个参数来执行要比较的操作。对应关系如下：</p>
+<h3 id="丰富的比较操作符"><a href="#丰富的比较操作符" class="headerlink" title="丰富的比较操作符"></a>丰富的比较操作符</h3><p>Cython扩展类型不支持比较操作的特殊方法，如<strong>eq</strong>、<strong>lt</strong>和<strong>le</strong>等特殊方法。但是Cython提供了一个单独的特殊方法<strong>richcmp</strong>(x, y, op)，通过第三个参数来执行要比较的操作。对应关系如下：<br><img src="/2017/08/10/第五章-Cython和扩展类型/1.png" alt="对应关系"></p>
 <p> 表中整数参数是编译时定义在object.h中的常量，我们可以导入这些常量。如下面例子：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> cpython.object cimport Py_LT, Py_LE, Py_EQ, Py_GE, Py_GT, Py_NE</div><div class="line"></div><div class="line">cdef <span class="class"><span class="keyword">class</span> <span class="title">R</span>:</span></div><div class="line">    <span class="string">"""Extension type that supports rich comparisons."""</span></div><div class="line">    cdef double data</div><div class="line">        <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, d)</span>:</span></div><div class="line">            self.data = d</div><div class="line">        <span class="function"><span class="keyword">def</span> <span class="title">__richcmp__</span><span class="params">(x, y, int op)</span>:</span></div><div class="line">            cdef:</div><div class="line">                R r</div><div class="line">                double data</div><div class="line">            <span class="comment"># Make r always refer to the R instance.</span></div><div class="line">            r, y = (x, y) <span class="keyword">if</span> isinstance(x, R) <span class="keyword">else</span> (y, x)</div><div class="line">            data = r.data</div><div class="line">            <span class="keyword">if</span> op == Py_LT:</div><div class="line">                <span class="keyword">return</span> data &lt; y</div><div class="line">            <span class="keyword">elif</span> op == Py_LE:</div><div class="line">                <span class="keyword">return</span> data &lt;= y</div><div class="line">            <span class="keyword">elif</span> op == Py_EQ:</div><div class="line">                <span class="keyword">return</span> data == y</div><div class="line">            <span class="keyword">elif</span> op == Py_NE:</div><div class="line">                <span class="keyword">return</span> data != y</div><div class="line">            <span class="keyword">elif</span> op == Py_GT:</div><div class="line">                <span class="keyword">return</span> data &gt; y</div><div class="line">            <span class="keyword">elif</span> op == Py_GE:</div><div class="line">                <span class="keyword">return</span> data &gt;= y</div><div class="line">            <span class="keyword">else</span>:</div><div class="line">                <span class="keyword">assert</span> <span class="keyword">False</span></div></pre></td></tr></table></figure></p>
 <p>效果如下：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">In [<span class="number">1</span>]: <span class="keyword">import</span> pyximport; pyximport.install()</div><div class="line">Out[<span class="number">1</span>]: (<span class="keyword">None</span>, &lt;pyximport.pyximport.PyxImporter at <span class="number">0x101c7d290</span>&gt;)</div><div class="line">In [<span class="number">2</span>]: <span class="keyword">from</span> special_methods <span class="keyword">import</span> R</div><div class="line">In [<span class="number">3</span>]: r = R(<span class="number">10</span>)</div><div class="line">In [<span class="number">4</span>]: r &lt; <span class="number">20</span> <span class="keyword">and</span> <span class="number">20</span> &gt; r</div><div class="line">Out[<span class="number">4</span>]: <span class="keyword">True</span></div><div class="line">In [<span class="number">5</span>]: r &gt; <span class="number">20</span> <span class="keyword">and</span> <span class="number">20</span> &lt; r</div><div class="line">Out[<span class="number">5</span>]: <span class="keyword">False</span></div><div class="line">In [<span class="number">6</span>]: <span class="number">0</span> &lt;= r &lt;= <span class="number">100</span></div><div class="line">Out[<span class="number">6</span>]: <span class="keyword">True</span></div><div class="line">In [<span class="number">7</span>]: r == <span class="number">10</span></div><div class="line">Out[<span class="number">7</span>]: <span class="keyword">True</span></div><div class="line">In [<span class="number">8</span>]: r != <span class="number">10</span></div><div class="line">Out[<span class="number">8</span>]: <span class="keyword">False</span></div><div class="line">In [<span class="number">9</span>]: r == <span class="number">20</span></div><div class="line">Out[<span class="number">9</span>]: <span class="keyword">False</span></div><div class="line">In [<span class="number">10</span>]: <span class="number">20</span> == r</div><div class="line">Out[<span class="number">10</span>]: <span class="keyword">False</span></div></pre></td></tr></table></figure></p>
 <h3 id="迭代器支持"><a href="#迭代器支持" class="headerlink" title="迭代器支持"></a>迭代器支持</h3><p>为了让扩展类型可迭代，我们在里面定义了<strong>iter</strong>，就像在纯Python中使用一样，为了让扩展类型成为迭代器，我们在里面定义了<strong>next</strong>特殊方法。例子如下：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">cdef <span class="class"><span class="keyword">class</span> <span class="title">I</span>:</span></div><div class="line">    cdef:</div><div class="line">        list data</div><div class="line">        int i</div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">        self.data = range(<span class="number">100</span>)</div><div class="line">        self.i = <span class="number">0</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__iter__</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> self</div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__next__</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">if</span> self.i &gt;= len(self.data):</div><div class="line">            <span class="keyword">raise</span> StopIteration()</div><div class="line">        ret = self.data[self.i]</div><div class="line">        self.i += <span class="number">1</span></div><div class="line">        <span class="keyword">return</span> ret</div></pre></td></tr></table></figure></p>
@@ -337,7 +380,7 @@
         <p><span>本文标题:</span><a href="/2017/08/10/第五章-Cython和扩展类型/">第五章 Cython和扩展类型</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">HatBoy</a></p>
         <p><span>发布时间:</span>2017-08-10, 17:08:07</p>
-        <p><span>最后更新:</span>2017-08-11, 09:04:52</p>
+        <p><span>最后更新:</span>2017-12-21, 18:14:31</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2017/08/10/第五章-Cython和扩展类型/" title="第五章 Cython和扩展类型">https://hatboy.github.io/2017/08/10/第五章-Cython和扩展类型/</a>
             <span class="copy-path" data-clipboard-text="原文: https://hatboy.github.io/2017/08/10/第五章-Cython和扩展类型/　　作者: HatBoy" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
@@ -443,7 +486,7 @@
         
     </div>
 
-    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/08/16/第六章-组织Cython代码/">第六章 组织Cython代码</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/10/第五章-Cython和扩展类型/">第五章 Cython和扩展类型</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/31/第四章-Cython实践：N-body模拟/">第四章 Cython实践：N-body模拟</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/31/Python性能分析与调试/">Python性能分析与调试</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/17/第三章-深入Cython/">第三章 深入Cython</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/03/第二章-编译和运行Cython代码/">第二章 编译和运行Cython代码</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/02/第一章-Cython简介/">第一章 Cython简介</a></li></ul>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio：异步IO、事件循环和并发/">asyncio：异步IO、事件循环和并发</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之调试asyncio/">asyncio之调试asyncio</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之协程结合线程和进程/">asyncio之协程结合线程和进程</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之接收Unix信号/">asyncio之接收Unix信号</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之使用子进程/">asyncio之使用子进程</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之与DNS服务进行交互/">asyncio之与DNS服务进行交互</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之使用SSL/">asyncio之使用SSL</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之使用协程和流的异步I-O/">asyncio之使用协程和流的异步I/O</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之协议抽象类的异步I-O/">asyncio之协议抽象类的异步I/O</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之同步原语/">asyncio之同步原语</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之用控制结构组建协程/">asyncio之用控制结构组建协程</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之并发执行Tasks/">asyncio之并发执行Tasks</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之异步生产结果/">asyncio之异步生产结果</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之定时调度常规函数/">asyncio之定时调度常规函数</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之使用协程处理多任务/">asyncio之使用协程处理多任务</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之异步并发的概念/">asyncio之异步并发的概念</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/Python上下文管理器/">Python上下文管理器</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/Python-importlib讲解/">Python importlib讲解</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/第七章-用Cython包装C库/">第七章 用Cython包装C库</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/16/第六章-组织Cython代码/">第六章 组织Cython代码</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/10/第五章-Cython和扩展类型/">第五章 Cython和扩展类型</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/31/第四章-Cython实践：N-body模拟/">第四章 Cython实践：N-body模拟</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/31/Python性能分析与调试/">Python性能分析与调试</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/17/第三章-深入Cython/">第三章 深入Cython</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/03/第二章-编译和运行Cython代码/">第二章 编译和运行Cython代码</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/02/第一章-Cython简介/">第一章 Cython简介</a></li></ul>
 
 
 
@@ -521,22 +564,8 @@ MathJax.Hub.Queue(function() {
 <script>
     // Open in New Window
     
-        var oOpenInNew = {
-            
-            
-            
-            
-            
-            
-             archives: ".archive-article-title", 
-             miniArchives: "a.post-list-link", 
-            
-            
-             socail: ".social a" 
-        }
-        for (var x in oOpenInNew) {
-            $(oOpenInNew[x]).attr("target", "_blank");
-        }
+        $("a").attr("target", "_blank");
+        $("#scroll a, #toc a").removeAttr("target");
     
 </script>
 

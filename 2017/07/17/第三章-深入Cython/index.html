@@ -15,18 +15,21 @@
 
 
 
-<meta name="description" content="本章将深入Cython的学习">
+<meta name="description" content="深入Cython">
 <meta name="keywords" content="Python,Cython">
 <meta property="og:type" content="article">
 <meta property="og:title" content="第三章 深入Cython">
 <meta property="og:url" content="https://hatboy.github.io/2017/07/17/第三章-深入Cython/index.html">
 <meta property="og:site_name" content="HatBoy的个人主页">
-<meta property="og:description" content="本章将深入Cython的学习">
+<meta property="og:description" content="深入Cython">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-08-11T01:06:35.758Z">
+<meta property="og:image" content="https://hatboy.github.io/2017/07/17/第三章-深入Cython/1.png">
+<meta property="og:image" content="https://hatboy.github.io/2017/07/17/第三章-深入Cython/2.png">
+<meta property="og:updated_time" content="2017-12-21T10:08:24.881Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="第三章 深入Cython">
-<meta name="twitter:description" content="本章将深入Cython的学习">
+<meta name="twitter:description" content="深入Cython">
+<meta name="twitter:image" content="https://hatboy.github.io/2017/07/17/第三章-深入Cython/1.png">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -91,6 +94,16 @@
 
 
 
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "//hm.baidu.com/hm.js?94c5bc16a94e5db3e2942494f0be64dd";
+            var s = document.getElementsByTagName("script")[0]; 
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
 
 </head>
 <body>
@@ -130,6 +143,11 @@
                             <div class="ribbon"></div>
                         </div>
                         
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
                         
                         <div class="icon-wrap icon-me hide" data-idx="3">
                             <div class="user"></div>
@@ -144,6 +162,8 @@
                     <ul class="tips-inner">
                         <li>菜单</li>
                         <li>标签</li>
+                        
+                        <li>友情链接</li>
                         
                         
                         <li>关于我</li>
@@ -176,6 +196,8 @@
                             
                                 <a class="fa GitHub" href="https://github.com/HatBoy/" title="GitHub"></a>
                             
+                                <a class="fa 码云博客" href="http://hatboy.gitee.io/" title="码云博客"></a>
+                            
                                 <a class="fa CSDN" href="http://blog.csdn.net/dj1174232716" title="CSDN"></a>
                             
                         </ul>
@@ -185,18 +207,38 @@
                 
                 <section class="switch-part switch-part2">
                     <div class="widget tagcloud" id="js-tagcloud">
-                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Cython/">Cython</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/">Python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/调试/">调试</a></li></ul>
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Cython/">Cython</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/">Python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python模块tips/">Python模块tips</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python语法/">Python语法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/asyncio/">asyncio</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/异步并发/">异步并发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/调试/">调试</a></li></ul>
                     </div>
                 </section>
                 
                 
                 
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://fmxfmx.gitee.io/">FMX</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://jewelz.me/">Jewelz</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://www.zhihu.com/people/talentisan/activities">轻狂书生</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://threetop.top/">ZCC</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://blog.csdn.net/u012017783">ZCC的CSDN</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://zcc888.gitee.io/">ZCC的博客</a>
+                    
+                    </div>
+                </section>
+                
 
                 
                 
-                <section class="switch-part switch-part3">
+                <section class="switch-part switch-part4">
                 
-                    <div id="js-aboutme">爱Python,爱海贼</div>
+                    <div id="js-aboutme">一枚爱Python,爱海贼,爱健身,喜欢好玩有趣事物的程序员……</div>
                 </section>
                 
             </div>
@@ -239,6 +281,8 @@
                                 <a class="fa Email" target="_blank" href="mailto:hatboy-dj@qq.com" title="Email"></a>
                             
                                 <a class="fa GitHub" target="_blank" href="https://github.com/HatBoy/" title="GitHub"></a>
+                            
+                                <a class="fa 码云博客" target="_blank" href="http://hatboy.gitee.io/" title="码云博客"></a>
                             
                                 <a class="fa CSDN" target="_blank" href="http://blog.csdn.net/dj1174232716" title="CSDN"></a>
                             
@@ -290,7 +334,7 @@
           
         <excerpt in="" index="" |="" 首页摘要="">
 
-<p>本章将深入Cython的学习</p>
+<p>深入Cython</p>
 <a id="more"></a>
 <the rest="" of="" contents="" |="" 余下全文="">
 
@@ -303,14 +347,14 @@
 <h2 id="解释和编译后执行"><a href="#解释和编译后执行" class="headerlink" title="解释和编译后执行"></a>解释和编译后执行</h2><p>字节码和机器码的桥梁：Python解释器可以直接运行编译后的C代码，并且对最终用户透明。这些C代码必须编译成特殊类型的动态库，作为扩展模块，这些模块是完整的Python模块，当运行这部分扩展模块的时候，Python虚拟机不在解释字节码，而是直接运行编译后的机器码，这将节省Python解释器的时间开销。<br>这种方式大概能提升Python 10%~30%的性能，但是真正性能改进来自用静态类型替代Python的动态类型。</p>
 <h3 id="动态类型和静态类型"><a href="#动态类型和静态类型" class="headerlink" title="动态类型和静态类型"></a>动态类型和静态类型</h3><p>静态类型通过指定变量类型，编译器将基础的操作进行优化，而动态类型获得了灵活性却将大量的时间浪费在了变量类型推断和基础操作中。</p>
 <h3 id="静态类型定义关键字：cdef"><a href="#静态类型定义关键字：cdef" class="headerlink" title="静态类型定义关键字：cdef"></a>静态类型定义关键字：cdef</h3><p>使用C语言的变量类型，就要按照C语言的构造规则,<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">cdef int i, j, k</div><div class="line">cdef float price, margin</div><div class="line"></div><div class="line">cdef int i = <span class="number">0</span></div><div class="line">cdef long int j = <span class="number">0</span>, k = <span class="number">0</span></div><div class="line">cdef float price = <span class="number">0.0</span>, margin = <span class="number">1.0</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">integrate</span><span class="params">(a, b, f)</span>:</span></div><div class="line">    cdef int i</div><div class="line">    cdef int N=<span class="number">2000</span></div><div class="line">    cdef float dx, s=<span class="number">0.0</span></div><div class="line">    dx = (b-a)/N</div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(N):</div><div class="line">        s += f(a+i*dx)</div><div class="line">    <span class="keyword">return</span> s * dx</div><div class="line"></div><div class="line"><span class="comment">#也可以使用cdef代码块</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">integrate</span><span class="params">(a, b, f)</span>:</span></div><div class="line">    cdef:</div><div class="line">        int i</div><div class="line">        int N=<span class="number">2000</span></div><div class="line">        float dx, s=<span class="number">0.0</span></div><div class="line">    <span class="comment">#...</span></div></pre></td></tr></table></figure></p>
-<p>cdef声明对应表:</p>
+<p>cdef声明对应表:<br><img src="/2017/07/17/第三章-深入Cython/1.png" alt="cdef声明对应表"></p>
 <h3 id="Cython中的自动类型推断"><a href="#Cython中的自动类型推断" class="headerlink" title="Cython中的自动类型推断"></a>Cython中的自动类型推断</h3><p>使用cdef不是Cython的唯一的定义静态变量的方法，Cython还支持自动推断未被定义类型的函数和函数体，默认情况下，Cython只有在不会改变代码语义的情况下才会使用自动类型推断。<br>可以使用infer_types编译指令来给Cython的自动推断更好的控制，infer_types编译指令可以用在函数作用域或者全局作用域，如下：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">cimport cython</div><div class="line"></div><div class="line"><span class="meta">@cython.infer_types(True)</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">more_inference</span><span class="params">()</span>:</span></div><div class="line">    i = <span class="number">1</span></div><div class="line">    d = <span class="number">2.0</span></div><div class="line">    c = <span class="number">3</span>+<span class="number">4j</span></div><div class="line">    r = i * d + c</div><div class="line">    <span class="keyword">return</span> r</div></pre></td></tr></table></figure></p>
 <p>当时用infer_types编译指令的时候，我们应该负责人的确定整数不会溢出，代码语义不会改变，使用它可以很轻易的测试是否改变了代码的结果，以及是否有不同的性能。</p>
 <h3 id="Cython中的C指针"><a href="#Cython中的C指针" class="headerlink" title="Cython中的C指针"></a>Cython中的C指针</h3><p>在Cython中，我们可以使用C的语法和语义定义指针，如下：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">cdef int *p_int</div><div class="line">cdef float** pp_float = NULL</div><div class="line">cdef int *a, *b</div></pre></td></tr></table></figure></p>
 <p>由于Python中有<em>和*</em>语法，所以Cython中指针的引用跟C语言中的语法有些不同，有下面两种引用方式：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">cdef double golden_ratio</div><div class="line">cdef double *p_double</div><div class="line">p_double = &amp;golden_ratio</div><div class="line"></div><div class="line"><span class="comment">#下面方式不常用</span></div><div class="line"><span class="keyword">from</span> cython cimport operator</div><div class="line"><span class="keyword">print</span> operator.dereference(p_double)</div></pre></td></tr></table></figure></p>
 <p>另外，Cython中指针指向结构体和C语言中也不同：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#C语言用法：</span></div><div class="line">st_t *p_st = make_struct();</div><div class="line">int a_doubled = p_st-&gt;a + p_st-&gt;a;</div><div class="line"></div><div class="line"><span class="comment">#Cython用法：</span></div><div class="line">cdef st_t *p_st = make_struct()</div><div class="line">cdef int a_doubled = p_st.a + p_st.a</div></pre></td></tr></table></figure></p>
 <h3 id="混合静态和动态类型变量"><a href="#混合静态和动态类型变量" class="headerlink" title="混合静态和动态类型变量"></a>混合静态和动态类型变量</h3><p>Cython允许静态类型和动态类型变量之间的赋值，如下面例子：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#今天的int类型</span></div><div class="line">cdef int a, b, c</div><div class="line"><span class="comment">#动态元祖类型</span></div><div class="line">tuple_of_ints = (a, b, c)</div></pre></td></tr></table></figure></p>
-<p>这个简单的例子能运行是因为C语言中的int和Python中的int有明显的对应关系，如果a,b,c变量是指针，那么这个例子就不能工作，需要先将指针的应用内容放入元祖中或者采用其他策略。<br>下面是C/C++和Python的类型对应关系表:</p>
+<p>这个简单的例子能运行是因为C语言中的int和Python中的int有明显的对应关系，如果a,b,c变量是指针，那么这个例子就不能工作，需要先将指针的应用内容放入元祖中或者采用其他策略。<br>下面是C/C++和Python的类型对应关系表:<br><img src="/2017/07/17/第三章-深入Cython/2.png" alt="C/C++和Python的类型对应关系表"></p>
 <h3 id="int类型转换和溢出"><a href="#int类型转换和溢出" class="headerlink" title="int类型转换和溢出"></a>int类型转换和溢出</h3><p>注意：int类型的转换需要考虑整数溢出的问题，如果C类型不能代表Python的整数，运行时将会抛出OverflowError异常，我们可以设置overflowcheck和overflowcheck.fold编译指令来捕捉溢出错误</p>
 <h3 id="str和unicode类型"><a href="#str和unicode类型" class="headerlink" title="str和unicode类型"></a>str和unicode类型</h3><p>str或unicode的类型转换到char *或std::string类型需要设置c_string_type和c_string_encoding编译指令。</p>
 <h3 id="用Python类型声明静态变量"><a href="#用Python类型声明静态变量" class="headerlink" title="用Python类型声明静态变量"></a>用Python类型声明静态变量</h3><p>目前为止，我们已经使用cdef关键字声明C类型的静态变量，他也能够声明Python类型的静态变量，我们可以使用内置的变量类型，如list，tuple，dict，扩展的类型，如NumPy的arrays类型，和其他的许多类型。<br>但并不是所有的Python类型都能被静态声明：他们必须用C语言实现，而且Cython能访问他们的声明。Python内置的类型已经满足这些要求，静态声明他们很简单，如下：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">cdef list particles, modified_particles</div><div class="line">cdef dict names_from_particles</div><div class="line">cdef str pname</div><div class="line">cdef set unique_particles</div></pre></td></tr></table></figure></p>
@@ -358,7 +402,7 @@
         <p><span>本文标题:</span><a href="/2017/07/17/第三章-深入Cython/">第三章 深入Cython</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">HatBoy</a></p>
         <p><span>发布时间:</span>2017-07-17, 10:31:00</p>
-        <p><span>最后更新:</span>2017-08-11, 09:06:35</p>
+        <p><span>最后更新:</span>2017-12-21, 18:08:24</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2017/07/17/第三章-深入Cython/" title="第三章 深入Cython">https://hatboy.github.io/2017/07/17/第三章-深入Cython/</a>
             <span class="copy-path" data-clipboard-text="原文: https://hatboy.github.io/2017/07/17/第三章-深入Cython/　　作者: HatBoy" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
@@ -464,7 +508,7 @@
         
     </div>
 
-    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/08/16/第六章-组织Cython代码/">第六章 组织Cython代码</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/10/第五章-Cython和扩展类型/">第五章 Cython和扩展类型</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/31/第四章-Cython实践：N-body模拟/">第四章 Cython实践：N-body模拟</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/31/Python性能分析与调试/">Python性能分析与调试</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/17/第三章-深入Cython/">第三章 深入Cython</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/03/第二章-编译和运行Cython代码/">第二章 编译和运行Cython代码</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/02/第一章-Cython简介/">第一章 Cython简介</a></li></ul>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio：异步IO、事件循环和并发/">asyncio：异步IO、事件循环和并发</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之调试asyncio/">asyncio之调试asyncio</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之协程结合线程和进程/">asyncio之协程结合线程和进程</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之接收Unix信号/">asyncio之接收Unix信号</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之使用子进程/">asyncio之使用子进程</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之与DNS服务进行交互/">asyncio之与DNS服务进行交互</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之使用SSL/">asyncio之使用SSL</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之使用协程和流的异步I-O/">asyncio之使用协程和流的异步I/O</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之协议抽象类的异步I-O/">asyncio之协议抽象类的异步I/O</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之同步原语/">asyncio之同步原语</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之用控制结构组建协程/">asyncio之用控制结构组建协程</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之并发执行Tasks/">asyncio之并发执行Tasks</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之异步生产结果/">asyncio之异步生产结果</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之定时调度常规函数/">asyncio之定时调度常规函数</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之使用协程处理多任务/">asyncio之使用协程处理多任务</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之异步并发的概念/">asyncio之异步并发的概念</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/Python上下文管理器/">Python上下文管理器</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/Python-importlib讲解/">Python importlib讲解</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/第七章-用Cython包装C库/">第七章 用Cython包装C库</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/16/第六章-组织Cython代码/">第六章 组织Cython代码</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/10/第五章-Cython和扩展类型/">第五章 Cython和扩展类型</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/31/第四章-Cython实践：N-body模拟/">第四章 Cython实践：N-body模拟</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/31/Python性能分析与调试/">Python性能分析与调试</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/17/第三章-深入Cython/">第三章 深入Cython</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/03/第二章-编译和运行Cython代码/">第二章 编译和运行Cython代码</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/02/第一章-Cython简介/">第一章 Cython简介</a></li></ul>
 
 
 
@@ -542,22 +586,8 @@ MathJax.Hub.Queue(function() {
 <script>
     // Open in New Window
     
-        var oOpenInNew = {
-            
-            
-            
-            
-            
-            
-             archives: ".archive-article-title", 
-             miniArchives: "a.post-list-link", 
-            
-            
-             socail: ".social a" 
-        }
-        for (var x in oOpenInNew) {
-            $(oOpenInNew[x]).attr("target", "_blank");
-        }
+        $("a").attr("target", "_blank");
+        $("#scroll a, #toc a").removeAttr("target");
     
 </script>
 

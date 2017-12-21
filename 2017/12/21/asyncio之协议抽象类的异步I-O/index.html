@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="HatBoy" />
+
+
+
+<meta name="description" content="协议抽象类的异步I/O">
+<meta name="keywords" content="Python,asyncio,异步并发">
+<meta property="og:type" content="article">
+<meta property="og:title" content="asyncio之协议抽象类的异步I&#x2F;O">
+<meta property="og:url" content="https://hatboy.github.io/2017/12/21/asyncio之协议抽象类的异步I-O/index.html">
+<meta property="og:site_name" content="HatBoy的个人主页">
+<meta property="og:description" content="协议抽象类的异步I/O">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-12-21T10:37:41.134Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="asyncio之协议抽象类的异步I&#x2F;O">
+<meta name="twitter:description" content="协议抽象类的异步I/O">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="HatBoy的个人主页" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>asyncio之协议抽象类的异步I/O | HatBoy的个人主页</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: true
+    }
+</script>
+
+
+    <script>
+        yiliaConfig.jquery_ui = [true, "//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js", "//cdn.bootcss.com/jqueryui/1.10.4/css/jquery-ui.min.css"];
+    </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "//hm.baidu.com/hm.js?94c5bc16a94e5db3e2942494f0be64dd";
+            var s = document.getElementsByTagName("script")[0]; 
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/avatar.jpg" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">HatBoy</a></h1>
+        </hgroup>
+
+        
+
+        
+            <form id="search-form">
+            <input type="text" id="local-search-input" name="q" placeholder="search..." class="search form-control" autocomplete="off" autocorrect="off" searchonload="true" />
+            <i class="fa fa-times" onclick="resetSearch()"></i>
+            </form>
+            <div id="local-search-result"></div>
+            <p class='no-result'>No results found <i class='fa fa-spinner fa-pulse'></i></p>
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="mailto:hatboy-dj@qq.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" href="https://github.com/HatBoy/" title="GitHub"></a>
+                            
+                                <a class="fa 码云博客" href="http://hatboy.gitee.io/" title="码云博客"></a>
+                            
+                                <a class="fa CSDN" href="http://blog.csdn.net/dj1174232716" title="CSDN"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Cython/">Cython</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/">Python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python模块tips/">Python模块tips</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python语法/">Python语法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/asyncio/">asyncio</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/异步并发/">异步并发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/调试/">调试</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://fmxfmx.gitee.io/">FMX</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://jewelz.me/">Jewelz</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://www.zhihu.com/people/talentisan/activities">轻狂书生</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://threetop.top/">ZCC</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://blog.csdn.net/u012017783">ZCC的CSDN</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://zcc888.gitee.io/">ZCC的博客</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">一枚爱Python,爱海贼,爱健身,喜欢好玩有趣事物的程序员……</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">HatBoy</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/avatar.jpg" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">HatBoy</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="mailto:hatboy-dj@qq.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="https://github.com/HatBoy/" title="GitHub"></a>
+                            
+                                <a class="fa 码云博客" target="_blank" href="http://hatboy.gitee.io/" title="码云博客"></a>
+                            
+                                <a class="fa CSDN" target="_blank" href="http://blog.csdn.net/dj1174232716" title="CSDN"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-asyncio之协议抽象类的异步I-O" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/12/21/asyncio之协议抽象类的异步I-O/" class="article-date">
+      <time datetime="2017-12-21T10:36:43.000Z" itemprop="datePublished">2017-12-21</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      asyncio之协议抽象类的异步I/O
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/">Python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/asyncio/">asyncio</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/异步并发/">异步并发</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <excerpt in="" index="" |="" 首页摘要="">
+
+<p>协议抽象类的异步I/O</p>
+<a id="more"></a>
+<the rest="" of="" contents="" |="" 余下全文="">
+
+<p>到目前为止，这些例子都避免了混合并发和I/O操作，一次只关注一个概念。然后当I/O阻塞时切换上下文是asyncio的主要是用情景之一。前面已经介绍过并发的概念，本章节将介绍两个实现简单的echo服务器和客户端，跟socket和socketserver章节使用的例子类似。客户端可以连接到服务器，发送一些数据，然后接收相同的数据作为响应。每次发起I/O操作时，执行代码都会放弃对事件循环的控制，允许其他任务运行，直到I/O准备就绪。</p>
+<h3 id="Echo-Server"><a href="#Echo-Server" class="headerlink" title="Echo Server"></a>Echo Server</h3><p>服务器通过导入设置所需的模块asyncio和logging来启动，然后创建一个事件循环对象。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> asyncio</div><div class="line"><span class="keyword">import</span> logging</div><div class="line"><span class="keyword">import</span> sys</div><div class="line"></div><div class="line">SERVER_ADDRESS = (<span class="string">'localhost'</span>, <span class="number">10000</span>)</div><div class="line"></div><div class="line">logging.basicConfig(</div><div class="line">    level=logging.DEBUG,</div><div class="line">    format=<span class="string">'%(name)s: %(message)s'</span>,</div><div class="line">    stream=sys.stderr,</div><div class="line">)</div><div class="line">log = logging.getLogger(<span class="string">'main'</span>)</div><div class="line"></div><div class="line">event_loop = asyncio.get_event_loop()</div></pre></td></tr></table></figure></p>
+<p>然后定义一个asyncio.Protocol的子类来处理客户端通信。协议对象的方法是基于与服务器socket关联的事件来调用的。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">EchoServer</span><span class="params">(asyncio.Protocol)</span>:</span></div></pre></td></tr></table></figure></p>
+<p>每个新的客户端连接都会触发调用connection_made()。transport参数是asyncio.Transport的一个实例，它提供了使用socket进行异步I/O的抽象。不同类型的通信提供不同的传输实现，全部使用相同的API。例如，有单独的传输类用于处理socket和用于处理子进程的管道。传入客户端的地址可通过一个特殊实现的方法get_extra_info()从传输中获得。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">connection_made</span><span class="params">(self, transport)</span>:</span></div><div class="line">    self.transport = transport</div><div class="line">    self.address = transport.get_extra_info(<span class="string">'peername'</span>)</div><div class="line">    self.log = logging.getLogger(<span class="string">'EchoServer_&#123;&#125;_&#123;&#125;'</span>.format(*self.address))</div><div class="line">    self.log.debug(<span class="string">'connection accepted'</span>)</div></pre></td></tr></table></figure></p>
+<p>连接建立后，当数据从客户端发送到服务器调用协议的data_received()方法传递数据进行处理。数据以字节字符串形式进行传递，应用程序以适当的方式解码。在这里记录结果，然后通过调用transport.write()立即将响应发送回客户端。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">data_received</span><span class="params">(self, data)</span>:</span></div><div class="line">    self.log.debug(<span class="string">'received &#123;!r&#125;'</span>.format(data))</div><div class="line">    self.transport.write(data)</div><div class="line">    self.log.debug(<span class="string">'sent &#123;!r&#125;'</span>.format(data))</div></pre></td></tr></table></figure></p>
+<p>一些传输支持特殊的文件结束指示符（EOF）。当遇到EOF时，eof_received()被调用。在这里的实现中，EOF被发送回客户端以表明它已被接收。因为不是所有的传输都支持明确的EOF，该协议首先询问运输工具是否安全发送EOF。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">eof_received</span><span class="params">(self)</span>:</span></div><div class="line">    self.log.debug(<span class="string">'received EOF'</span>)</div><div class="line">    <span class="keyword">if</span> self.transport.can_write_eof():</div><div class="line">        self.transport.write_eof()</div></pre></td></tr></table></figure></p>
+<p>当连接关闭时，通常或者由于错误，协议的connection_lost()方法将会被调用。如果出现错误，则参数包含适当的异常对象。否则它是None。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">connection_lost</span><span class="params">(self, error)</span>:</span></div><div class="line">    <span class="keyword">if</span> error:</div><div class="line">        self.log.error(<span class="string">'ERROR: &#123;&#125;'</span>.format(error))</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        self.log.debug(<span class="string">'closing'</span>)</div><div class="line">    super().connection_lost(error)</div></pre></td></tr></table></figure></p>
+<p>通过两个步骤来启动服务器，首先，应用程序通知事件循环，使用协议类以及要侦听的主机名和socket创建一个新的服务器对象。create_server()方法是一个协程，所以结果必须由事件循环处理才能真正启动服务器。完成协程会生成绑定到事件循环的asyncio.Server实例。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 创建服务器，然后让循环完成协程</span></div><div class="line">factory = event_loop.create_server(EchoServer, *SERVER_ADDRESS)</div><div class="line"><span class="comment"># 启动真正的事件循环</span></div><div class="line">server = event_loop.run_until_complete(factory)</div><div class="line">log.debug(<span class="string">'starting up on &#123;&#125; port &#123;&#125;'</span>.format(*SERVER_ADDRESS))</div></pre></td></tr></table></figure></p>
+<p>然后，需要运行事件循环才能处理事件并处理客户端请求。对于长期运行的服务，run_forever()方法是最简单的方法。当事件循环停止时，无论是通过应用程序代码还是通过发信号通知进程，都可以关闭服务器以正确清理socket，然后在程序退出之前事件循环可以关闭，以完成处理任何其他的协程。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 永久运行事件循环以处理所有连接</span></div><div class="line"><span class="keyword">try</span>:</div><div class="line">    event_loop.run_forever()</div><div class="line"><span class="keyword">finally</span>:</div><div class="line">    log.debug(<span class="string">'closing server'</span>)</div><div class="line">    server.close()</div><div class="line">    event_loop.run_until_complete(server.wait_closed())</div><div class="line">    log.debug(<span class="string">'closing event loop'</span>)</div><div class="line">    event_loop.close()</div></pre></td></tr></table></figure></p>
+<h3 id="Echo-Client"><a href="#Echo-Client" class="headerlink" title="Echo Client"></a>Echo Client</h3><p>使用协议类构建客户端与构建服务器非常相似。代码再次通过导入设置所需的模块asyncio和logging来启动，然后创建一个事件循环对象。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> asyncio</div><div class="line"><span class="keyword">import</span> functools</div><div class="line"><span class="keyword">import</span> logging</div><div class="line"><span class="keyword">import</span> sys</div><div class="line"></div><div class="line">MESSAGES = [</div><div class="line">    <span class="string">b'This is the message. '</span>,</div><div class="line">    <span class="string">b'It will be sent '</span>,</div><div class="line">    <span class="string">b'in parts.'</span>,</div><div class="line">]</div><div class="line">SERVER_ADDRESS = (<span class="string">'localhost'</span>, <span class="number">10000</span>)</div><div class="line"></div><div class="line">logging.basicConfig(</div><div class="line">    level=logging.DEBUG,</div><div class="line">    format=<span class="string">'%(name)s: %(message)s'</span>,</div><div class="line">    stream=sys.stderr,</div><div class="line">)</div><div class="line">log = logging.getLogger(<span class="string">'main'</span>)</div><div class="line"></div><div class="line">event_loop = asyncio.get_event_loop</div></pre></td></tr></table></figure></p>
+<p>客户端协议类定义与服务器相同的方法，具有不同的实现。类的构造函数接受两个参数，要发送的消息的列表以及用于通过从服务器接收响应来发信号通知客户已经完成了一个工作周期的Future实例。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">EchoClient</span><span class="params">(asyncio.Protocol)</span>:</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, messages, future)</span>:</span></div><div class="line">        super().__init__()</div><div class="line">        self.messages = messages</div><div class="line">        self.log = logging.getLogger(<span class="string">'EchoClient'</span>)</div><div class="line">        self.f = future</div></pre></td></tr></table></figure></p>
+<p>当客户端成功连接到服务器时，它立即开始通信。尽管底层网络代码可以将多个消息组合成一个传输，但是消息序列一次只能发送一个消息。当所有的消息都发送完成时，发送一个EOF。<br>虽然看起来数据全部是立即发送，实际上，传输对象缓冲传出数据，并在socket的缓冲区准备好接收数据时设置一个实际传输的回调。这一切都是透明处理的，所以应用程序代码可以像I/O操作马上发生一样写入。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">connection_made</span><span class="params">(self, transport)</span>:</span></div><div class="line">    self.transport = transport</div><div class="line">    self.address = transport.get_extra_info(<span class="string">'peername'</span>)</div><div class="line">    self.log.debug(</div><div class="line">        <span class="string">'connecting to &#123;&#125; port &#123;&#125;'</span>.format(*self.address)</div><div class="line">    )</div><div class="line">    <span class="comment"># This could be transport.writelines() except that</span></div><div class="line">    <span class="comment"># would make it harder to show each part of the message</span></div><div class="line">    <span class="comment"># being sent.</span></div><div class="line">    <span class="keyword">for</span> msg <span class="keyword">in</span> self.messages:</div><div class="line">        transport.write(msg)</div><div class="line">        self.log.debug(<span class="string">'sending &#123;!r&#125;'</span>.format(msg))</div><div class="line">    <span class="keyword">if</span> transport.can_write_eof():</div><div class="line">        transport.write_eof()</div></pre></td></tr></table></figure></p>
+<p>当收到来自服务器的响应时，记录下来。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">data_received</span><span class="params">(self, data)</span>:</span></div><div class="line">    self.log.debug(<span class="string">'received &#123;!r&#125;'</span>.format(data))</div></pre></td></tr></table></figure></p>
+<p>当接收到文件结束标记或从服务器端关闭连接时，本地传输对象关闭，Future对象通过设置结果被标记为已完成。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">eof_received</span><span class="params">(self)</span>:</span></div><div class="line">    self.log.debug(<span class="string">'received EOF'</span>)</div><div class="line">    self.transport.close()</div><div class="line">    <span class="keyword">if</span> <span class="keyword">not</span> self.f.done():</div><div class="line">        self.f.set_result(<span class="keyword">True</span>)</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">connection_lost</span><span class="params">(self, exc)</span>:</span></div><div class="line">    self.log.debug(<span class="string">'server closed connection'</span>)</div><div class="line">    self.transport.close()</div><div class="line">    <span class="keyword">if</span> <span class="keyword">not</span> self.f.done():</div><div class="line">        self.f.set_result(<span class="keyword">True</span>)</div><div class="line">    super().connection_lost(exc)</div></pre></td></tr></table></figure></p>
+<p>协议类通常被传递给事件循环来创建连接。在这种情况下，因为事件循环无法将多余的参数传递给协议构造函数，有必要创建一个partial来包装客户端类并传递消息列表和Future实例进行发送。然后在调用create_connection()建立客户端连接时，使用新的可调用代替类。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">client_completed = asyncio.Future()</div><div class="line"></div><div class="line">client_factory = functools.partial(</div><div class="line">    EchoClient,</div><div class="line">    messages=MESSAGES,</div><div class="line">    future=client_completed,</div><div class="line">)</div><div class="line">factory_coroutine = event_loop.create_connection(</div><div class="line">    client_factory,</div><div class="line">    *SERVER_ADDRESS,</div><div class="line">)</div></pre></td></tr></table></figure></p>
+<p>要启动客户端运行，事件循环被调用一次与协程创建客户端，然后再与Future实例交给客户端进行通信。使用这样的两个调用可以避免在客户端程序中产生一个无限循环，在完成与服务器的通信后，可能要退出。如果只有第一个调用被用来等待协程来创建客户端，它可能不会处理所有的响应数据，并正确地清理到服务器的连接。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">log.debug(<span class="string">'waiting for client to complete'</span>)</div><div class="line"><span class="keyword">try</span>:</div><div class="line">    event_loop.run_until_complete(factory_coroutine)</div><div class="line">    event_loop.run_until_complete(client_completed)</div><div class="line"><span class="keyword">finally</span>:</div><div class="line">    log.debug(<span class="string">'closing event loop'</span>)</div><div class="line">    event_loop.close()</div></pre></td></tr></table></figure></p>
+<h3 id="输出"><a href="#输出" class="headerlink" title="输出"></a>输出</h3><p>在一个窗口中运行服务器，在另一个窗口中运行客户端将生成以下输出。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line">$ python3 asyncio_echo_client_protocol.py</div><div class="line">asyncio: Using selector: KqueueSelector</div><div class="line">main: waiting <span class="keyword">for</span> client to complete</div><div class="line">EchoClient: connecting to ::<span class="number">1</span> port <span class="number">10000</span></div><div class="line">EchoClient: sending <span class="string">b'This is the message. '</span></div><div class="line">EchoClient: sending <span class="string">b'It will be sent '</span></div><div class="line">EchoClient: sending <span class="string">b'in parts.'</span></div><div class="line">EchoClient: received <span class="string">b'This is the message. It will be sent in parts.'</span></div><div class="line">EchoClient: received EOF</div><div class="line">EchoClient: server closed connection</div><div class="line">main: closing event loop</div><div class="line"></div><div class="line">$ python3 asyncio_echo_client_protocol.py</div><div class="line">asyncio: Using selector: KqueueSelector</div><div class="line">main: waiting <span class="keyword">for</span> client to complete</div><div class="line">EchoClient: connecting to ::<span class="number">1</span> port <span class="number">10000</span></div><div class="line">EchoClient: sending <span class="string">b'This is the message. '</span></div><div class="line">EchoClient: sending <span class="string">b'It will be sent '</span></div><div class="line">EchoClient: sending <span class="string">b'in parts.'</span></div><div class="line">EchoClient: received <span class="string">b'This is the message. It will be sent in parts.'</span></div><div class="line">EchoClient: received EOF</div><div class="line">EchoClient: server closed connection</div><div class="line">main: closing event loop</div><div class="line"></div><div class="line">$ python3 asyncio_echo_client_protocol.py</div><div class="line">asyncio: Using selector: KqueueSelector</div><div class="line">main: waiting <span class="keyword">for</span> client to complete</div><div class="line">EchoClient: connecting to ::<span class="number">1</span> port <span class="number">10000</span></div><div class="line">EchoClient: sending <span class="string">b'This is the message. '</span></div><div class="line">EchoClient: sending <span class="string">b'It will be sent '</span></div><div class="line">EchoClient: sending <span class="string">b'in parts.'</span></div><div class="line">EchoClient: received <span class="string">b'This is the message. It will be sent in parts.'</span></div><div class="line">EchoClient: received EOF</div><div class="line">EchoClient: server closed connection</div><div class="line">main: closing event loop</div></pre></td></tr></table></figure></p>
+<p>尽管客户端总是单独发送消息，但是客户端第一次运行服务器却会收到一条大消息，并将消息回传给客户端。这些结果在后续运行中会有所不同，具体取决于网络的繁忙程度以及在准备好所有数据之前是否刷新了网络缓冲区。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">$ python3 asyncio_echo_server_protocol.py</div><div class="line">asyncio: Using selector: KqueueSelector</div><div class="line">main: starting up on localhost port <span class="number">10000</span></div><div class="line">EchoServer_::<span class="number">1</span>_63347: connection accepted</div><div class="line">EchoServer_::<span class="number">1</span>_63347: received <span class="string">b'This is the message. It will be sent in parts.'</span></div><div class="line">EchoServer_::<span class="number">1</span>_63347: sent <span class="string">b'This is the message. It will be sent in parts.'</span></div><div class="line">EchoServer_::<span class="number">1</span>_63347: received EOF</div><div class="line">EchoServer_::<span class="number">1</span>_63347: closing</div><div class="line"></div><div class="line">EchoServer_::<span class="number">1</span>_63387: connection accepted</div><div class="line">EchoServer_::<span class="number">1</span>_63387: received <span class="string">b'This is the message. '</span></div><div class="line">EchoServer_::<span class="number">1</span>_63387: sent <span class="string">b'This is the message. '</span></div><div class="line">EchoServer_::<span class="number">1</span>_63387: received <span class="string">b'It will be sent in parts.'</span></div><div class="line">EchoServer_::<span class="number">1</span>_63387: sent <span class="string">b'It will be sent in parts.'</span></div><div class="line">EchoServer_::<span class="number">1</span>_63387: received EOF</div><div class="line">EchoServer_::<span class="number">1</span>_63387: closing</div><div class="line"></div><div class="line">EchoServer_::<span class="number">1</span>_63389: connection accepted</div><div class="line">EchoServer_::<span class="number">1</span>_63389: received <span class="string">b'This is the message. It will be sent '</span></div><div class="line">EchoServer_::<span class="number">1</span>_63389: sent <span class="string">b'This is the message. It will be sent '</span></div><div class="line">EchoServer_::<span class="number">1</span>_63389: received <span class="string">b'in parts.'</span></div><div class="line">EchoServer_::<span class="number">1</span>_63389: sent <span class="string">b'in parts.'</span></div><div class="line">EchoServer_::<span class="number">1</span>_63389: received EOF</div><div class="line">EchoServer_::<span class="number">1</span>_63389: closing</div></pre></td></tr></table></figure></p>
+<h3 id="其他实例"><a href="#其他实例" class="headerlink" title="其他实例"></a>其他实例</h3><p>asyncio官方文档也提供了相应的例子，下面展示给大家：<br>TCP Echo Server：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> asyncio</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">EchoServerClientProtocol</span><span class="params">(asyncio.Protocol)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">connection_made</span><span class="params">(self, transport)</span>:</span></div><div class="line">        peername = transport.get_extra_info(<span class="string">'peername'</span>)</div><div class="line">        print(<span class="string">'Connection from &#123;&#125;'</span>.format(peername))</div><div class="line">        self.transport = transport</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">data_received</span><span class="params">(self, data)</span>:</span></div><div class="line">        message = data.decode()</div><div class="line">        print(<span class="string">'Data received: &#123;!r&#125;'</span>.format(message))</div><div class="line"></div><div class="line">        print(<span class="string">'Send: &#123;!r&#125;'</span>.format(message))</div><div class="line">        self.transport.write(data)</div><div class="line"></div><div class="line">        print(<span class="string">'Close the client socket'</span>)</div><div class="line">        self.transport.close()</div><div class="line"></div><div class="line">loop = asyncio.get_event_loop()</div><div class="line"><span class="comment"># Each client connection will create a new protocol instance</span></div><div class="line">coro = loop.create_server(EchoServerClientProtocol, <span class="string">'127.0.0.1'</span>, <span class="number">8888</span>)</div><div class="line">server = loop.run_until_complete(coro)</div><div class="line"></div><div class="line"><span class="comment"># Serve requests until Ctrl+C is pressed</span></div><div class="line">print(<span class="string">'Serving on &#123;&#125;'</span>.format(server.sockets[<span class="number">0</span>].getsockname()))</div><div class="line"><span class="keyword">try</span>:</div><div class="line">    loop.run_forever()</div><div class="line"><span class="keyword">except</span> KeyboardInterrupt:</div><div class="line">    <span class="keyword">pass</span></div><div class="line"></div><div class="line"><span class="comment"># Close the server</span></div><div class="line">server.close()</div><div class="line">loop.run_until_complete(server.wait_closed())</div><div class="line">loop.close()</div></pre></td></tr></table></figure></p>
+<p>TCP Echo Client：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> asyncio</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">EchoClientProtocol</span><span class="params">(asyncio.Protocol)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, message, loop)</span>:</span></div><div class="line">        self.message = message</div><div class="line">        self.loop = loop</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">connection_made</span><span class="params">(self, transport)</span>:</span></div><div class="line">        transport.write(self.message.encode())</div><div class="line">        print(<span class="string">'Data sent: &#123;!r&#125;'</span>.format(self.message))</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">data_received</span><span class="params">(self, data)</span>:</span></div><div class="line">        print(<span class="string">'Data received: &#123;!r&#125;'</span>.format(data.decode()))</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">connection_lost</span><span class="params">(self, exc)</span>:</span></div><div class="line">        print(<span class="string">'The server closed the connection'</span>)</div><div class="line">        print(<span class="string">'Stop the event loop'</span>)</div><div class="line">        self.loop.stop()</div><div class="line"></div><div class="line">loop = asyncio.get_event_loop()</div><div class="line">message = <span class="string">'Hello World!'</span></div><div class="line">coro = loop.create_connection(<span class="keyword">lambda</span>: EchoClientProtocol(message, loop),</div><div class="line">                              <span class="string">'127.0.0.1'</span>, <span class="number">8888</span>)</div><div class="line">loop.run_until_complete(coro)</div><div class="line">loop.run_forever()</div><div class="line">loop.close()</div></pre></td></tr></table></figure></p>
+<p>UDP Echo Server：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> asyncio</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">EchoServerProtocol</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">connection_made</span><span class="params">(self, transport)</span>:</span></div><div class="line">        self.transport = transport</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">datagram_received</span><span class="params">(self, data, addr)</span>:</span></div><div class="line">        message = data.decode()</div><div class="line">        print(<span class="string">'Received %r from %s'</span> % (message, addr))</div><div class="line">        print(<span class="string">'Send %r to %s'</span> % (message, addr))</div><div class="line">        self.transport.sendto(data, addr)</div><div class="line"></div><div class="line">loop = asyncio.get_event_loop()</div><div class="line">print(<span class="string">"Starting UDP server"</span>)</div><div class="line"><span class="comment"># One protocol instance will be created to serve all client requests</span></div><div class="line">listen = loop.create_datagram_endpoint(</div><div class="line">    EchoServerProtocol, local_addr=(<span class="string">'127.0.0.1'</span>, <span class="number">9999</span>))</div><div class="line">transport, protocol = loop.run_until_complete(listen)</div><div class="line"></div><div class="line"><span class="keyword">try</span>:</div><div class="line">    loop.run_forever()</div><div class="line"><span class="keyword">except</span> KeyboardInterrupt:</div><div class="line">    <span class="keyword">pass</span></div><div class="line"></div><div class="line">transport.close()</div><div class="line">loop.close()</div></pre></td></tr></table></figure></p>
+<p>UDP Echo Client：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> asyncio</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">EchoClientProtocol</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, message, loop)</span>:</span></div><div class="line">        self.message = message</div><div class="line">        self.loop = loop</div><div class="line">        self.transport = <span class="keyword">None</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">connection_made</span><span class="params">(self, transport)</span>:</span></div><div class="line">        self.transport = transport</div><div class="line">        print(<span class="string">'Send:'</span>, self.message)</div><div class="line">        self.transport.sendto(self.message.encode())</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">datagram_received</span><span class="params">(self, data, addr)</span>:</span></div><div class="line">        print(<span class="string">"Received:"</span>, data.decode())</div><div class="line"></div><div class="line">        print(<span class="string">"Close the socket"</span>)</div><div class="line">        self.transport.close()</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">error_received</span><span class="params">(self, exc)</span>:</span></div><div class="line">        print(<span class="string">'Error received:'</span>, exc)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">connection_lost</span><span class="params">(self, exc)</span>:</span></div><div class="line">        print(<span class="string">"Socket closed, stop the event loop"</span>)</div><div class="line">        loop = asyncio.get_event_loop()</div><div class="line">        loop.stop()</div><div class="line"></div><div class="line">loop = asyncio.get_event_loop()</div><div class="line">message = <span class="string">"Hello World!"</span></div><div class="line">connect = loop.create_datagram_endpoint(</div><div class="line">    <span class="keyword">lambda</span>: EchoClientProtocol(message, loop),</div><div class="line">    remote_addr=(<span class="string">'127.0.0.1'</span>, <span class="number">9999</span>))</div><div class="line">transport, protocol = loop.run_until_complete(connect)</div><div class="line">loop.run_forever()</div><div class="line">transport.close()</div><div class="line">loop.close()</div></pre></td></tr></table></figure></p>
+<p><strong>本文翻译自《The Python3 Standard Library By Example》asyncio相关章节</strong></p>
+</the></excerpt>
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2017/12/21/asyncio之协议抽象类的异步I-O/">asyncio之协议抽象类的异步I/O</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">HatBoy</a></p>
+        <p><span>发布时间:</span>2017-12-21, 18:36:43</p>
+        <p><span>最后更新:</span>2017-12-21, 18:37:41</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2017/12/21/asyncio之协议抽象类的异步I-O/" title="asyncio之协议抽象类的异步I/O">https://hatboy.github.io/2017/12/21/asyncio之协议抽象类的异步I-O/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://hatboy.github.io/2017/12/21/asyncio之协议抽象类的异步I-O/　　作者: HatBoy" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2017/12/21/asyncio之使用协程和流的异步I-O/">
+                    asyncio之使用协程和流的异步I/O
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2017/12/21/asyncio之同步原语/">
+                    asyncio之同步原语
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Echo-Server"><span class="toc-number">1.</span> <span class="toc-text">Echo Server</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Echo-Client"><span class="toc-number">2.</span> <span class="toc-text">Echo Client</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#输出"><span class="toc-number">3.</span> <span class="toc-text">输出</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#其他实例"><span class="toc-number">4.</span> <span class="toc-text">其他实例</span></a></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"asyncio之协议抽象类的异步I/O　| HatBoy的个人主页　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2017/12/21/asyncio之使用协程和流的异步I-O/" title="上一篇: asyncio之使用协程和流的异步I/O">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2017/12/21/asyncio之同步原语/" title="下一篇: asyncio之同步原语">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio：异步IO、事件循环和并发/">asyncio：异步IO、事件循环和并发</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之调试asyncio/">asyncio之调试asyncio</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之协程结合线程和进程/">asyncio之协程结合线程和进程</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之接收Unix信号/">asyncio之接收Unix信号</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之使用子进程/">asyncio之使用子进程</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之与DNS服务进行交互/">asyncio之与DNS服务进行交互</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之使用SSL/">asyncio之使用SSL</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之使用协程和流的异步I-O/">asyncio之使用协程和流的异步I/O</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之协议抽象类的异步I-O/">asyncio之协议抽象类的异步I/O</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之同步原语/">asyncio之同步原语</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之用控制结构组建协程/">asyncio之用控制结构组建协程</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之并发执行Tasks/">asyncio之并发执行Tasks</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之异步生产结果/">asyncio之异步生产结果</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之定时调度常规函数/">asyncio之定时调度常规函数</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之使用协程处理多任务/">asyncio之使用协程处理多任务</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之异步并发的概念/">asyncio之异步并发的概念</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/Python上下文管理器/">Python上下文管理器</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/Python-importlib讲解/">Python importlib讲解</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/第七章-用Cython包装C库/">第七章 用Cython包装C库</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/16/第六章-组织Cython代码/">第六章 组织Cython代码</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/10/第五章-Cython和扩展类型/">第五章 Cython和扩展类型</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/31/第四章-Cython实践：N-body模拟/">第四章 Cython实践：N-body模拟</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/31/Python性能分析与调试/">Python性能分析与调试</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/17/第三章-深入Cython/">第三章 深入Cython</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/03/第二章-编译和运行Cython代码/">第二章 编译和运行Cython代码</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/02/第一章-Cython简介/">第一章 Cython简介</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2017 HatBoy
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+
+
+
+
+    <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script src="//cdn.bootcss.com/mathjax/2.6.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        $("a").attr("target", "_blank");
+        $("#scroll a, #toc a").removeAttr("target");
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>
