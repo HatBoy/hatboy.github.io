@@ -23,7 +23,7 @@
 <meta property="og:site_name" content="HatBoy的个人主页">
 <meta property="og:description" content="asyncio：异步IO、事件循环和并发">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-12-21T10:55:05.640Z">
+<meta property="og:updated_time" content="2017-12-21T10:57:11.260Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="asyncio：异步IO、事件循环和并发">
 <meta name="twitter:description" content="asyncio：异步IO、事件循环和并发">
@@ -336,63 +336,63 @@
 <the rest="" of="" contents="" |="" 余下全文="">
 
 <p>asyncio模块提供了使用协程构建并发程序的工具。threading模块通过多线程实现并发，multiprocessing模块通过系统进程实现并发，asyncio则使用单线程单进程在程序中明确的时间点切换任务来实现并发。大多数情况下是在程序阻塞等待读取数据或者写入数据时发生任务切换的，但是asyncio还支持定时调度任务，能过让一个协程等待其他的完成，处理系统信号，等等功能。</p>
-<h3 id="异步并发的概念"><a href="#异步并发的概念" class="headerlink" title="异步并发的概念"></a><a href="http://hatboy.gitee.io/2017/12/21/asyncio%E4%B9%8B%E5%BC%82%E6%AD%A5%E5%B9%B6%E5%8F%91%E7%9A%84%E6%A6%82%E5%BF%B5/" target="_blank" rel="external">异步并发的概念</a></h3><h3 id="使用协程处理多任务"><a href="#使用协程处理多任务" class="headerlink" title="使用协程处理多任务"></a><a href="http://hatboy.gitee.io/2017/12/21/asyncio%E4%B9%8B%E4%BD%BF%E7%94%A8%E5%8D%8F%E7%A8%8B%E5%A4%84%E7%90%86%E5%A4%9A%E4%BB%BB%E5%8A%A1/" target="_blank" rel="external">使用协程处理多任务</a></h3><ul>
+<h3 id="异步并发的概念"><a href="#异步并发的概念" class="headerlink" title="异步并发的概念"></a><a href="https://hatboy.github.io/2017/12/21/asyncio%E4%B9%8B%E5%BC%82%E6%AD%A5%E5%B9%B6%E5%8F%91%E7%9A%84%E6%A6%82%E5%BF%B5/">异步并发的概念</a></h3><h3 id="使用协程处理多任务"><a href="#使用协程处理多任务" class="headerlink" title="使用协程处理多任务"></a><a href="https://hatboy.github.io/2017/12/21/asyncio%E4%B9%8B%E4%BD%BF%E7%94%A8%E5%8D%8F%E7%A8%8B%E5%A4%84%E7%90%86%E5%A4%9A%E4%BB%BB%E5%8A%A1/">使用协程处理多任务</a></h3><ul>
 <li>启动协程</li>
 <li>协程返回值</li>
 <li>协程链</li>
 <li>生成器替代协程</li>
 </ul>
-<h3 id="定时调度常规函数"><a href="#定时调度常规函数" class="headerlink" title="定时调度常规函数"></a><a href="http://hatboy.gitee.io/2017/12/21/asyncio%E4%B9%8B%E5%AE%9A%E6%97%B6%E8%B0%83%E5%BA%A6%E5%B8%B8%E8%A7%84%E5%87%BD%E6%95%B0/" target="_blank" rel="external">定时调度常规函数</a></h3><ul>
+<h3 id="定时调度常规函数"><a href="#定时调度常规函数" class="headerlink" title="定时调度常规函数"></a><a href="https://hatboy.github.io/2017/12/21/asyncio%E4%B9%8B%E5%AE%9A%E6%97%B6%E8%B0%83%E5%BA%A6%E5%B8%B8%E8%A7%84%E5%87%BD%E6%95%B0/">定时调度常规函数</a></h3><ul>
 <li>计划调度“Soon”</li>
 <li>延迟调度</li>
 <li>特定时间调度</li>
 </ul>
-<h3 id="异步生产结果"><a href="#异步生产结果" class="headerlink" title="异步生产结果"></a><a href="http://hatboy.gitee.io/2017/12/21/asyncio%E4%B9%8B%E5%BC%82%E6%AD%A5%E7%94%9F%E4%BA%A7%E7%BB%93%E6%9E%9C/" target="_blank" rel="external">异步生产结果</a></h3><ul>
+<h3 id="异步生产结果"><a href="#异步生产结果" class="headerlink" title="异步生产结果"></a><a href="https://hatboy.github.io/2017/12/21/asyncio%E4%B9%8B%E5%BC%82%E6%AD%A5%E7%94%9F%E4%BA%A7%E7%BB%93%E6%9E%9C/">异步生产结果</a></h3><ul>
 <li>等待Future</li>
 <li>Future回调</li>
 </ul>
-<h3 id="并发执行Tasks"><a href="#并发执行Tasks" class="headerlink" title="并发执行Tasks"></a><a href="http://hatboy.gitee.io/2017/12/21/asyncio%E4%B9%8B%E5%B9%B6%E5%8F%91%E6%89%A7%E8%A1%8CTasks/" target="_blank" rel="external">并发执行Tasks</a></h3><ul>
+<h3 id="并发执行Tasks"><a href="#并发执行Tasks" class="headerlink" title="并发执行Tasks"></a><a href="https://hatboy.github.io/2017/12/21/asyncio%E4%B9%8B%E5%B9%B6%E5%8F%91%E6%89%A7%E8%A1%8CTasks/">并发执行Tasks</a></h3><ul>
 <li>启动Task</li>
 <li>取消Task</li>
 <li>从协程创建Task</li>
 </ul>
-<h3 id="用控制结构组建协程"><a href="#用控制结构组建协程" class="headerlink" title="用控制结构组建协程"></a><a href="http://hatboy.gitee.io/2017/12/21/asyncio%E4%B9%8B%E7%94%A8%E6%8E%A7%E5%88%B6%E7%BB%93%E6%9E%84%E7%BB%84%E5%BB%BA%E5%8D%8F%E7%A8%8B/" target="_blank" rel="external">用控制结构组建协程</a></h3><ul>
+<h3 id="用控制结构组建协程"><a href="#用控制结构组建协程" class="headerlink" title="用控制结构组建协程"></a><a href="https://hatboy.github.io/2017/12/21/asyncio%E4%B9%8B%E7%94%A8%E6%8E%A7%E5%88%B6%E7%BB%93%E6%9E%84%E7%BB%84%E5%BB%BA%E5%8D%8F%E7%A8%8B/">用控制结构组建协程</a></h3><ul>
 <li>等待多个协程</li>
 <li>从协程聚集结果</li>
 <li>操作完成时进行处理</li>
 </ul>
-<h3 id="同步原语"><a href="#同步原语" class="headerlink" title="同步原语"></a><a href="http://hatboy.gitee.io/2017/12/21/asyncio%E4%B9%8B%E5%90%8C%E6%AD%A5%E5%8E%9F%E8%AF%AD/" target="_blank" rel="external">同步原语</a></h3><ul>
+<h3 id="同步原语"><a href="#同步原语" class="headerlink" title="同步原语"></a><a href="https://hatboy.github.io/2017/12/21/asyncio%E4%B9%8B%E5%90%8C%E6%AD%A5%E5%8E%9F%E8%AF%AD/">同步原语</a></h3><ul>
 <li>Locks</li>
 <li>Events</li>
 <li>Conditions</li>
 <li>Queues</li>
 </ul>
-<h3 id="协议抽象类的异步I-O"><a href="#协议抽象类的异步I-O" class="headerlink" title="协议抽象类的异步I/O"></a><a href="http://hatboy.gitee.io/2017/12/21/asyncio%E4%B9%8B%E5%8D%8F%E8%AE%AE%E6%8A%BD%E8%B1%A1%E7%B1%BB%E7%9A%84%E5%BC%82%E6%AD%A5I-O/" target="_blank" rel="external">协议抽象类的异步I/O</a></h3><ul>
+<h3 id="协议抽象类的异步I-O"><a href="#协议抽象类的异步I-O" class="headerlink" title="协议抽象类的异步I/O"></a><a href="https://hatboy.github.io/2017/12/21/asyncio%E4%B9%8B%E5%8D%8F%E8%AE%AE%E6%8A%BD%E8%B1%A1%E7%B1%BB%E7%9A%84%E5%BC%82%E6%AD%A5I-O/">协议抽象类的异步I/O</a></h3><ul>
 <li>Echo Server</li>
 <li>Echo Client</li>
 <li>输出</li>
 <li>其他实例</li>
 </ul>
-<h3 id="使用协程和流的异步I-O"><a href="#使用协程和流的异步I-O" class="headerlink" title="使用协程和流的异步I/O"></a><a href="http://hatboy.gitee.io/2017/12/21/asyncio%E4%B9%8B%E4%BD%BF%E7%94%A8%E5%8D%8F%E7%A8%8B%E5%92%8C%E6%B5%81%E7%9A%84%E5%BC%82%E6%AD%A5I-O/" target="_blank" rel="external">使用协程和流的异步I/O</a></h3><ul>
+<h3 id="使用协程和流的异步I-O"><a href="#使用协程和流的异步I-O" class="headerlink" title="使用协程和流的异步I/O"></a><a href="https://hatboy.github.io/2017/12/21/asyncio%E4%B9%8B%E4%BD%BF%E7%94%A8%E5%8D%8F%E7%A8%8B%E5%92%8C%E6%B5%81%E7%9A%84%E5%BC%82%E6%AD%A5I-O/">使用协程和流的异步I/O</a></h3><ul>
 <li>Echo Server</li>
 <li>Echo Client</li>
 <li>输出</li>
 <li>其他实例</li>
 </ul>
-<h3 id="使用SSL"><a href="#使用SSL" class="headerlink" title="使用SSL"></a><a href="http://hatboy.gitee.io/2017/12/21/asyncio%E4%B9%8B%E4%BD%BF%E7%94%A8SSL/" target="_blank" rel="external">使用SSL</a></h3><h3 id="与DNS服务进行交互"><a href="#与DNS服务进行交互" class="headerlink" title="与DNS服务进行交互"></a><a href="http://hatboy.gitee.io/2017/12/21/asyncio%E4%B9%8B%E4%B8%8EDNS%E6%9C%8D%E5%8A%A1%E8%BF%9B%E8%A1%8C%E4%BA%A4%E4%BA%92/" target="_blank" rel="external">与DNS服务进行交互</a></h3><ul>
+<h3 id="使用SSL"><a href="#使用SSL" class="headerlink" title="使用SSL"></a><a href="https://hatboy.github.io/2017/12/21/asyncio%E4%B9%8B%E4%BD%BF%E7%94%A8SSL/">使用SSL</a></h3><h3 id="与DNS服务进行交互"><a href="#与DNS服务进行交互" class="headerlink" title="与DNS服务进行交互"></a><a href="https://hatboy.github.io/2017/12/21/asyncio%E4%B9%8B%E4%B8%8EDNS%E6%9C%8D%E5%8A%A1%E8%BF%9B%E8%A1%8C%E4%BA%A4%E4%BA%92/">与DNS服务进行交互</a></h3><ul>
 <li>按名称查询地址</li>
 <li>按地址查询名称</li>
 </ul>
-<h3 id="使用子进程"><a href="#使用子进程" class="headerlink" title="使用子进程"></a><a href="http://hatboy.gitee.io/2017/12/21/asyncio%E4%B9%8B%E4%BD%BF%E7%94%A8%E5%AD%90%E8%BF%9B%E7%A8%8B/" target="_blank" rel="external">使用子进程</a></h3><ul>
+<h3 id="使用子进程"><a href="#使用子进程" class="headerlink" title="使用子进程"></a><a href="https://hatboy.github.io/2017/12/21/asyncio%E4%B9%8B%E4%BD%BF%E7%94%A8%E5%AD%90%E8%BF%9B%E7%A8%8B/">使用子进程</a></h3><ul>
 <li>使用协议抽象子进程</li>
 <li>使用协程和流子进程</li>
 <li>发送数据到子进程</li>
 </ul>
-<h3 id="接收Unix信号"><a href="#接收Unix信号" class="headerlink" title="接收Unix信号"></a><a href="http://hatboy.gitee.io/2017/12/21/asyncio%E4%B9%8B%E6%8E%A5%E6%94%B6Unix%E4%BF%A1%E5%8F%B7/" target="_blank" rel="external">接收Unix信号</a></h3><h3 id="协程结合线程和进程"><a href="#协程结合线程和进程" class="headerlink" title="协程结合线程和进程"></a><a href="http://hatboy.gitee.io/2017/12/21/asyncio%E4%B9%8B%E5%8D%8F%E7%A8%8B%E7%BB%93%E5%90%88%E7%BA%BF%E7%A8%8B%E5%92%8C%E8%BF%9B%E7%A8%8B/" target="_blank" rel="external">协程结合线程和进程</a></h3><ul>
+<h3 id="接收Unix信号"><a href="#接收Unix信号" class="headerlink" title="接收Unix信号"></a><a href="https://hatboy.github.io/2017/12/21/asyncio%E4%B9%8B%E6%8E%A5%E6%94%B6Unix%E4%BF%A1%E5%8F%B7/">接收Unix信号</a></h3><h3 id="协程结合线程和进程"><a href="#协程结合线程和进程" class="headerlink" title="协程结合线程和进程"></a><a href="https://hatboy.github.io/2017/12/21/asyncio%E4%B9%8B%E5%8D%8F%E7%A8%8B%E7%BB%93%E5%90%88%E7%BA%BF%E7%A8%8B%E5%92%8C%E8%BF%9B%E7%A8%8B/">协程结合线程和进程</a></h3><ul>
 <li>线程</li>
 <li>进程</li>
 </ul>
-<h3 id="调试asyncio"><a href="#调试asyncio" class="headerlink" title="调试asyncio"></a><a href="http://hatboy.gitee.io/2017/12/21/asyncio%E4%B9%8B%E8%B0%83%E8%AF%95asyncio/" target="_blank" rel="external">调试asyncio</a></h3><h4 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h4><p>在Python 3.5中，asyncio仍然是一个临时模块，这个API在Python 3.6中稳定了，大部分的变化被反向移植到了Python 3.5的补丁版本。因此，在不同版本的Python 3.5下，该模块可能会略有不同。</p>
+<h3 id="调试asyncio"><a href="#调试asyncio" class="headerlink" title="调试asyncio"></a><a href="https://hatboy.github.io/2017/12/21/asyncio%E4%B9%8B%E8%B0%83%E8%AF%95asyncio/">调试asyncio</a></h3><h4 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h4><p>在Python 3.5中，asyncio仍然是一个临时模块，这个API在Python 3.6中稳定了，大部分的变化被反向移植到了Python 3.5的补丁版本。因此，在不同版本的Python 3.5下，该模块可能会略有不同。</p>
 <h4 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h4><ul>
 <li><a href="https://docs.python.org/3.5/library/asyncio.html" target="_blank" rel="external">Standard library documentation for asyncio</a></li>
 <li><a href="https://www.python.org/dev/peps/pep-3156" target="_blank" rel="external">PEP 3156</a> – Asynchronous IO Support Rebooted: the “asyncio” Module</li>
@@ -426,7 +426,7 @@
         <p><span>本文标题:</span><a href="/2017/12/21/asyncio：异步IO、事件循环和并发/">asyncio：异步IO、事件循环和并发</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">HatBoy</a></p>
         <p><span>发布时间:</span>2017-12-21, 18:49:14</p>
-        <p><span>最后更新:</span>2017-12-21, 18:55:05</p>
+        <p><span>最后更新:</span>2017-12-21, 18:57:11</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2017/12/21/asyncio：异步IO、事件循环和并发/" title="asyncio：异步IO、事件循环和并发">https://hatboy.github.io/2017/12/21/asyncio：异步IO、事件循环和并发/</a>
             <span class="copy-path" data-clipboard-text="原文: https://hatboy.github.io/2017/12/21/asyncio：异步IO、事件循环和并发/　　作者: HatBoy" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
