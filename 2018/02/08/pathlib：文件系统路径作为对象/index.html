@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="HatBoy" />
+
+
+
+<meta name="description" content="pathlib：文件系统路径作为对象">
+<meta name="keywords" content="Python,Python模块tips">
+<meta property="og:type" content="article">
+<meta property="og:title" content="pathlib：文件系统路径作为对象">
+<meta property="og:url" content="https://hatboy.github.io/2018/02/08/pathlib：文件系统路径作为对象/index.html">
+<meta property="og:site_name" content="HatBoy的个人主页">
+<meta property="og:description" content="pathlib：文件系统路径作为对象">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-02-08T07:54:13.439Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="pathlib：文件系统路径作为对象">
+<meta name="twitter:description" content="pathlib：文件系统路径作为对象">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="HatBoy的个人主页" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>pathlib：文件系统路径作为对象 | HatBoy的个人主页</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: true
+    }
+</script>
+
+
+    <script>
+        yiliaConfig.jquery_ui = [true, "//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js", "//cdn.bootcss.com/jqueryui/1.10.4/css/jquery-ui.min.css"];
+    </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "//hm.baidu.com/hm.js?94c5bc16a94e5db3e2942494f0be64dd";
+            var s = document.getElementsByTagName("script")[0]; 
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/avatar.jpg" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">HatBoy</a></h1>
+        </hgroup>
+
+        
+
+        
+            <form id="search-form">
+            <input type="text" id="local-search-input" name="q" placeholder="search..." class="search form-control" autocomplete="off" autocorrect="off" searchonload="true" />
+            <i class="fa fa-times" onclick="resetSearch()"></i>
+            </form>
+            <div id="local-search-result"></div>
+            <p class='no-result'>No results found <i class='fa fa-spinner fa-pulse'></i></p>
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="mailto:hatboy-dj@qq.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" href="https://github.com/HatBoy/" title="GitHub"></a>
+                            
+                                <a class="fa 码云博客" href="http://hatboy.gitee.io/" title="码云博客"></a>
+                            
+                                <a class="fa CSDN" href="http://blog.csdn.net/dj1174232716" title="CSDN"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Cython/">Cython</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/">Python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python模块tips/">Python模块tips</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python语法/">Python语法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/asyncio/">asyncio</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/异步并发/">异步并发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/调试/">调试</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://fmxfmx.gitee.io/">FMX</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://jewelz.me/">Jewelz</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://www.zhihu.com/people/talentisan/activities">轻狂书生</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://threetop.top/">ZCC</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://blog.csdn.net/u012017783">ZCC的CSDN</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://zcc888.gitee.io/">ZCC的博客</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">一枚爱Python,爱海贼,爱健身,喜欢好玩有趣事物的程序员……</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">HatBoy</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/avatar.jpg" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">HatBoy</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="mailto:hatboy-dj@qq.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="https://github.com/HatBoy/" title="GitHub"></a>
+                            
+                                <a class="fa 码云博客" target="_blank" href="http://hatboy.gitee.io/" title="码云博客"></a>
+                            
+                                <a class="fa CSDN" target="_blank" href="http://blog.csdn.net/dj1174232716" title="CSDN"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-pathlib：文件系统路径作为对象" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2018/02/08/pathlib：文件系统路径作为对象/" class="article-date">
+      <time datetime="2018-02-08T07:53:05.000Z" itemprop="datePublished">2018-02-08</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      pathlib：文件系统路径作为对象
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/">Python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python模块tips/">Python模块tips</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <excerpt in="" index="" |="" 首页摘要="">
+
+<p>pathlib：文件系统路径作为对象</p>
+<a id="more"></a>
+<the rest="" of="" contents="" |="" 余下全文="">
+
+<p>目的：使用面向对象的API解析，构建，测试文件名和路径，而不是使用低级别的字符串操作。</p>
+<h2 id="路径表示"><a href="#路径表示" class="headerlink" title="路径表示"></a>路径表示</h2><ul>
+<li>pathlib包含用于管理使用POSIX标准或Microsoft Windows语法格式化的文件系统路径的类。它包括所谓的“pure”类，它们对字符串进行操作，但不与实际的文件系统交互；和“concrete”类，它们将API扩展到包含反映或修改本地文件系统数据的操作。</li>
+<li>pure类PurePosixPath和PureWindowsPath可以在任何操作系统上实例化和使用，因为他们只在名字上工作。为了实例化correct类来处理真正的文件系统，使用Path会根据平台的不同自动来获取PosixPath或WindowsPath。</li>
+</ul>
+<h2 id="构建Paths"><a href="#构建Paths" class="headerlink" title="构建Paths"></a>构建Paths</h2><p>要实例化一个新的路径，需要给一个字符串作为第一个参数。路径对象的字符串表示形式是该名称值。要创建一个引用相对于现有路径的值的新路径，使用/运算符来扩展路径。运算符的参数可以是字符串或其他路径对象。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># pathlib_operator.py</span></div><div class="line"></div><div class="line"><span class="keyword">import</span> pathlib</div><div class="line"></div><div class="line">usr = pathlib.PurePosixPath(<span class="string">'/usr'</span>)</div><div class="line">print(usr)</div><div class="line"></div><div class="line">usr_local = usr / <span class="string">'local'</span></div><div class="line">print(usr_local)</div><div class="line"></div><div class="line">usr_share = usr / pathlib.PurePosixPath(<span class="string">'share'</span>)</div><div class="line">print(usr_share)</div><div class="line"></div><div class="line">root = usr / <span class="string">'..'</span></div><div class="line">print(root)</div><div class="line"></div><div class="line">etc = root / <span class="string">'/etc/'</span></div><div class="line">print(etc)</div></pre></td></tr></table></figure></p>
+<p>正如示例输出中的root值所示，操作符将所给的路径值接合在一起，并且在包含父目录引用“..”时不会规范化结果。但是，如果一个段以路径分隔符开始，它将被解释为一个新的“root”引用，就像os.path.join()。从路径值中间删除额外路径分隔符，像例子中的etc一样。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">$ python3 pathlib_operator.py</div><div class="line"></div><div class="line">/usr</div><div class="line">/usr/<span class="built_in">local</span></div><div class="line">/usr/share</div><div class="line">/usr/..</div><div class="line">/etc</div></pre></td></tr></table></figure></p>
+<p>concrete路径类包含了一个resolve()方法，用于通过查看目录和符号链接的文件系统并生成名称引用的绝对路径来标准化路径。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># pathlib_resolve.py</span></div><div class="line"></div><div class="line"><span class="keyword">import</span> pathlib</div><div class="line"></div><div class="line">usr_local = pathlib.Path(<span class="string">'/usr/local'</span>)</div><div class="line">share = usr_local / <span class="string">'..'</span> / <span class="string">'share'</span></div><div class="line">print(share.resolve())</div></pre></td></tr></table></figure></p>
+<p>这里相对路径被转换为绝对路径/etc/share。如果输入路径包含符号链接，那么也会扩展这些符号链接以允许解析的路径直接引用目标。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ python3 pathlib_resolve.py</div><div class="line"></div><div class="line">/usr/share</div></pre></td></tr></table></figure></p>
+<p>要在事先不知道段的情况下构建路径，使用joinpath()，将每个路径段作为单独的参数传递。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># pathlib_joinpath.py</span></div><div class="line"></div><div class="line"><span class="keyword">import</span> pathlib</div><div class="line"></div><div class="line">root = pathlib.PurePosixPath(<span class="string">'/'</span>)</div><div class="line">subdirs = [<span class="string">'usr'</span>, <span class="string">'local'</span>]</div><div class="line">usr_local = root.joinpath(*subdirs)</div><div class="line">print(usr_local)</div></pre></td></tr></table></figure></p>
+<p>和使用/操作符一样，调用joinpath()创建一个新的实例。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ python3 pathlib_joinpath.py</div><div class="line"></div><div class="line">/usr/<span class="built_in">local</span></div></pre></td></tr></table></figure></p>
+<p>给定一个现有的路径对象，很容易建立一个小的差异新对象，如引用同一目录中的不同文件。使用with_name()创建一个新路径，用不同的文件名替换路径的名称部分。使用with_suffix()创建一个新路径，用不同的值替换文件名的扩展名。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># pathlib_from_existing.py</span></div><div class="line"></div><div class="line"><span class="keyword">import</span> pathlib</div><div class="line"></div><div class="line">ind = pathlib.PurePosixPath(<span class="string">'source/pathlib/index.rst'</span>)</div><div class="line">print(ind)</div><div class="line"></div><div class="line">py = ind.with_name(<span class="string">'pathlib_from_existing.py'</span>)</div><div class="line">print(py)</div><div class="line"></div><div class="line">pyc = py.with_suffix(<span class="string">'.pyc'</span>)</div><div class="line">print(pyc)</div></pre></td></tr></table></figure></p>
+<p>这两种方法都返回新的对象，并保持左边部分不变。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ python3 pathlib_from_existing.py</div><div class="line"></div><div class="line"><span class="built_in">source</span>/pathlib/index.rst</div><div class="line"><span class="built_in">source</span>/pathlib/pathlib_from_existing.py</div><div class="line"><span class="built_in">source</span>/pathlib/pathlib_from_existing.pyc</div></pre></td></tr></table></figure></p>
+<h2 id="解析Paths"><a href="#解析Paths" class="headerlink" title="解析Paths"></a>解析Paths</h2><p>Path对象具有用于从名称中提取部分值的方法和属性。例如，parts属性会生成一系列基于路径分隔符值解析的路径段。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># pathlib_parts.py</span></div><div class="line"></div><div class="line"><span class="keyword">import</span> pathlib</div><div class="line"></div><div class="line">p = pathlib.PurePosixPath(<span class="string">'/usr/local'</span>)</div><div class="line">print(p.parts)</div></pre></td></tr></table></figure></p>
+<p>该序列是一个元组，反映了路径实例的不变性。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ python3 pathlib_parts.py</div><div class="line"></div><div class="line">(<span class="string">'/'</span>, <span class="string">'usr'</span>, <span class="string">'local'</span>)</div></pre></td></tr></table></figure></p>
+<p>有两种方法可以从一个给定的路径对象中“up”导航文件系统层次结构。parent属性引用了包含路径目录的新路径实例，这些值由os.path.dirname()返回。parents属性是一个迭代器，它产生父目录引用，不断地“up”路径层次直到到达根目录。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># pathlib_parents.py</span></div><div class="line"></div><div class="line"><span class="keyword">import</span> pathlib</div><div class="line"></div><div class="line">p = pathlib.PurePosixPath(<span class="string">'/usr/local/lib'</span>)</div><div class="line"></div><div class="line">print(<span class="string">'parent: &#123;&#125;'</span>.format(p.parent))</div><div class="line"></div><div class="line">print(<span class="string">'\nhierarchy:'</span>)</div><div class="line"><span class="keyword">for</span> up <span class="keyword">in</span> p.parents:</div><div class="line">    print(up)</div></pre></td></tr></table></figure></p>
+<p>该示例遍历parents项属性并打印成员值。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">$ python3 pathlib_parents.py</div><div class="line"></div><div class="line">parent: /usr/<span class="built_in">local</span></div><div class="line"></div><div class="line">hierarchy:</div><div class="line">/usr/<span class="built_in">local</span></div><div class="line">/usr</div><div class="line">/</div></pre></td></tr></table></figure></p>
+<p>路径的其他部分可以通过路径对象的属性来访问。name属性保存了最后一个路径分隔符后的路径的最后部分（与os.path.basename()产生的值相同）。suffix属性保存扩展分隔符后面的值，并且stem属性保留后缀之前的名称部分。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># pathlib_name.py</span></div><div class="line"></div><div class="line"><span class="keyword">import</span> pathlib</div><div class="line"></div><div class="line">p = pathlib.PurePosixPath(<span class="string">'./source/pathlib/pathlib_name.py'</span>)</div><div class="line">print(<span class="string">'path  : &#123;&#125;'</span>.format(p))</div><div class="line">print(<span class="string">'name  : &#123;&#125;'</span>.format(p.name))</div><div class="line">print(<span class="string">'suffix: &#123;&#125;'</span>.format(p.suffix))</div><div class="line">print(<span class="string">'stem  : &#123;&#125;'</span>.format(p.stem)</div></pre></td></tr></table></figure></p>
+<p>尽管suffix和stem值和os.path.splitext()产生的值相似，但是这些值仅仅基于name属性，而不是完整路径。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">$ python3 pathlib_name.py</div><div class="line"></div><div class="line">path  : <span class="built_in">source</span>/pathlib/pathlib_name.py</div><div class="line">name  : pathlib_name.py</div><div class="line">suffix: .py</div><div class="line">stem  : pathlib_name</div></pre></td></tr></table></figure></p>
+<h2 id="创建Concrete-Paths"><a href="#创建Concrete-Paths" class="headerlink" title="创建Concrete Paths"></a>创建Concrete Paths</h2><p>concrete path类的实例可以通过引用文件系统上的文件，目录或符号链接的名称（或潜在名称）的字符串参数来创建。该类还提供了几种便捷方法来构建使用常用位置的目录，如当前工作目录和用户主目录。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># pathlib_convenience.py</span></div><div class="line"></div><div class="line"><span class="keyword">import</span> pathlib</div><div class="line"></div><div class="line">home = pathlib.Path.home()</div><div class="line">print(<span class="string">'home: '</span>, home)</div><div class="line"></div><div class="line">cwd = pathlib.Path.cwd()</div><div class="line">print(<span class="string">'cwd : '</span>, cwd)</div></pre></td></tr></table></figure></p>
+<p>这两种方法创建Path实例都是通过预填充绝对文件系统引用。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ python3 pathlib_convenience.py</div><div class="line"></div><div class="line">home:  /Users/dhellmann</div><div class="line">cwd :  /Users/dhellmann/PyMOTW</div></pre></td></tr></table></figure></p>
+<h2 id="目录内容"><a href="#目录内容" class="headerlink" title="目录内容"></a>目录内容</h2><p>有三种方法可以访问目录列表，以发现文件系统上可用文件的名称。iterdir()是一个生成器，为包含目录中的每个项目生成一个新的Path实例。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># pathlib_iterdir.py</span></div><div class="line"></div><div class="line"><span class="keyword">import</span> pathlib</div><div class="line"></div><div class="line">p = pathlib.Path(<span class="string">'.'</span>)</div><div class="line"></div><div class="line"><span class="keyword">for</span> f <span class="keyword">in</span> p.iterdir():</div><div class="line">    print(f)</div></pre></td></tr></table></figure></p>
+<p>如果路径没有引用目录，则iterdir()会引发NotADirectoryError异常。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">$ python3 pathlib_iterdir.py</div><div class="line"></div><div class="line">example_link</div><div class="line">index.rst</div><div class="line">pathlib_chmod.py</div><div class="line">pathlib_convenience.py</div><div class="line">pathlib_from_existing.py</div><div class="line">pathlib_glob.py</div><div class="line">pathlib_iterdir.py</div><div class="line">pathlib_joinpath.py</div><div class="line">pathlib_mkdir.py</div><div class="line">pathlib_name.py</div><div class="line">pathlib_operator.py</div><div class="line">pathlib_ownership.py</div><div class="line">pathlib_parents.py</div><div class="line">pathlib_parts.py</div><div class="line">pathlib_read_write.py</div><div class="line">pathlib_resolve.py</div><div class="line">pathlib_rglob.py</div><div class="line">pathlib_rmdir.py</div><div class="line">pathlib_stat.py</div><div class="line">pathlib_symlink_to.py</div><div class="line">pathlib_touch.py</div><div class="line">pathlib_types.py</div><div class="line">pathlib_unlink.py</div></pre></td></tr></table></figure></p>
+<p>使用glob()仅查找匹配模式的文件。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># pathlib_glob.py</span></div><div class="line"></div><div class="line"><span class="keyword">import</span> pathlib</div><div class="line"></div><div class="line">p = pathlib.Path(<span class="string">'..'</span>)</div><div class="line"></div><div class="line"><span class="keyword">for</span> f <span class="keyword">in</span> p.glob(<span class="string">'*.rst'</span>):</div><div class="line">    print(f)</div></pre></td></tr></table></figure></p>
+<p>此示例显示脚本的父目录中的所有reStructuredText输入文件。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">$ python3 pathlib_glob.py</div><div class="line"></div><div class="line">../about.rst</div><div class="line">../algorithm_tools.rst</div><div class="line">../book.rst</div><div class="line">../compression.rst</div><div class="line">../concurrency.rst</div><div class="line">../cryptographic.rst</div><div class="line">../data_structures.rst</div><div class="line">../dates.rst</div><div class="line">../dev_tools.rst</div><div class="line">../email.rst</div><div class="line">../file_access.rst</div><div class="line">../frameworks.rst</div><div class="line">../i18n.rst</div><div class="line">../importing.rst</div><div class="line">../index.rst</div><div class="line">../internet_protocols.rst</div><div class="line">../language.rst</div><div class="line">../networking.rst</div><div class="line">../numeric.rst</div><div class="line">../persistence.rst</div><div class="line">../porting_notes.rst</div><div class="line">../runtime_services.rst</div><div class="line">../text.rst</div><div class="line">../third_party.rst</div><div class="line">../unix.rst</div></pre></td></tr></table></figure></p>
+<p>glob处理器支持使用模式前缀**或通过调用rglob()而不是glob()来进行递归扫描。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># pathlib_rglob.py</span></div><div class="line"></div><div class="line"><span class="keyword">import</span> pathlib</div><div class="line"></div><div class="line">p = pathlib.Path(<span class="string">'..'</span>)</div><div class="line"></div><div class="line"><span class="keyword">for</span> f <span class="keyword">in</span> p.rglob(<span class="string">'pathlib_*.py'</span>):</div><div class="line">    print(f)</div></pre></td></tr></table></figure></p>
+<p>因为这个例子从父目录开始，所以需要递归搜索来找到匹配pathlib _ *.py的示例文件。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">$ python3 pathlib_rglob.py</div><div class="line"></div><div class="line">../pathlib/pathlib_chmod.py</div><div class="line">../pathlib/pathlib_convenience.py</div><div class="line">../pathlib/pathlib_from_existing.py</div><div class="line">../pathlib/pathlib_glob.py</div><div class="line">../pathlib/pathlib_iterdir.py</div><div class="line">../pathlib/pathlib_joinpath.py</div><div class="line">../pathlib/pathlib_mkdir.py</div><div class="line">../pathlib/pathlib_name.py</div><div class="line">../pathlib/pathlib_operator.py</div><div class="line">../pathlib/pathlib_ownership.py</div><div class="line">../pathlib/pathlib_parents.py</div><div class="line">../pathlib/pathlib_parts.py</div><div class="line">../pathlib/pathlib_read_write.py</div><div class="line">../pathlib/pathlib_resolve.py</div><div class="line">../pathlib/pathlib_rglob.py</div><div class="line">../pathlib/pathlib_rmdir.py</div><div class="line">../pathlib/pathlib_stat.py</div><div class="line">../pathlib/pathlib_symlink_to.py</div><div class="line">../pathlib/pathlib_touch.py</div><div class="line">../pathlib/pathlib_types.py</div><div class="line">../pathlib/pathlib_unlink.py</div></pre></td></tr></table></figure></p>
+<h2 id="读写文件"><a href="#读写文件" class="headerlink" title="读写文件"></a>读写文件</h2><p>每个Path实例都包含处理它所引用的文件内容的方法。要立即检索内容，请使用read_bytes()或read_text()方法。要写入文件，请使用write_bytes()或write_text()。使用open()方法打开文件并保留文件句柄，而不是将名称传递给内置的open()函数。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># pathlib_read_write.py</span></div><div class="line"></div><div class="line"><span class="keyword">import</span> pathlib</div><div class="line"></div><div class="line">f = pathlib.Path(<span class="string">'example.txt'</span>)</div><div class="line"></div><div class="line">f.write_bytes(<span class="string">'This is the content'</span>.encode(<span class="string">'utf-8'</span>))</div><div class="line"></div><div class="line"><span class="keyword">with</span> f.open(<span class="string">'r'</span>, encoding=<span class="string">'utf-8'</span>) <span class="keyword">as</span> handle:</div><div class="line">    print(<span class="string">'read from open(): &#123;!r&#125;'</span>.format(handle.read()))</div><div class="line"></div><div class="line">print(<span class="string">'read_text(): &#123;!r&#125;'</span>.format(f.read_text(<span class="string">'utf-8'</span>)))</div></pre></td></tr></table></figure></p>
+<p>便捷方法在打开文件并写入之前进行一些类型检查，否则就相当于直接进行操作。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ python3 pathlib_read_write.py</div><div class="line"></div><div class="line"><span class="built_in">read</span> from open(): <span class="string">'This is the content'</span></div><div class="line">read_text(): <span class="string">'This is the content'</span></div></pre></td></tr></table></figure></p>
+<h2 id="操纵目录和符号链接"><a href="#操纵目录和符号链接" class="headerlink" title="操纵目录和符号链接"></a>操纵目录和符号链接</h2><p>表示不存在的目录或符号链接的路径可用于创建关联的文件系统条目。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># pathlib_mkdir.py</span></div><div class="line"></div><div class="line"><span class="keyword">import</span> pathlib</div><div class="line"></div><div class="line">p = pathlib.Path(<span class="string">'example_dir'</span>)</div><div class="line"></div><div class="line">print(<span class="string">'Creating &#123;&#125;'</span>.format(p))</div><div class="line">p.mkdir()</div></pre></td></tr></table></figure></p>
+<p>如果路径已经存在，mkdir()会引发一个FileExistsError异常。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">$ python3 pathlib_mkdir.py</div><div class="line"></div><div class="line">Creating example_dir</div><div class="line"></div><div class="line">$ python3 pathlib_mkdir.py</div><div class="line"></div><div class="line">Creating example_dir</div><div class="line">Traceback (most recent call last):</div><div class="line">  File <span class="string">"pathlib_mkdir.py"</span>, line 16, <span class="keyword">in</span> &lt;module&gt;</div><div class="line">    p.mkdir()</div><div class="line">  File <span class="string">".../lib/python3.5/pathlib.py"</span>, line 1214, <span class="keyword">in</span> mkdir</div><div class="line">    self._accessor.mkdir(self, mode)</div><div class="line">  File <span class="string">".../lib/python3.5/pathlib.py"</span>, line 371, <span class="keyword">in</span> wrapped</div><div class="line">    <span class="built_in">return</span> strfunc(str(pathobj), *args)</div><div class="line">FileExistsError: [Errno 17] File exists: <span class="string">'example_dir'</span></div></pre></td></tr></table></figure></p>
+<p>使用symlink_to()创建一个符号链接。该链接将根据路径的值进行命名，并将引用作为symlink_to()的参数的名称。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># pathlib_symlink_to.py</span></div><div class="line"></div><div class="line"><span class="keyword">import</span> pathlib</div><div class="line"></div><div class="line">p = pathlib.Path(<span class="string">'example_link'</span>)</div><div class="line"></div><div class="line">p.symlink_to(<span class="string">'index.rst'</span>)</div><div class="line"></div><div class="line">print(p)</div><div class="line">print(p.resolve().name)</div></pre></td></tr></table></figure></p>
+<p>这个例子创建了一个符号链接，然后使用resolve()来读取链接，找到它指向的内容并打印名称。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ python3 pathlib_symlink_to.py</div><div class="line"></div><div class="line">example_link</div><div class="line">index.rst</div></pre></td></tr></table></figure></p>
+<h2 id="文件类型"><a href="#文件类型" class="headerlink" title="文件类型"></a>文件类型</h2><p>Path实例包含几种用于测试路径引用的文件类型的方法。本示例创建了多个不同类型的文件，并测试这些文件以及本地操作系统上可用的一些其他设备特定的文件。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># pathlib_types.py</span></div><div class="line"></div><div class="line"><span class="keyword">import</span> itertools</div><div class="line"><span class="keyword">import</span> os</div><div class="line"><span class="keyword">import</span> pathlib</div><div class="line"></div><div class="line">root = pathlib.Path(<span class="string">'test_files'</span>)</div><div class="line"></div><div class="line"><span class="comment"># Clean up from previous runs.</span></div><div class="line"><span class="keyword">if</span> root.exists():</div><div class="line">    <span class="keyword">for</span> f <span class="keyword">in</span> root.iterdir():</div><div class="line">        f.unlink()</div><div class="line"><span class="keyword">else</span>:</div><div class="line">    root.mkdir()</div><div class="line"></div><div class="line"><span class="comment"># Create test files</span></div><div class="line">(root / <span class="string">'file'</span>).write_text(</div><div class="line">    <span class="string">'This is a regular file'</span>, encoding=<span class="string">'utf-8'</span>)</div><div class="line">(root / <span class="string">'symlink'</span>).symlink_to(<span class="string">'file'</span>)</div><div class="line">os.mkfifo(str(root / <span class="string">'fifo'</span>))</div><div class="line"></div><div class="line"><span class="comment"># Check the file types</span></div><div class="line">to_scan = itertools.chain(</div><div class="line">    root.iterdir(),</div><div class="line">    [pathlib.Path(<span class="string">'/dev/disk0'</span>),</div><div class="line">    pathlib.Path(<span class="string">'/dev/console'</span>)],</div><div class="line">)</div><div class="line">hfmt = <span class="string">'&#123;:18s&#125;'</span> + (<span class="string">'  &#123;:&gt;5&#125;'</span> * <span class="number">6</span>)</div><div class="line">print(hfmt.format(<span class="string">'Name'</span>, <span class="string">'File'</span>, <span class="string">'Dir'</span>, <span class="string">'Link'</span>, <span class="string">'FIFO'</span>, <span class="string">'Block'</span>,</div><div class="line">                  <span class="string">'Character'</span>))</div><div class="line">print()</div><div class="line"></div><div class="line">fmt = <span class="string">'&#123;:20s&#125;  '</span> + (<span class="string">'&#123;!r:&gt;5&#125;  '</span> * <span class="number">6</span>)</div><div class="line"><span class="keyword">for</span> f <span class="keyword">in</span> to_scan:</div><div class="line">    print(fmt.format(</div><div class="line">        str(f),</div><div class="line">        f.is_file(),</div><div class="line">        f.is_dir(),</div><div class="line">        f.is_symlink(),</div><div class="line">        f.is_fifo(),</div><div class="line">        f.is_block_device(),</div><div class="line">        f.is_char_device(),</div><div class="line">    ))</div></pre></td></tr></table></figure></p>
+<p>每一个方法，is_dir()、is_file()、is_symlink()、is_socket()、is_fifo()、is_block_device()和is_char_device()都没有参数。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">$ python3 pathlib_types.py</div><div class="line"></div><div class="line">Name                File    Dir  Link  FIFO  Block  Character</div><div class="line"></div><div class="line">test_files/fifo      False  False  False  True  False  False</div><div class="line">test_files/file        True  False  False  False  False  False</div><div class="line">test_files/symlink    True  False  True  False  False  False</div><div class="line">/dev/disk0            False  False  False  False  True  False</div><div class="line">/dev/console          False  False  False  False  False  True</div></pre></td></tr></table></figure></p>
+<h2 id="文件属性"><a href="#文件属性" class="headerlink" title="文件属性"></a>文件属性</h2><p>有关文件的详细信息可以使用stat()或lstat()方法进行访问（用于检查可能是符号链接的东西的状态）。这些方法产生与os.stat()和os.lstat()相同的结果。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># pathlib_stat.py</span></div><div class="line"></div><div class="line"><span class="keyword">import</span> pathlib</div><div class="line"><span class="keyword">import</span> sys</div><div class="line"><span class="keyword">import</span> time</div><div class="line"></div><div class="line"><span class="keyword">if</span> len(sys.argv) == <span class="number">1</span>:</div><div class="line">    filename = __file__</div><div class="line"><span class="keyword">else</span>:</div><div class="line">    filename = sys.argv[<span class="number">1</span>]</div><div class="line"></div><div class="line">p = pathlib.Path(filename)</div><div class="line">stat_info = p.stat()</div><div class="line"></div><div class="line">print(<span class="string">'&#123;&#125;:'</span>.format(filename))</div><div class="line">print(<span class="string">'  Size:'</span>, stat_info.st_size)</div><div class="line">print(<span class="string">'  Permissions:'</span>, oct(stat_info.st_mode))</div><div class="line">print(<span class="string">'  Owner:'</span>, stat_info.st_uid)</div><div class="line">print(<span class="string">'  Device:'</span>, stat_info.st_dev)</div><div class="line">print(<span class="string">'  Created      :'</span>, time.ctime(stat_info.st_ctime))</div><div class="line">print(<span class="string">'  Last modified:'</span>, time.ctime(stat_info.st_mtime))</div><div class="line">print(<span class="string">'  Last accessed:'</span>, time.ctime(stat_info.st_atime))</div></pre></td></tr></table></figure></p>
+<p>输出将取决于示例代码的安装方式。尝试在命令行上传递不同的文件名到pathlib_stat.py。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">$ python3 pathlib_stat.py</div><div class="line"></div><div class="line">pathlib_stat.py:</div><div class="line">  Size: 607</div><div class="line">  Permissions: 0o100644</div><div class="line">  Owner: 527</div><div class="line">  Device: 16777218</div><div class="line">  Created      : Thu Dec 29 12:25:25 2016</div><div class="line">  Last modified: Thu Dec 29 12:25:25 2016</div><div class="line">  Last accessed: Thu Dec 29 12:25:34 2016</div><div class="line"></div><div class="line">$ python3 pathlib_stat.py index.rst</div><div class="line"></div><div class="line">index.rst:</div><div class="line">  Size: 19363</div><div class="line">  Permissions: 0o100644</div><div class="line">  Owner: 527</div><div class="line">  Device: 16777218</div><div class="line">  Created      : Thu Dec 29 11:27:58 2016</div><div class="line">  Last modified: Thu Dec 29 11:27:58 2016</div><div class="line">  Last accessed: Thu Dec 29 12:25:33 2016</div></pre></td></tr></table></figure></p>
+<p>要更简单地访问有关文件所有者的信息，使用owner()和group()。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># pathlib_ownership.py</span></div><div class="line"></div><div class="line"><span class="keyword">import</span> pathlib</div><div class="line"></div><div class="line">p = pathlib.Path(__file__)</div><div class="line"></div><div class="line">print(<span class="string">'&#123;&#125; is owned by &#123;&#125;/&#123;&#125;'</span>.format(p, p.owner(), p.group()))</div></pre></td></tr></table></figure></p>
+<p>当stat()返回数字系统ID值时，这些方法将查找与ID相关联的名称。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ python3 pathlib_ownership.py</div><div class="line"></div><div class="line">pathlib_ownership.py is owned by dhellmann/dhellmann</div></pre></td></tr></table></figure></p>
+<p>touch()方法与Unix命令touch类似，用于创建文件或更新现有文件的修改时间和权限。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># pathlib_touch.py</span></div><div class="line"></div><div class="line"><span class="keyword">import</span> pathlib</div><div class="line"><span class="keyword">import</span> time</div><div class="line"></div><div class="line">p = pathlib.Path(<span class="string">'touched'</span>)</div><div class="line"><span class="keyword">if</span> p.exists():</div><div class="line">    print(<span class="string">'already exists'</span>)</div><div class="line"><span class="keyword">else</span>:</div><div class="line">    print(<span class="string">'creating new'</span>)</div><div class="line"></div><div class="line">p.touch()</div><div class="line">start = p.stat()</div><div class="line"></div><div class="line">time.sleep(<span class="number">1</span>)</div><div class="line"></div><div class="line">p.touch()</div><div class="line">end = p.stat()</div><div class="line"></div><div class="line">print(<span class="string">'Start:'</span>, time.ctime(start.st_mtime))</div><div class="line">print(<span class="string">'End  :'</span>, time.ctime(end.st_mtime))</div></pre></td></tr></table></figure></p>
+<p>多次运行此示例将在后续运行中更新现有文件。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">$ python3 pathlib_touch.py</div><div class="line"></div><div class="line">creating new</div><div class="line">Start: Thu Dec 29 12:25:34 2016</div><div class="line">End  : Thu Dec 29 12:25:35 2016</div><div class="line"></div><div class="line">$ python3 pathlib_touch.py</div><div class="line"></div><div class="line">already exists</div><div class="line">Start: Thu Dec 29 12:25:35 2016</div><div class="line">End  : Thu Dec 29 12:25:36 2016</div></pre></td></tr></table></figure></p>
+<h2 id="权限"><a href="#权限" class="headerlink" title="权限"></a>权限</h2><p>在类Unix系统上，可以使用chmod()更改文件权限，将模式作为整数传递。模式值可以使用stat模块中定义的常量来构造。这个例子切换用户的执行权限位。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># pathlib_chmod.py</span></div><div class="line"></div><div class="line"><span class="keyword">import</span> os</div><div class="line"><span class="keyword">import</span> pathlib</div><div class="line"><span class="keyword">import</span> stat</div><div class="line"></div><div class="line"><span class="comment"># Create a fresh test file.</span></div><div class="line">f = pathlib.Path(<span class="string">'pathlib_chmod_example.txt'</span>)</div><div class="line"><span class="keyword">if</span> f.exists():</div><div class="line">    f.unlink()</div><div class="line">f.write_text(<span class="string">'contents'</span>)</div><div class="line"></div><div class="line"><span class="comment"># Determine what permissions are already set using stat.</span></div><div class="line">existing_permissions = stat.S_IMODE(f.stat().st_mode)</div><div class="line">print(<span class="string">'Before: &#123;:o&#125;'</span>.format(existing_permissions))</div><div class="line"></div><div class="line"><span class="comment"># Decide which way to toggle them.</span></div><div class="line"><span class="keyword">if</span> <span class="keyword">not</span> (existing_permissions &amp; os.X_OK):</div><div class="line">    print(<span class="string">'Adding execute permission'</span>)</div><div class="line">    new_permissions = existing_permissions | stat.S_IXUSR</div><div class="line"><span class="keyword">else</span>:</div><div class="line">    print(<span class="string">'Removing execute permission'</span>)</div><div class="line">    <span class="comment"># use xor to remove the user execute permission</span></div><div class="line">    new_permissions = existing_permissions ^ stat.S_IXUSR</div><div class="line"></div><div class="line"><span class="comment"># Make the change and show the new value.</span></div><div class="line">f.chmod(new_permissions)</div><div class="line">after_permissions = stat.S_IMODE(f.stat().st_mode)</div><div class="line">print(<span class="string">'After: &#123;:o&#125;'</span>.format(after_permissions))</div></pre></td></tr></table></figure></p>
+<p>脚本假定它具有运行时修改文件模式所需的权限。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ python3 pathlib_chmod.py</div><div class="line"></div><div class="line">Before: 644</div><div class="line">Adding execute permission</div><div class="line">After: 744</div></pre></td></tr></table></figure></p>
+<h2 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h2><p>有两种从文件系统中删除东西的方法，具体取决于类型。要删除空目录，请使用rmdir()。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># pathlib_rmdir.py</span></div><div class="line"></div><div class="line"><span class="keyword">import</span> pathlib</div><div class="line"></div><div class="line">p = pathlib.Path(<span class="string">'example_dir'</span>)</div><div class="line"></div><div class="line">print(<span class="string">'Removing &#123;&#125;'</span>.format(p))</div><div class="line">p.rmdir()</div></pre></td></tr></table></figure></p>
+<p>如果后置条件已满足且目录不存在，则会引发FileNotFoundError异常。尝试删除非空的目录也是错误的。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">$ python3 pathlib_rmdir.py</div><div class="line"></div><div class="line">Removing example_dir</div><div class="line"></div><div class="line">$ python3 pathlib_rmdir.py</div><div class="line"></div><div class="line">Removing example_dir</div><div class="line">Traceback (most recent call last):</div><div class="line">  File <span class="string">"pathlib_rmdir.py"</span>, line 16, <span class="keyword">in</span> &lt;module&gt;</div><div class="line">    p.rmdir()</div><div class="line">  File <span class="string">".../lib/python3.5/pathlib.py"</span>, line 1262, <span class="keyword">in</span> rmdir</div><div class="line">    self._accessor.rmdir(self)</div><div class="line">  File <span class="string">".../lib/python3.5/pathlib.py"</span>, line 371, <span class="keyword">in</span> wrapped</div><div class="line">    <span class="built_in">return</span> strfunc(str(pathobj), *args)</div><div class="line">FileNotFoundError: [Errno 2] No such file or directory:</div><div class="line"><span class="string">'example_dir'</span></div></pre></td></tr></table></figure></p>
+<p>对于文件，符号链接和大多数其他路径类型使用unlink()。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># pathlib_unlink.py</span></div><div class="line"></div><div class="line"><span class="keyword">import</span> pathlib</div><div class="line"></div><div class="line">p = pathlib.Path(<span class="string">'touched'</span>)</div><div class="line"></div><div class="line">p.touch()</div><div class="line"></div><div class="line">print(<span class="string">'exists before removing:'</span>, p.exists())</div><div class="line"></div><div class="line">p.unlink()</div><div class="line"></div><div class="line">print(<span class="string">'exists after removing:'</span>, p.exists())</div></pre></td></tr></table></figure></p>
+<p>用户必须具有删除文件，符号链接，套接字或其他文件系统对象的权限。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ python3 pathlib_unlink.py</div><div class="line"></div><div class="line">exists before removing: True</div><div class="line">exists after removing: False</div></pre></td></tr></table></figure></p>
+<p><br></p>
+<h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><ul>
+<li><a href="https://docs.python.org/3.5/library/pathlib.html" target="_blank" rel="external">Standard library documentation for pathlib</a></li>
+<li><a href="https://pymotw.com/3/os.path/index.html#module-os.path" target="_blank" rel="external">os.path</a> – Platform-independent manipulation of filenames</li>
+<li><a href="https://pymotw.com/3/os/index.html#os-stat" target="_blank" rel="external">Managing File System Permissions</a> – Discussion of os.stat() and os.lstat().</li>
+<li><a href="https://pymotw.com/3/glob/index.html#module-glob" target="_blank" rel="external">glob</a> – Unix shell pattern matching for filenames</li>
+<li><a href="https://www.python.org/dev/peps/pep-0428" target="_blank" rel="external">PEP 428</a> – The pathlib module</li>
+</ul>
+<p><strong>本文翻译自<a href="https://pymotw.com/3/pathlib/" target="_blank" rel="external">《The Python3 Standard Library By Example》</a>pathlib相关章节</strong></p>
+</the></excerpt>
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2018/02/08/pathlib：文件系统路径作为对象/">pathlib：文件系统路径作为对象</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">HatBoy</a></p>
+        <p><span>发布时间:</span>2018-02-08, 15:53:05</p>
+        <p><span>最后更新:</span>2018-02-08, 15:54:13</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2018/02/08/pathlib：文件系统路径作为对象/" title="pathlib：文件系统路径作为对象">https://hatboy.github.io/2018/02/08/pathlib：文件系统路径作为对象/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://hatboy.github.io/2018/02/08/pathlib：文件系统路径作为对象/　　作者: HatBoy" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2017/12/21/asyncio：异步IO、事件循环和并发/">
+                    asyncio：异步IO、事件循环和并发
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#路径表示"><span class="toc-number">1.</span> <span class="toc-text">路径表示</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#构建Paths"><span class="toc-number">2.</span> <span class="toc-text">构建Paths</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#解析Paths"><span class="toc-number">3.</span> <span class="toc-text">解析Paths</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#创建Concrete-Paths"><span class="toc-number">4.</span> <span class="toc-text">创建Concrete Paths</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#目录内容"><span class="toc-number">5.</span> <span class="toc-text">目录内容</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#读写文件"><span class="toc-number">6.</span> <span class="toc-text">读写文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#操纵目录和符号链接"><span class="toc-number">7.</span> <span class="toc-text">操纵目录和符号链接</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#文件类型"><span class="toc-number">8.</span> <span class="toc-text">文件类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#文件属性"><span class="toc-number">9.</span> <span class="toc-text">文件属性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#权限"><span class="toc-number">10.</span> <span class="toc-text">权限</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#删除"><span class="toc-number">11.</span> <span class="toc-text">删除</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#参考资料"><span class="toc-number">11.1.</span> <span class="toc-text">参考资料</span></a></li></ol></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"pathlib：文件系统路径作为对象　| HatBoy的个人主页　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2017/12/21/asyncio：异步IO、事件循环和并发/" title="下一篇: asyncio：异步IO、事件循环和并发">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2018/02/08/pathlib：文件系统路径作为对象/">pathlib：文件系统路径作为对象</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio：异步IO、事件循环和并发/">asyncio：异步IO、事件循环和并发</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之调试asyncio/">asyncio之调试asyncio</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之协程结合线程和进程/">asyncio之协程结合线程和进程</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之接收Unix信号/">asyncio之接收Unix信号</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之使用子进程/">asyncio之使用子进程</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之与DNS服务进行交互/">asyncio之与DNS服务进行交互</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之使用SSL/">asyncio之使用SSL</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之使用协程和流的异步I-O/">asyncio之使用协程和流的异步I/O</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之协议抽象类的异步I-O/">asyncio之协议抽象类的异步I/O</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之同步原语/">asyncio之同步原语</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之用控制结构组建协程/">asyncio之用控制结构组建协程</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之并发执行Tasks/">asyncio之并发执行Tasks</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之异步生产结果/">asyncio之异步生产结果</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之定时调度常规函数/">asyncio之定时调度常规函数</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之使用协程处理多任务/">asyncio之使用协程处理多任务</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之异步并发的概念/">asyncio之异步并发的概念</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/Python上下文管理器/">Python上下文管理器</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/Python-importlib讲解/">Python importlib讲解</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/第七章-用Cython包装C库/">第七章 用Cython包装C库</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/16/第六章-组织Cython代码/">第六章 组织Cython代码</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/10/第五章-Cython和扩展类型/">第五章 Cython和扩展类型</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/31/第四章-Cython实践：N-body模拟/">第四章 Cython实践：N-body模拟</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/31/Python性能分析与调试/">Python性能分析与调试</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/17/第三章-深入Cython/">第三章 深入Cython</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/03/第二章-编译和运行Cython代码/">第二章 编译和运行Cython代码</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/02/第一章-Cython简介/">第一章 Cython简介</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2017-2018 HatBoy
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+
+
+
+
+    <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script src="//cdn.bootcss.com/mathjax/2.6.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        $("a").attr("target", "_blank");
+        $("#scroll a, #toc a").removeAttr("target");
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>
