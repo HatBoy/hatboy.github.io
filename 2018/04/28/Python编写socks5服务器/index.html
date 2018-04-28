@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="HatBoy" />
+
+
+
+<meta name="description" content="Python编写socks5服务器">
+<meta name="keywords" content="Python,socks">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python编写socks5服务器">
+<meta property="og:url" content="https://hatboy.github.io/2018/04/28/Python编写socks5服务器/index.html">
+<meta property="og:site_name" content="HatBoy的个人主页">
+<meta property="og:description" content="Python编写socks5服务器">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://hatboy.github.io/2018/04/28/Python编写socks5服务器/1.png">
+<meta property="og:image" content="https://hatboy.github.io/2018/04/28/Python编写socks5服务器/2.png">
+<meta property="og:image" content="https://hatboy.github.io/2018/04/28/Python编写socks5服务器/3.png">
+<meta property="og:image" content="https://hatboy.github.io/2018/04/28/Python编写socks5服务器/4.png">
+<meta property="og:image" content="https://hatboy.github.io/2018/04/28/Python编写socks5服务器/5.png">
+<meta property="og:image" content="https://hatboy.github.io/2018/04/28/Python编写socks5服务器/6.png">
+<meta property="og:image" content="https://hatboy.github.io/2018/04/28/Python编写socks5服务器/7.png">
+<meta property="og:image" content="https://hatboy.github.io/2018/04/28/Python编写socks5服务器/8.png">
+<meta property="og:updated_time" content="2018-04-28T10:30:50.265Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Python编写socks5服务器">
+<meta name="twitter:description" content="Python编写socks5服务器">
+<meta name="twitter:image" content="https://hatboy.github.io/2018/04/28/Python编写socks5服务器/1.png">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="HatBoy的个人主页" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>Python编写socks5服务器 | HatBoy的个人主页</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: true
+    }
+</script>
+
+
+    <script>
+        yiliaConfig.jquery_ui = [true, "//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js", "//cdn.bootcss.com/jqueryui/1.10.4/css/jquery-ui.min.css"];
+    </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "//hm.baidu.com/hm.js?94c5bc16a94e5db3e2942494f0be64dd";
+            var s = document.getElementsByTagName("script")[0]; 
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/avatar.jpg" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">HatBoy</a></h1>
+        </hgroup>
+
+        
+
+        
+            <form id="search-form">
+            <input type="text" id="local-search-input" name="q" placeholder="search..." class="search form-control" autocomplete="off" autocorrect="off" searchonload="true" />
+            <i class="fa fa-times" onclick="resetSearch()"></i>
+            </form>
+            <div id="local-search-result"></div>
+            <p class='no-result'>No results found <i class='fa fa-spinner fa-pulse'></i></p>
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="mailto:hatboy-dj@qq.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" href="https://github.com/HatBoy/" title="GitHub"></a>
+                            
+                                <a class="fa 码云博客" href="http://hatboy.gitee.io/" title="码云博客"></a>
+                            
+                                <a class="fa CSDN" href="http://blog.csdn.net/dj1174232716" title="CSDN"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Cython/">Cython</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/">Python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python-tips/">Python tips</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python模块tips/">Python模块tips</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python语法/">Python语法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/asyncio/">asyncio</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/socks/">socks</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/安全/">安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/异步并发/">异步并发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/调试/">调试</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://fmxfmx.gitee.io/">FMX</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://jewelz.me/">Jewelz</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://www.zhihu.com/people/talentisan/activities">轻狂书生</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://threetop.top/">ZCC</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://blog.csdn.net/u012017783">ZCC的CSDN</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://zcc888.gitee.io/">ZCC的博客</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">一枚爱Python,爱海贼,爱健身,喜欢好玩有趣事物的程序员……</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">HatBoy</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/avatar.jpg" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">HatBoy</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="mailto:hatboy-dj@qq.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="https://github.com/HatBoy/" title="GitHub"></a>
+                            
+                                <a class="fa 码云博客" target="_blank" href="http://hatboy.gitee.io/" title="码云博客"></a>
+                            
+                                <a class="fa CSDN" target="_blank" href="http://blog.csdn.net/dj1174232716" title="CSDN"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-Python编写socks5服务器" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2018/04/28/Python编写socks5服务器/" class="article-date">
+      <time datetime="2018-04-28T10:04:48.000Z" itemprop="datePublished">2018-04-28</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Python编写socks5服务器
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/">Python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/socks/">socks</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <excerpt in="" index="" |="" 首页摘要="">
+
+<p>Python编写socks5服务器</p>
+<a id="more"></a>
+<the rest="" of="" contents="" |="" 余下全文="">
+
+<h2 id="socks协议"><a href="#socks协议" class="headerlink" title="socks协议"></a>socks协议</h2><ul>
+<li>socks是一种网络传输协议，主要用于客户端与外网服务器之间通讯的中间传递。SOCKS是”SOCKetS”的缩写。</li>
+<li>当防火墙后的客户端要访问外部的服务器时，就跟socks代理服务器连接。这个代理服务器控制客户端访问外网的资格，允许的话，就将客户端的请求发往外部的服务器。这个协议最初由David Koblas开发，而后由NEC的Ying-Da Lee将其扩展到版本4。最新协议是版本5，与前一版本相比，增加支持UDP、验证，以及IPv6。根据OSI模型，socks是会话层的协议，位于表示层与传输层之间。</li>
+<li>socks协议的RFC地址：<ul>
+<li><a href="https://www.ietf.org/rfc/rfc1928.txt" target="_blank" rel="external">RFC1928</a></li>
+<li><a href="https://www.ietf.org/rfc/rfc1929.txt" target="_blank" rel="external">RFC1928</a></li>
+</ul>
+</li>
+</ul>
+<h2 id="socks协议使用场景"><a href="#socks协议使用场景" class="headerlink" title="socks协议使用场景"></a>socks协议使用场景</h2><ul>
+<li>socks协议的设计初衷是在保证网络隔离的情况下，提高部分人员的网络访问权限，但是国内似乎很少有组织机构这样使用。一般情况下，大家都会使用更新的网络安全技术来达到相同的目的。</li>
+<li>但是由于socksCap32和PSD这类软件，人们找到了socks协议新的用途：突破网络通信限制，这和该协议的设计初衷正好相反。另外，socks协议也可以用来内网穿透。</li>
+</ul>
+<h2 id="与HTTP代理的对比"><a href="#与HTTP代理的对比" class="headerlink" title="与HTTP代理的对比"></a>与HTTP代理的对比</h2><ul>
+<li>socks支持多种用户身份验证方式和通信加密方式</li>
+<li>socks工作在比HTTP代理更低的层次：socks使用握手协议来通知代理软件其客户端试图进行的连接socks，然后尽可能透明地进行操作，而常规代理可能会解释和重写报头（例如，使用另一种底层协议，例如FTP；然而，HTTP代理只是将HTTP请求转发到所需的HTTP服务器）。虽然HTTP代理有不同的使用模式，CONNECT方法允许转发TCP连接；然而，socks代理还可以转发UDP流量和反向代理，而HTTP代理不能。HTTP代理通常更适合HTTP协议，执行更高层次的过滤（虽然通常只用于GET和POST方法，而不用于CONNECT方法）。socks不管应用层是什么协议，只要是传输层是TCP/UDP协议就可以代理。</li>
+</ul>
+<h2 id="socks5协议详解"><a href="#socks5协议详解" class="headerlink" title="socks5协议详解"></a>socks5协议详解</h2><p><img src="/2018/04/28/Python编写socks5服务器/1.png" alt="1.png"></p>
+<h3 id="协商"><a href="#协商" class="headerlink" title="协商"></a>协商</h3><ul>
+<li>客户端首先向SOCKS服务器自己的协议版本号，以及支持的认证方法。SOCKS服务器向客户端返回协议版本号以及选定的认证方法。格式为：<br><img src="/2018/04/28/Python编写socks5服务器/2.png" alt="2.png"></li>
+<li>各个字段的含义为：    <ul>
+<li>VER：socks版本（在socks5中是<code>X05</code>）</li>
+<li>NMETHODS：在METHODS字段中出现的方法的数目</li>
+<li>METHODS：客户端支持的认证方式列表，每个方法占1字节</li>
+</ul>
+</li>
+<li>服务器端在客户端提供的METHODS域给定的方法中选择一个，然后返回一个方法选择消息：<br><img src="/2018/04/28/Python编写socks5服务器/3.png" alt="3.png"></li>
+<li>各个字段的含义为：    <ul>
+<li>VER：socks版本（在socks5中是<code>X05</code>）</li>
+<li>METHOD：服务端选中的方法（若返回<code>XFF</code>表示没有方法被选中，客户端需要关闭连接）</li>
+</ul>
+</li>
+<li>当前定义的表示方法的值有：<ul>
+<li><code>X00</code> 表示NO AUTHENTICATION REQUIRED(没有认证需求)</li>
+<li><code>X01</code> 表示GSSAPI</li>
+<li><code>X02</code> 表示USERNAME/PASSWORD(用户名/密码)</li>
+<li><code>X03</code> 到 X’7F’表示IANA ASSIGNED(由IANA负责分配）</li>
+<li><code>X80</code> 到 X’FE’为私有方法保留</li>
+<li><code>XFF</code> 表示NO ACCEPTABLE MEHTODS（没有方法被选中）</li>
+</ul>
+</li>
+<li>之后客户端和服务端根据选定的认证方式执行对应的认证。认证结束后客户端就可以发送请求信息（如果认证方法有特殊封装要求，请求必须按照方法所定义的方式进行封装）。</li>
+</ul>
+<h3 id="认证"><a href="#认证" class="headerlink" title="认证"></a>认证</h3><ul>
+<li>客户端根据服务器端选定的方法进行认证，如果选定的方法是02,则根据RFC 1929定义的方法进行认证。RFC 1929定义的密码是明文传输，安全性较差。请求格式为：<br><img src="/2018/04/28/Python编写socks5服务器/4.png" alt="4.png"></li>
+<li>各个字段的含义为：<ul>
+<li>VER：表示当前子协议的版本，这里是<code>X01</code></li>
+<li>ULEN：表示UNAME字段的长度</li>
+<li>UNAME：表示用户名字节数据</li>
+<li>PLEN：表示PASSWD字段的长度</li>
+<li>PASSWD：表示密码的字节数据</li>
+</ul>
+</li>
+<li>服务器校验用户名和密码，然后返回下面的响应包：<br><img src="/2018/04/28/Python编写socks5服务器/5.png" alt="5.png"></li>
+<li>各个字段的含义为：    <ul>
+<li>VER：表示当前子协议的版本，这里是<code>X01</code></li>
+<li>STATUS：表示认证结果，如果是<code>X00</code>表示认证成功，其他的结果表示认证失败</li>
+</ul>
+</li>
+</ul>
+<h3 id="请求"><a href="#请求" class="headerlink" title="请求"></a>请求</h3><ul>
+<li>针对所依赖方法的子协商一旦完成，客户端就发送请求细节。如果协商过的方法包含了针对完整性检查或保密性目的的封装，这些请求必须被包装到所依赖的方法的封装中。SOCKS请求按下述格式进行组织：<br><img src="/2018/04/28/Python编写socks5服务器/6.png" alt="6.png"></li>
+<li><p>各个字段的含义为：    </p>
+<ul>
+<li>VER：socks版本（在socks5中是<code>0x05</code>）</li>
+<li>CMD：SOCK的命令码：<ul>
+<li>CONNECT <code>X01</code></li>
+<li>BIND <code>X02</code></li>
+<li>UDP ASSOCIATE <code>X03</code></li>
+</ul>
+</li>
+<li>RSV：保留字段</li>
+<li>ATYP：地址类型：<ul>
+<li>IP V4地址：<code>X01</code></li>
+<li>域名地址：<code>X03</code></li>
+<li>IP V6地址：<code>X04</code></li>
+</ul>
+</li>
+<li>DST.ADDR：目的地址</li>
+<li>DST.PORT：目的端口</li>
+</ul>
+</li>
+<li><p>请求类型有下面几种：</p>
+<ul>
+<li>CONNECT : <code>0X01</code>， 建立代理连接。比较常见的请求，客服端请求服务器发起链接到目标主机，目标端口的代理。SOCKS 服务器将使用目标主机，目标端口, 客户端的源地址和端口号来评估 CONNECT 请求是否通过。成功之后后续流量都会被转发到目标主机的目标端口。</li>
+<li>BIND : <code>0X02</code>，BIND请求被用于要求客户端接受来自服务器连接的协议中。FTP是一个众所周知的例子，它针对命令和状态报告使用主要的“客户端到服务器”的连接，但是用来响应命令（如LS、GET、PUT命令）的数据传输可以使用一条“服务器到客户端”的连接。只有在完成了connnect操作之后才能进行bind操作，bind操作之后，代理服务器会有两次响应, 第一次响应是在创建socket监听完成之后，第二次是在目标机器连接到代理服务器上之后。.建立流程如下：<ul>
+<li>Client随BIND请求，发送其要绑定的地址和端口。</li>
+<li>Server返回其创建的监听端口的地址和端口。</li>
+<li>Server创建的监听端口有连接后，返回该连接的源地址和端口。</li>
+<li>Server端将上述连接中的流量，发送给client的监听端口。</li>
+</ul>
+</li>
+<li>UDP ASSOCIATE : <code>0x03</code>，用于在UDP中继处理中建立一条关联以处理UDP数据报。</li>
+</ul>
+</li>
+<li><p>服务器按以下格式回应客户端的请求：<br><img src="/2018/04/28/Python编写socks5服务器/7.png" alt="7.png"></p>
+</li>
+<li>各个字段的含义为：<ul>
+<li>VER：socks版本（在socks5中是<code>X05</code>）</li>
+<li>REP：应答状态码：<ul>
+<li><code>X00</code> 成功</li>
+<li><code>X01</code> 连接不被规则集允许</li>
+<li><code>X02</code> 普通的SOCKS服务器失败</li>
+<li><code>X03</code> 网络不可达</li>
+<li><code>X04</code> 主机不可达</li>
+<li><code>X05</code> 连接被拒绝</li>
+<li><code>X06</code> TTL超时</li>
+<li><code>X07</code> 命令不被支持</li>
+<li><code>X08</code> 地址类型不被支持</li>
+<li><code>X09</code> 到 <code>XFF</code> 未分配</li>
+</ul>
+</li>
+<li>RSV：保留字段（标记为被保留的域必须被设置为<code>X00</code>）</li>
+<li>ATYP：地址类型：<ul>
+<li>IPV4地址：<code>X01</code></li>
+<li>域名：<code>X03</code></li>
+<li>IPV6地址：<code>X04</code></li>
+</ul>
+</li>
+<li>BND.ADDR：服务器绑定的地址</li>
+<li>BND.PORT：服务器绑定的端口</li>
+</ul>
+</li>
+</ul>
+<h3 id="数据转发"><a href="#数据转发" class="headerlink" title="数据转发"></a>数据转发</h3><ul>
+<li>到了这个阶段基本就是数据转发了，tcp就直接转发，udp还须要做点工作。<ul>
+<li>当一个响应（REP值不为<code>X00</code>）指示失败的时候，SOCKS服务器必须在发送这个响应后立刻断开这条TCP连接。这必须发生在检测到引起失败的原因之后的10秒内。</li>
+<li>如果响应码（REP值为<code>X00</code>）指示成功，而且这次请求是BIND或者CONNECT，那么客户端可以立刻开始数据传输。如果选择的认证方法支持针对完整性、认证或私密性目的封装，要传输的数据应该包装在所依赖的认证方法的封装中。同样地，当针对客户端的响应数据到达SOCKS服务器的时候，服务器也必须根据使用的认证方法来封装数据。</li>
+</ul>
+</li>
+<li>一个基于UDP的客户端必须将它的数据报发送到UDP中继服务器的指定端口——该端口在针对UDP ASSOCIATE的响应中的BND.PORT域指明。如果选择的认证方法提供了针对认证、完整性或私密性目的的封装，数据报必须使用恰当的封装方式进行包装。每一个UDP数据报都随身携带了一个UDP请求头：<br><img src="/2018/04/28/Python编写socks5服务器/8.png" alt="8.png"></li>
+<li>各个字段的含义为：    <ul>
+<li>RSV 保留位，值为<code>X0000</code></li>
+<li>FRAG 当前分片号</li>
+<li>ATYP 下列地址类型之一： <ul>
+<li>IPV4地址：<code>X01</code></li>
+<li>域名：<code>X03</code></li>
+<li>IPV6地址：<code>X04</code></li>
+</ul>
+</li>
+<li>DST.ADDR 目的地址</li>
+<li>DST.PORT 目的端口号</li>
+<li>DATA 用户数据</li>
+</ul>
+</li>
+<li>当一个UDP中继服务器决定中继一个UDP数据报的时候，它会默默的做——不会给客户端返回任何通知。同样的，如果它不能中继数据报那它就会丢弃数据报。当一个UDP中继服务器从远端主机收到一个响应数据报文的时候，它必须根据使用上述的UDP请求头对该响应报文进行封装，然后再进行所依赖的认证方法的封装处理。</li>
+</ul>
+<h2 id="Python-socks5服务器代码实现"><a href="#Python-socks5服务器代码实现" class="headerlink" title="Python socks5服务器代码实现"></a>Python socks5服务器代码实现</h2><ul>
+<li><p>不需要认证的socks5服务器</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div></pre></td><td class="code"><pre><div class="line">import logging</div><div class="line">import select</div><div class="line">import socket</div><div class="line">import struct</div><div class="line">from socketserver import StreamRequestHandler, ThreadingTCPServer</div><div class="line"></div><div class="line">logging.basicConfig(level=logging.DEBUG)</div><div class="line">SOCKS_VERSION = <span class="number">5</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SocksProxy</span>(<span class="title">StreamRequestHandler</span>):</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">handle</span><span class="params">(<span class="keyword">self</span>)</span></span><span class="symbol">:</span></div><div class="line">        logging.info(<span class="string">'Accepting connection from %s:%s'</span> % <span class="keyword">self</span>.client_address)</div><div class="line"></div><div class="line">        <span class="comment"># 协商</span></div><div class="line">        <span class="comment"># 从客户端读取并解包两个字节的数据</span></div><div class="line">        header = <span class="keyword">self</span>.connection.recv(<span class="number">2</span>)</div><div class="line">        version, nmethods = struct.unpack(<span class="string">"!BB"</span>, header)</div><div class="line"></div><div class="line">        <span class="comment"># 设置socks5协议，METHODS字段的数目大于0</span></div><div class="line">        assert version == SOCKS_VERSION</div><div class="line">        assert nmethods &gt; <span class="number">0</span></div><div class="line"></div><div class="line">        <span class="comment"># 接受支持的方法</span></div><div class="line">        methods = <span class="keyword">self</span>.get_available_methods(nmethods)</div><div class="line"></div><div class="line">        <span class="comment"># 无需认证</span></div><div class="line">        <span class="keyword">if</span> <span class="number">0</span> <span class="keyword">not</span> <span class="keyword">in</span> set(methods)<span class="symbol">:</span></div><div class="line">            <span class="keyword">self</span>.server.close_request(<span class="keyword">self</span>.request)</div><div class="line">            <span class="keyword">return</span></div><div class="line"></div><div class="line">        <span class="comment"># 发送协商响应数据包</span></div><div class="line">        <span class="keyword">self</span>.connection.sendall(struct.pack(<span class="string">"!BB"</span>, SOCKS_VERSION, <span class="number">0</span>))</div><div class="line"></div><div class="line">        <span class="comment"># 请求</span></div><div class="line">        version, cmd, <span class="number">_</span>, address_type = struct.unpack(<span class="string">"!BBBB"</span>, <span class="keyword">self</span>.connection.recv(<span class="number">4</span>))</div><div class="line">        assert version == SOCKS_VERSION</div><div class="line"></div><div class="line">        <span class="keyword">if</span> address_type == <span class="number">1</span>:  <span class="comment"># IPv4</span></div><div class="line">            address = socket.inet_ntoa(<span class="keyword">self</span>.connection.recv(<span class="number">4</span>))</div><div class="line">        elif address_type == <span class="number">3</span>:  <span class="comment"># Domain name</span></div><div class="line">            domain_length = ord(<span class="keyword">self</span>.connection.recv(<span class="number">1</span>)[<span class="number">0</span>])</div><div class="line">            address = <span class="keyword">self</span>.connection.recv(domain_length)</div><div class="line"></div><div class="line">        port = struct.unpack(<span class="string">'!H'</span>, <span class="keyword">self</span>.connection.recv(<span class="number">2</span>))[<span class="number">0</span>]</div><div class="line"></div><div class="line">        <span class="comment"># 响应，只支持CONNECT请求</span></div><div class="line">        <span class="symbol">try:</span></div><div class="line">            <span class="keyword">if</span> cmd == <span class="number">1</span>:  <span class="comment"># CONNECT</span></div><div class="line">                remote = socket.socket(socket.AF_INET, socket.SOCK_STREAM)</div><div class="line">                remote.connect((address, port))</div><div class="line">                bind_address = remote.getsockname()</div><div class="line">                logging.info(<span class="string">'Connected to %s %s'</span> % (address, port))</div><div class="line">            <span class="symbol">else:</span></div><div class="line">                <span class="keyword">self</span>.server.close_request(<span class="keyword">self</span>.request)</div><div class="line"></div><div class="line">            addr = struct.unpack(<span class="string">"!I"</span>, socket.inet_aton(bind_address[<span class="number">0</span>]))[<span class="number">0</span>]</div><div class="line">            port = bind_address[<span class="number">1</span>]</div><div class="line">            reply = struct.pack(<span class="string">"!BBBBIH"</span>, SOCKS_VERSION, <span class="number">0</span>, <span class="number">0</span>, address_type,</div><div class="line">                                addr, port)</div><div class="line"></div><div class="line">        except Exception as <span class="symbol">err:</span></div><div class="line">            logging.error(err)</div><div class="line">            <span class="comment"># 响应拒绝连接的错误</span></div><div class="line">            reply = <span class="keyword">self</span>.generate_failed_reply(address_type, <span class="number">5</span>)</div><div class="line"></div><div class="line">        <span class="keyword">self</span>.connection.sendall(reply)</div><div class="line"></div><div class="line">        <span class="comment"># 建立连接成功，开始交换数据</span></div><div class="line">        <span class="keyword">if</span> reply[<span class="number">1</span>] == <span class="number">0</span> <span class="keyword">and</span> cmd == <span class="number">1</span><span class="symbol">:</span></div><div class="line">            <span class="keyword">self</span>.exchange_loop(<span class="keyword">self</span>.connection, remote)</div><div class="line"></div><div class="line">        <span class="keyword">self</span>.server.close_request(<span class="keyword">self</span>.request)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_available_methods</span><span class="params">(<span class="keyword">self</span>, n)</span></span><span class="symbol">:</span></div><div class="line">        methods = []</div><div class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(n)<span class="symbol">:</span></div><div class="line">            methods.append(ord(<span class="keyword">self</span>.connection.recv(<span class="number">1</span>)))</div><div class="line">        <span class="keyword">return</span> methods</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">generate_failed_reply</span><span class="params">(<span class="keyword">self</span>, address_type, error_number)</span></span><span class="symbol">:</span></div><div class="line">        <span class="keyword">return</span> struct.pack(<span class="string">"!BBBBIH"</span>, SOCKS_VERSION, error_number, <span class="number">0</span>, address_type, <span class="number">0</span>, <span class="number">0</span>)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">exchange_loop</span><span class="params">(<span class="keyword">self</span>, client, remote)</span></span><span class="symbol">:</span></div><div class="line"></div><div class="line">        <span class="keyword">while</span> <span class="symbol">True:</span></div><div class="line"></div><div class="line">            <span class="comment"># 等待数据</span></div><div class="line">            r, w, e = select.select([client, remote], [], [])</div><div class="line"></div><div class="line">            <span class="keyword">if</span> client <span class="keyword">in</span> <span class="symbol">r:</span></div><div class="line">                data = client.recv(<span class="number">4096</span>)</div><div class="line">                <span class="keyword">if</span> remote.send(data) &lt;= <span class="number">0</span><span class="symbol">:</span></div><div class="line">                    <span class="keyword">break</span></div><div class="line"></div><div class="line">            <span class="keyword">if</span> remote <span class="keyword">in</span> <span class="symbol">r:</span></div><div class="line">                data = remote.recv(<span class="number">4096</span>)</div><div class="line">                <span class="keyword">if</span> client.send(data) &lt;= <span class="number">0</span><span class="symbol">:</span></div><div class="line">                    <span class="keyword">break</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">if</span> __name_<span class="number">_</span> == <span class="string">'__main__'</span><span class="symbol">:</span></div><div class="line">    <span class="comment"># 使用socketserver库的多线程服务器ThreadingTCPServer启动代理</span></div><div class="line">    with ThreadingTCPServer((<span class="string">'127.0.0.1'</span>, <span class="number">9011</span>), SocksProxy) as <span class="symbol">server:</span></div><div class="line">        server.serve_forever()</div></pre></td></tr></table></figure>
+</li>
+<li><p>需要认证的socks5服务器</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div></pre></td><td class="code"><pre><div class="line">import logging</div><div class="line">import select</div><div class="line">import socket</div><div class="line">import struct</div><div class="line">from socketserver import StreamRequestHandler, ThreadingTCPServer</div><div class="line"></div><div class="line">logging.basicConfig(level=logging.DEBUG)</div><div class="line">SOCKS_VERSION = <span class="number">5</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SocksProxy</span>(<span class="title">StreamRequestHandler</span>):</span></div><div class="line">    username = <span class="string">'username'</span></div><div class="line">    password = <span class="string">'password'</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">handle</span><span class="params">(<span class="keyword">self</span>)</span></span><span class="symbol">:</span></div><div class="line">        logging.info(<span class="string">'Accepting connection from %s:%s'</span> % <span class="keyword">self</span>.client_address)</div><div class="line"></div><div class="line">        <span class="comment"># 协商</span></div><div class="line">        <span class="comment"># 从客户端读取并解包两个字节的数据</span></div><div class="line">        header = <span class="keyword">self</span>.connection.recv(<span class="number">2</span>)</div><div class="line">        version, nmethods = struct.unpack(<span class="string">"!BB"</span>, header)</div><div class="line"></div><div class="line">        <span class="comment"># 设置socks5协议，METHODS字段的数目大于0</span></div><div class="line">        assert version == SOCKS_VERSION</div><div class="line">        assert nmethods &gt; <span class="number">0</span></div><div class="line"></div><div class="line">        <span class="comment"># 接受支持的方法</span></div><div class="line">        methods = <span class="keyword">self</span>.get_available_methods(nmethods)</div><div class="line"></div><div class="line">        <span class="comment"># 检查是否支持用户名/密码认证方式，不支持则断开连接</span></div><div class="line">        <span class="keyword">if</span> <span class="number">2</span> <span class="keyword">not</span> <span class="keyword">in</span> set(methods)<span class="symbol">:</span></div><div class="line">            <span class="keyword">self</span>.server.close_request(<span class="keyword">self</span>.request)</div><div class="line">            <span class="keyword">return</span></div><div class="line"></div><div class="line">        <span class="comment"># 发送协商响应数据包</span></div><div class="line">        <span class="keyword">self</span>.connection.sendall(struct.pack(<span class="string">"!BB"</span>, SOCKS_VERSION, <span class="number">2</span>))</div><div class="line"></div><div class="line">        <span class="comment"># 校验用户名和密码</span></div><div class="line">        <span class="keyword">if</span> <span class="keyword">not</span> <span class="keyword">self</span>.verify_credentials()<span class="symbol">:</span></div><div class="line">            <span class="keyword">return</span></div><div class="line"></div><div class="line">        <span class="comment"># 请求</span></div><div class="line">        version, cmd, <span class="number">_</span>, address_type = struct.unpack(<span class="string">"!BBBB"</span>, <span class="keyword">self</span>.connection.recv(<span class="number">4</span>))</div><div class="line">        assert version == SOCKS_VERSION</div><div class="line"></div><div class="line">        <span class="keyword">if</span> address_type == <span class="number">1</span>:  <span class="comment"># IPv4</span></div><div class="line">            address = socket.inet_ntoa(<span class="keyword">self</span>.connection.recv(<span class="number">4</span>))</div><div class="line">        elif address_type == <span class="number">3</span>:  <span class="comment"># 域名</span></div><div class="line">            domain_length = ord(<span class="keyword">self</span>.connection.recv(<span class="number">1</span>)[<span class="number">0</span>])</div><div class="line">            address = <span class="keyword">self</span>.connection.recv(domain_length)</div><div class="line"></div><div class="line">        port = struct.unpack(<span class="string">'!H'</span>, <span class="keyword">self</span>.connection.recv(<span class="number">2</span>))[<span class="number">0</span>]</div><div class="line"></div><div class="line">        <span class="comment"># 响应，只支持CONNECT请求</span></div><div class="line">        <span class="symbol">try:</span></div><div class="line">            <span class="keyword">if</span> cmd == <span class="number">1</span>:  <span class="comment"># CONNECT</span></div><div class="line">                remote = socket.socket(socket.AF_INET, socket.SOCK_STREAM)</div><div class="line">                remote.connect((address, port))</div><div class="line">                bind_address = remote.getsockname()</div><div class="line">                logging.info(<span class="string">'Connected to %s %s'</span> % (address, port))</div><div class="line">            <span class="symbol">else:</span></div><div class="line">                <span class="keyword">self</span>.server.close_request(<span class="keyword">self</span>.request)</div><div class="line"></div><div class="line">            addr = struct.unpack(<span class="string">"!I"</span>, socket.inet_aton(bind_address[<span class="number">0</span>]))[<span class="number">0</span>]</div><div class="line">            port = bind_address[<span class="number">1</span>]</div><div class="line">            reply = struct.pack(<span class="string">"!BBBBIH"</span>, SOCKS_VERSION, <span class="number">0</span>, <span class="number">0</span>, address_type, addr, port)</div><div class="line"></div><div class="line">        except Exception as <span class="symbol">err:</span></div><div class="line">            logging.error(err)</div><div class="line">            <span class="comment"># 响应拒绝连接的错误</span></div><div class="line">            reply = <span class="keyword">self</span>.generate_failed_reply(address_type, <span class="number">5</span>)</div><div class="line"></div><div class="line">        <span class="keyword">self</span>.connection.sendall(reply)</div><div class="line"></div><div class="line">        <span class="comment"># 建立连接成功，开始交换数据</span></div><div class="line">        <span class="keyword">if</span> reply[<span class="number">1</span>] == <span class="number">0</span> <span class="keyword">and</span> cmd == <span class="number">1</span><span class="symbol">:</span></div><div class="line">            <span class="keyword">self</span>.exchange_loop(<span class="keyword">self</span>.connection, remote)</div><div class="line"></div><div class="line">        <span class="keyword">self</span>.server.close_request(<span class="keyword">self</span>.request)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_available_methods</span><span class="params">(<span class="keyword">self</span>, n)</span></span><span class="symbol">:</span></div><div class="line">        methods = []</div><div class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(n)<span class="symbol">:</span></div><div class="line">            methods.append(ord(<span class="keyword">self</span>.connection.recv(<span class="number">1</span>)))</div><div class="line">        <span class="keyword">return</span> methods</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">verify_credentials</span><span class="params">(<span class="keyword">self</span>)</span></span><span class="symbol">:</span></div><div class="line">        <span class="string">""</span><span class="string">"校验用户名和密码"</span><span class="string">""</span></div><div class="line">        version = ord(<span class="keyword">self</span>.connection.recv(<span class="number">1</span>))</div><div class="line">        assert version == <span class="number">1</span></div><div class="line"></div><div class="line">        username_len = ord(<span class="keyword">self</span>.connection.recv(<span class="number">1</span>))</div><div class="line">        username = <span class="keyword">self</span>.connection.recv(username_len).decode(<span class="string">'utf-8'</span>)</div><div class="line"></div><div class="line">        password_len = ord(<span class="keyword">self</span>.connection.recv(<span class="number">1</span>))</div><div class="line">        password = <span class="keyword">self</span>.connection.recv(password_len).decode(<span class="string">'utf-8'</span>)</div><div class="line"></div><div class="line">        <span class="keyword">if</span> username == <span class="keyword">self</span>.username <span class="keyword">and</span> password == <span class="keyword">self</span>.<span class="symbol">password:</span></div><div class="line">            <span class="comment"># 验证成功, status = 0</span></div><div class="line">            response = struct.pack(<span class="string">"!BB"</span>, version, <span class="number">0</span>)</div><div class="line">            <span class="keyword">self</span>.connection.sendall(response)</div><div class="line">            <span class="keyword">return</span> True</div><div class="line"></div><div class="line">        <span class="comment"># 验证失败, status != 0</span></div><div class="line">        response = struct.pack(<span class="string">"!BB"</span>, version, <span class="number">0xFF</span>)</div><div class="line">        <span class="keyword">self</span>.connection.sendall(response)</div><div class="line">        <span class="keyword">self</span>.server.close_request(<span class="keyword">self</span>.request)</div><div class="line">        <span class="keyword">return</span> False</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">generate_failed_reply</span><span class="params">(<span class="keyword">self</span>, address_type, error_number)</span></span><span class="symbol">:</span></div><div class="line">        <span class="keyword">return</span> struct.pack(<span class="string">"!BBBBIH"</span>, SOCKS_VERSION, error_number, <span class="number">0</span>, address_type, <span class="number">0</span>, <span class="number">0</span>)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">exchange_loop</span><span class="params">(<span class="keyword">self</span>, client, remote)</span></span><span class="symbol">:</span></div><div class="line"></div><div class="line">        <span class="keyword">while</span> <span class="symbol">True:</span></div><div class="line">            <span class="comment"># 等待数据</span></div><div class="line">            r, w, e = select.select([client, remote], [], [])</div><div class="line"></div><div class="line">            <span class="keyword">if</span> client <span class="keyword">in</span> <span class="symbol">r:</span></div><div class="line">                data = client.recv(<span class="number">4096</span>)</div><div class="line">                <span class="keyword">if</span> remote.send(data) &lt;= <span class="number">0</span><span class="symbol">:</span></div><div class="line">                    <span class="keyword">break</span></div><div class="line"></div><div class="line">            <span class="keyword">if</span> remote <span class="keyword">in</span> <span class="symbol">r:</span></div><div class="line">                data = remote.recv(<span class="number">4096</span>)</div><div class="line">                <span class="keyword">if</span> client.send(data) &lt;= <span class="number">0</span><span class="symbol">:</span></div><div class="line">                    <span class="keyword">break</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">if</span> __name_<span class="number">_</span> == <span class="string">'__main__'</span><span class="symbol">:</span></div><div class="line">    <span class="comment"># 使用socketserver库的多线程服务器ThreadingTCPServer启动代理</span></div><div class="line">    with ThreadingTCPServer((<span class="string">'127.0.0.1'</span>, <span class="number">9011</span>), SocksProxy) as <span class="symbol">server:</span></div><div class="line">        server.serve_forever()</div></pre></td></tr></table></figure>
+</li>
+<li><p>客户端代码</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">import socket</div><div class="line">import socks</div><div class="line">import requests</div><div class="line"></div><div class="line">socks.set_default_proxy(socks<span class="selector-class">.SOCKS5</span>, <span class="string">"127.0.0.1"</span>, <span class="number">9011</span>, username=None, password=None)</div><div class="line">socket<span class="selector-class">.socket</span> = socks.socksocket</div><div class="line"></div><div class="line"><span class="function"><span class="title">print</span><span class="params">(requests.get(<span class="string">'http://www.baidu.com'</span>)</span></span>.text)</div></pre></td></tr></table></figure>
+</li>
+<li><p>或者可以通过curl等命令直接使用</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ curl -v  --socks5 <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">9011</span>  -U <span class="string">username:</span>password <span class="string">http:</span><span class="comment">//www.baidu.com</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><ul>
+<li><a href="https://zh.wikipedia.org/wiki/SOCKS" target="_blank" rel="external">SOCKS维基百科</a></li>
+<li><a href="https://www.ietf.org/rfc/rfc1928.txt" target="_blank" rel="external">RFC1928</a></li>
+<li><a href="https://www.ietf.org/rfc/rfc1929.txt" target="_blank" rel="external">RFC1928</a></li>
+<li><a href="https://rushter.com/blog/python-socks-server/" target="_blank" rel="external">Writing a simple SOCKS server in Python</a></li>
+<li><a href="https://www.zybuluo.com/programath/note/224435" target="_blank" rel="external">SOCKS协议第五版（SOCKS Protocol Version 5）</a></li>
+<li><a href="https://geesun.github.io/posts/2015/09/socks5_protocol.html" target="_blank" rel="external">SOCKS 5协议简析</a></li>
+<li><a href="http://zhihan.me/network/2017/09/24/socks5-protocol/" target="_blank" rel="external">socks5 协议简介</a></li>
+<li><a href="http://www.mojidong.com/network/2015/03/07/socket5-1/" target="_blank" rel="external">socket5 协议学习与实现(一)</a></li>
+</ul>
+</the></excerpt>
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2018/04/28/Python编写socks5服务器/">Python编写socks5服务器</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">HatBoy</a></p>
+        <p><span>发布时间:</span>2018-04-28, 18:04:48</p>
+        <p><span>最后更新:</span>2018-04-28, 18:30:50</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2018/04/28/Python编写socks5服务器/" title="Python编写socks5服务器">https://hatboy.github.io/2018/04/28/Python编写socks5服务器/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://hatboy.github.io/2018/04/28/Python编写socks5服务器/　　作者: HatBoy" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2018/04/19/Python沙箱逃逸总结/">
+                    Python沙箱逃逸总结
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#socks协议"><span class="toc-number">1.</span> <span class="toc-text">socks协议</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#socks协议使用场景"><span class="toc-number">2.</span> <span class="toc-text">socks协议使用场景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#与HTTP代理的对比"><span class="toc-number">3.</span> <span class="toc-text">与HTTP代理的对比</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#socks5协议详解"><span class="toc-number">4.</span> <span class="toc-text">socks5协议详解</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#协商"><span class="toc-number">4.1.</span> <span class="toc-text">协商</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#认证"><span class="toc-number">4.2.</span> <span class="toc-text">认证</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#请求"><span class="toc-number">4.3.</span> <span class="toc-text">请求</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#数据转发"><span class="toc-number">4.4.</span> <span class="toc-text">数据转发</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Python-socks5服务器代码实现"><span class="toc-number">5.</span> <span class="toc-text">Python socks5服务器代码实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#参考资料"><span class="toc-number">5.1.</span> <span class="toc-text">参考资料</span></a></li></ol></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"Python编写socks5服务器　| HatBoy的个人主页　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2018/04/19/Python沙箱逃逸总结/" title="下一篇: Python沙箱逃逸总结">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2018/04/28/Python编写socks5服务器/">Python编写socks5服务器</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/19/Python沙箱逃逸总结/">Python沙箱逃逸总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/02/27/如何恢复丢失的Python源代码如果它还在内存中运行/">如何恢复丢失的Python源代码如果它还在内存中运行</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/02/08/pathlib：文件系统路径作为对象/">pathlib：文件系统路径作为对象</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio：异步IO、事件循环和并发/">asyncio：异步IO、事件循环和并发</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之调试asyncio/">asyncio之调试asyncio</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之协程结合线程和进程/">asyncio之协程结合线程和进程</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之接收Unix信号/">asyncio之接收Unix信号</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之使用子进程/">asyncio之使用子进程</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之与DNS服务进行交互/">asyncio之与DNS服务进行交互</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之使用SSL/">asyncio之使用SSL</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之使用协程和流的异步I-O/">asyncio之使用协程和流的异步I/O</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之协议抽象类的异步I-O/">asyncio之协议抽象类的异步I/O</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之同步原语/">asyncio之同步原语</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之用控制结构组建协程/">asyncio之用控制结构组建协程</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之并发执行Tasks/">asyncio之并发执行Tasks</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之异步生产结果/">asyncio之异步生产结果</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之定时调度常规函数/">asyncio之定时调度常规函数</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之使用协程处理多任务/">asyncio之使用协程处理多任务</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之异步并发的概念/">asyncio之异步并发的概念</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/Python上下文管理器/">Python上下文管理器</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/Python-importlib讲解/">Python importlib讲解</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/第七章-用Cython包装C库/">第七章 用Cython包装C库</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/16/第六章-组织Cython代码/">第六章 组织Cython代码</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/10/第五章-Cython和扩展类型/">第五章 Cython和扩展类型</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/31/第四章-Cython实践：N-body模拟/">第四章 Cython实践：N-body模拟</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/31/Python性能分析与调试/">Python性能分析与调试</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/17/第三章-深入Cython/">第三章 深入Cython</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/03/第二章-编译和运行Cython代码/">第二章 编译和运行Cython代码</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/02/第一章-Cython简介/">第一章 Cython简介</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2017-2018 HatBoy
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+
+
+
+
+    <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script src="//cdn.bootcss.com/mathjax/2.6.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        $("a").attr("target", "_blank");
+        $("#scroll a, #toc a").removeAttr("target");
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>
