@@ -23,10 +23,12 @@
 <meta property="og:site_name" content="HatBoy的个人主页">
 <meta property="og:description" content="Python KCP协议实例">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-01-11T14:20:13.983Z">
+<meta property="og:image" content="https://hatboy.github.io/2019/01/11/Python-KCP协议实例/1.png">
+<meta property="og:updated_time" content="2019-01-11T14:29:00.430Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Python KCP协议实例">
 <meta name="twitter:description" content="Python KCP协议实例">
+<meta name="twitter:image" content="https://hatboy.github.io/2019/01/11/Python-KCP协议实例/1.png">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -339,10 +341,11 @@
 <a id="more"></a>
 <the rest="" of="" contents="" |="" 余下全文="">
 
-<ul>
+<h2 id="KCP协议介绍"><a href="#KCP协议介绍" class="headerlink" title="KCP协议介绍"></a>KCP协议介绍</h2><ul>
 <li>官网介绍KCP是一个快速可靠协议，能以比 TCP浪费10%-20%的带宽的代价，换取平均延迟降低 30%-40%，且最大延迟降低三倍的传输效果。纯算法实现，并不负责底层协议（如UDP）的收发，需要使用者自己定义下层数据包的发送方式，以 callback的方式提供给 KCP。 连时钟都需要外部传递进来，内部不会有任何一次系统调用。</li>
 <li>kcp协议是传输层的一个具有可靠性的传输层ARQ协议。它的设计是为了解决在网络拥堵情况下tcp协议的网络速度慢的问题。kcp力求在保证可靠性的情况下提高传输速度。kcp协议的关注点主要在控制数据的可靠性和提高传输速度上面，因此kcp没有规定下层传输协议，一般用udp作为下层传输协议，kcp层协议的数据包在udp数据报文的基础上增加控制头。</li>
-<li>基本使用流程如下：</li>
+</ul>
+<h2 id="KCP协议使用流程"><a href="#KCP协议使用流程" class="headerlink" title="KCP协议使用流程"></a>KCP协议使用流程</h2><ul>
 <li><p>1、创建 KCP对象：</p>
 <figure class="highlight gauss"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 初始化 kcp对象，conv为一个表示会话编号的整数，和tcp的 conv一样，通信双</span></div><div class="line"><span class="comment">// 方需保证 conv相同，相互的数据包才能够被认可，user是一个给回调函数的指针</span></div><div class="line">ikcpcb *kcp = ikcp_create(<span class="built_in">conv</span>, user);</div></pre></td></tr></table></figure>
 </li>
@@ -355,12 +358,13 @@
 <li><p>4、输入一个下层数据包：</p>
 <figure class="highlight less"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 收到一个下层数据包（比如UDP包）时需要调用：</span></div><div class="line"><span class="selector-tag">ikcp_input</span>(kcp, received_udp_packet, received_udp_size);</div><div class="line">处理了下层协议的输出/输入后 <span class="selector-tag">KCP</span>协议就可以正常工作了，使用 <span class="selector-tag">ikcp_send</span> 来向 远端发送数据。而另一端使用 <span class="selector-tag">ikcp_recv</span>(kcp, ptr, size)来接收数据。</div></pre></td></tr></table></figure>
 </li>
-<li><p>kcp源码流程图：</p>
+<li><p>kcp源码流程图：<br><img src="/2019/01/11/Python-KCP协议实例/1.png" alt="1.png"></p>
 </li>
-<li><p>接收数据包流程：接收数据包时，UDP自带的recv函数收到的包，不断通过kcp_input喂给KCP，KCP会对这部分数据（KCP协议数据）进行解包，重新封装成应用层用户数据，应用层通过kcp_recv获取。</p>
-</li>
+<li>接收数据包流程：接收数据包时，UDP自带的recv函数收到的包，不断通过kcp_input喂给KCP，KCP会对这部分数据（KCP协议数据）进行解包，重新封装成应用层用户数据，应用层通过kcp_recv获取。</li>
 <li>发送数据包流程：发送数据包时，应用层通过kcp_send发送数据，KCP会把用户数据拆分kcp数据包，通过kcp_output，以UDP（send）的方式发送。</li>
 <li>KCP会不停的进行update更新最新情况，数据的实际发送和接收数据都是在update时进行的。</li>
+</ul>
+<h2 id="Python-KCP使用实例"><a href="#Python-KCP使用实例" class="headerlink" title="Python KCP使用实例"></a>Python KCP使用实例</h2><ul>
 <li>想用Python调用KCP协议，发现并没有现成的实现，在github上找到一个用Cython包装的pyhton-kcp，却不支持Python3，于是做了简单的修改，使其支持Python3，地址如下：<a href="https://github.com/HatBoy/Python-KCP" target="_blank" rel="external">https://github.com/HatBoy/Python-KCP</a></li>
 <li>下层使用UDP协议，KCP的实例代码如下：</li>
 <li><p>Server端：</p>
@@ -391,7 +395,7 @@
         <p><span>本文标题:</span><a href="/2019/01/11/Python-KCP协议实例/">Python KCP协议实例</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">HatBoy</a></p>
         <p><span>发布时间:</span>2019-01-11, 22:18:32</p>
-        <p><span>最后更新:</span>2019-01-11, 22:20:13</p>
+        <p><span>最后更新:</span>2019-01-11, 22:29:00</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2019/01/11/Python-KCP协议实例/" title="Python KCP协议实例">https://hatboy.github.io/2019/01/11/Python-KCP协议实例/</a>
             <span class="copy-path" data-clipboard-text="原文: https://hatboy.github.io/2019/01/11/Python-KCP协议实例/　　作者: HatBoy" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
@@ -421,7 +425,7 @@
     <div id="toc" class="toc-article">
         <strong class="toc-title">文章目录</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#参考资料"><span class="toc-number">1.</span> <span class="toc-text">参考资料</span></a></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#KCP协议介绍"><span class="toc-number">1.</span> <span class="toc-text">KCP协议介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#KCP协议使用流程"><span class="toc-number">2.</span> <span class="toc-text">KCP协议使用流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Python-KCP使用实例"><span class="toc-number">3.</span> <span class="toc-text">Python KCP使用实例</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#参考资料"><span class="toc-number">3.1.</span> <span class="toc-text">参考资料</span></a></li></ol></li></ol>
         
     </div>
     <style>
