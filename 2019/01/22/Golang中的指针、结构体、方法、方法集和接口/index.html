@@ -23,7 +23,7 @@
 <meta property="og:site_name" content="HatBoy的个人主页">
 <meta property="og:description" content="Golang中的指针、结构体、方法、方法集和接口">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-01-22T11:54:56.978Z">
+<meta property="og:updated_time" content="2019-01-22T11:57:32.425Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Golang中的指针、结构体、方法、方法集和接口">
 <meta name="twitter:description" content="Golang中的指针、结构体、方法、方法集和接口">
@@ -365,13 +365,53 @@
 </ul>
 <h2 id="方法集和接口"><a href="#方法集和接口" class="headerlink" title="方法集和接口"></a>方法集和接口</h2><ul>
 <li>方法集定义了接口的接受规则。方法集定义了一组关联到给定类型的值或者指针的方法。定义方法时使用的接收者的类型决定了这个方法是关联到值，还是关联到指针，还是两个都关联。</li>
-<li>从值的角度来看，<code>T 类型的值的方法集只包含值接收者声明的方法。而指向T 类型的指针的方法集既包含值接收者声明的方法，也包含指针接收者声明的方法。</code><br>| Values | Methods Receivers |<br>| —— | —— |<br>| T | func (t T)method() |<br>| <em>T | func (t T)method() 或func (t </em>T)method() |</li>
+<li>从值的角度来看，<code>T 类型的值的方法集只包含值接收者声明的方法。而指向T 类型的指针的方法集既包含值接收者声明的方法，也包含指针接收者声明的方法。</code> </li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Values</th>
+<th>Methods Receivers</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>T</td>
+<td>func (t T)method()</td>
+</tr>
+<tr>
+<td>*T</td>
+<td>func (t T)method() 或func (t *T)method()</td>
+</tr>
+</tbody>
+</table>
+<ul>
 <li>接口类型是一种抽象的类型。它不会暴露出它所代表的对象的内部值的结构和这个对象支持的基础操作的集合；它们只会展示出它们自己的方法。也就是说当你有看到一个接口类型的值时，你不知道它是什么，唯一知道的就是可以通过它的方法来做什么。</li>
 <li>接口类型具体描述了一系列方法的集合，一个实现了这些方法的具体类型是这个接口类型的实例。在Go语言中，一个类只需要实现了接口要求的所有函数，我们就说这个类实现了该接口。</li>
-<li>从接收者的角度来看，<code>如果使用指针接收者来实现一个接口，那么只有指向那个类型的指针才能够实现对应的接口。如果使用值接收者来实现一个接口，那么那个类型的值和指针都能够实现对应的接口。</code>因为值类型接收者传入指针类型，变量可自动通过指针获取到值，但是指针接收者传入一个值类型，编译器并不是总能自动获得一个值的地址。<br>| Methods Receivers | Values |<br>| —— | —— |<br>| func (t T)method() | T或者<em>T |<br>| func (t </em>T)method() | *T |</li>
+<li>从接收者的角度来看，<code>如果使用指针接收者来实现一个接口，那么只有指向那个类型的指针才能够实现对应的接口。如果使用值接收者来实现一个接口，那么那个类型的值和指针都能够实现对应的接口。</code> 因为值类型接收者传入指针类型，变量可自动通过指针获取到值，但是指针接收者传入一个值类型，编译器并不是总能自动获得一个值的地址。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Methods Receivers</th>
+<th>Values</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>func (t T)method()</td>
+<td>T或者*T</td>
+</tr>
+<tr>
+<td>func (t *T)method()</td>
+<td>*T</td>
+</tr>
+</tbody>
+</table>
+<ul>
 <li>这和上面方法集的规则并不矛盾，只是站的角度不同而已。</li>
 </ul>
-<h3 id="参考资料："><a href="#参考资料：" class="headerlink" title="参考资料："></a>参考资料：</h3><ul>
+<h2 id="参考资料："><a href="#参考资料：" class="headerlink" title="参考资料："></a>参考资料：</h2><ul>
 <li>《Go语言实战》</li>
 <li>《Go语言圣经》</li>
 <li>《Go入门指南》</li>
@@ -387,7 +427,7 @@
         <p><span>本文标题:</span><a href="/2019/01/22/Golang中的指针、结构体、方法、方法集和接口/">Golang中的指针、结构体、方法、方法集和接口</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">HatBoy</a></p>
         <p><span>发布时间:</span>2019-01-22, 19:53:32</p>
-        <p><span>最后更新:</span>2019-01-22, 19:54:56</p>
+        <p><span>最后更新:</span>2019-01-22, 19:57:32</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2019/01/22/Golang中的指针、结构体、方法、方法集和接口/" title="Golang中的指针、结构体、方法、方法集和接口">https://hatboy.github.io/2019/01/22/Golang中的指针、结构体、方法、方法集和接口/</a>
             <span class="copy-path" data-clipboard-text="原文: https://hatboy.github.io/2019/01/22/Golang中的指针、结构体、方法、方法集和接口/　　作者: HatBoy" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
@@ -417,7 +457,7 @@
     <div id="toc" class="toc-article">
         <strong class="toc-title">文章目录</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#指针"><span class="toc-number">1.</span> <span class="toc-text">指针</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#结构体"><span class="toc-number">2.</span> <span class="toc-text">结构体</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#类型的本质"><span class="toc-number">3.</span> <span class="toc-text">类型的本质</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#方法"><span class="toc-number">4.</span> <span class="toc-text">方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#方法集和接口"><span class="toc-number">5.</span> <span class="toc-text">方法集和接口</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#参考资料："><span class="toc-number">5.1.</span> <span class="toc-text">参考资料：</span></a></li></ol></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#指针"><span class="toc-number">1.</span> <span class="toc-text">指针</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#结构体"><span class="toc-number">2.</span> <span class="toc-text">结构体</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#类型的本质"><span class="toc-number">3.</span> <span class="toc-text">类型的本质</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#方法"><span class="toc-number">4.</span> <span class="toc-text">方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#方法集和接口"><span class="toc-number">5.</span> <span class="toc-text">方法集和接口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考资料："><span class="toc-number">6.</span> <span class="toc-text">参考资料：</span></a></li></ol>
         
     </div>
     <style>
