@@ -15,18 +15,13 @@
 
 
 
-<meta name="description" content="Cython简介">
-<meta name="keywords" content="Python,Cython">
-<meta property="og:type" content="article">
-<meta property="og:title" content="第一章 Cython简介">
-<meta property="og:url" content="https://hatboy.github.io/2017/07/02/第一章-Cython简介/index.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="HatBoy的个人主页">
+<meta property="og:url" content="https://hatboy.github.io/archives/2019/02/index.html">
 <meta property="og:site_name" content="HatBoy的个人主页">
-<meta property="og:description" content="Cython简介">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-08-19T06:47:10.529Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="第一章 Cython简介">
-<meta name="twitter:description" content="Cython简介">
+<meta name="twitter:title" content="HatBoy的个人主页">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -58,7 +53,7 @@
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>第一章 Cython简介 | HatBoy的个人主页</title>
+<title>Archives: 2019/2 | HatBoy的个人主页</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -68,8 +63,8 @@
         fancybox: true,
         animate: true,
         isHome: false,
-        isPost: true,
-        isArchive: false,
+        isPost: false,
+        isArchive: true,
         isTag: false,
         isCategory: false,
         fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
@@ -289,200 +284,60 @@
     </div>
     <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
 </nav>
-      <div class="body-wrap"><article id="post-第一章-Cython简介" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap">
   
-    <div class="article-meta">
-      <a href="/2017/07/02/第一章-Cython简介/" class="article-date">
-      <time datetime="2017-07-02T12:52:19.000Z" itemprop="datePublished">2017-07-02</time>
+  
+    
+    
+      
+      
+      <section class="archives-wrap">
+        <div class="archive-year-wrap">
+          <a href="/archives/2019" class="archive-year">2019</a>
+        </div>
+        <div class="archives">
+    
+    <article class="archive-article archive-type-post">
+  <div class="archive-article-inner">
+    <header class="archive-article-header">
+          <div class="article-meta">
+              <a href="/2019/02/16/Python异步编程详解/" class="archive-article-date">
+      <time datetime="2019-02-16T07:37:14.000Z" itemprop="datePublished">02-16</time>
 </a>
 
 
-    </div>
+        </div>
+         
   
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 class="article-title" itemprop="name">
-      第一章 Cython简介
+    <h1 itemprop="name">
+      <a class="archive-article-title" href="/2019/02/16/Python异步编程详解/">Python异步编程详解</a>
     </h1>
   
 
-      </header>
-      
-      <div class="article-info article-info-post">
-        
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/Cython/">Cython</a>
-    </div>
-
-
-        
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Cython/">Cython</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/">Python</a></li></ul>
-    </div>
-
-        <div class="clearfix"></div>
-      </div>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
+        <div class="article-info info-on-archive">
           
-        <excerpt in="" index="" |="" 首页摘要="">
-
-<p>Cython简介</p>
-<a id="more"></a>
-<the rest="" of="" contents="" |="" 余下全文="">
-
-<h2 id="Cython基础"><a href="#Cython基础" class="headerlink" title="Cython基础"></a>Cython基础</h2><p>Cython 是Python语言的一个超集，对其你可以为Python写C 或C++模块。Cython也使得你可以从已编译的C库中调用函数。使用Cython让你得以发挥Python 的变量与操作的强类型优势。</p>
-<p>Cython 的本质可以总结如下：Cython 是包含 C 数据类型的 Python。</p>
-<p>Cython 是 Python：几乎所有 Python 代码都是合法的 Cython 代码。 （存在一些限制，但是差不多也可以。） Cython 的编译器会转化 Python 代码为 C 代码，这些 C 代码均可以调用 Python/C 的 API。</p>
-<p>Cython 可不仅仅包含这些，Cython 中的参数和变量还可以以 C 数据类型来声明。代码中的 Python 值和 C 的值可以自由地交叉混合（intermixed）使用, 所有的转化都是自动进行。Python 中的引用计数维护（Reference count maintenance）和错误检查（error checking）操作同样是自动进行的，并且全面支持 Python 的异常处理工具（facilities），包括 try-except 和 try-finally，即便在其中操作 C 数据都是可以的。</p>
-<p>本系列文章是笔者阅读Kurt W. Smith的著作《Cython》的学习笔记，国内目前没有中文版，只有英文版，笔者将自己觉得重要的内容进行整理记录，如有疑问，请参考原著。</p>
-</the></excerpt>
-      
-    </div>
-    
-  </div>
-  
-    
-    <div class="copyright">
-        <p><span>本文标题:</span><a href="/2017/07/02/第一章-Cython简介/">第一章 Cython简介</a></p>
-        <p><span>文章作者:</span><a href="/" title="回到主页">HatBoy</a></p>
-        <p><span>发布时间:</span>2017-07-02, 20:52:19</p>
-        <p><span>最后更新:</span>2018-08-19, 14:47:10</p>
-        <p>
-            <span>原始链接:</span><a class="post-url" href="/2017/07/02/第一章-Cython简介/" title="第一章 Cython简介">https://hatboy.github.io/2017/07/02/第一章-Cython简介/</a>
-            <span class="copy-path" data-clipboard-text="原文: https://hatboy.github.io/2017/07/02/第一章-Cython简介/　　作者: HatBoy" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
-            <script> var clipboard = new Clipboard('.copy-path'); </script>
-        </p>
-        <p>
-            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
-        </p>
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/Python编程/">Python编程</a>
     </div>
 
 
-
-    <nav id="article-nav">
-        
-            <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2017/07/03/第二章-编译和运行Cython代码/">
-                    第二章 编译和运行Cython代码
-                </a>
-            </div>
-        
-        
-    </nav>
-
-  
-</article>
-
-    <div id="toc" class="toc-article">
-        <strong class="toc-title">文章目录</strong>
-        
-            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Cython基础"><span class="toc-number">1.</span> <span class="toc-text">Cython基础</span></a></li></ol>
-        
+          
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/">Python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/asyncio/">asyncio</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/异步并发/">异步并发</a></li></ul>
     </div>
-    <style>
-        .left-col .switch-btn,
-        .left-col .switch-area {
-            display: none;
-        }
-        .toc-level-3 i,
-        .toc-level-3 ol {
-            display: none !important;
-        }
-    </style>
 
-    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
-
-    <script>
-        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
-    </script>
-
-
-
-    
-<div class="share">
-    
-        <div class="bdsharebuttonbox">
-            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
-            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
-            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
-            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
-            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
-            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
-            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
         </div>
-        <script>
-            window._bd_share_config={
-                "common":{"bdSnsKey":{},"bdText":"第一章 Cython简介　| HatBoy的个人主页　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
-        </script>
-    
-
-    
-</div>
-
-
-
-
-
-
-
-    
-        <section id="comments">
-    <style> aside.comment-bar { margin: auto 30px; }</style>
-    <div id="disqus_thread"></div>
-    <script>
-        var disqus_config = function(){
-            this.page.url = 'https://hatboy.github.io/2017/07/02/第一章-Cython简介/';
-            this.page.identifier = '2017/07/02/第一章-Cython简介/';
-        };
-        var loadComment = function(){
-            var d = document, s = d.createElement('script');
-            s.src = '//hatboy007.disqus.com/embed.js';
-            s.setAttribute('data-timestamp', +new Date());
-            (d.head || d.body).appendChild(s);
-        }
-    </script>
-    
-    <script> loadComment(); </script>
-
-</section>
-
+        <div class="clearfix"></div>
+    </header>
+  </div>
+</article>
+  
+  
+    </div></section>
+  
 
     
 
-
-
-
-    <div class="scroll" id="post-nav-button">
-        
-            <a href="/2017/07/03/第二章-编译和运行Cython代码/" title="上一篇: 第二章 编译和运行Cython代码">
-                <i class="fa fa-angle-left"></i>
-            </a>
-        
-
-        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
-
-        
-            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
-        
-    </div>
-
-    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2019/02/16/Python异步编程详解/">Python异步编程详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/22/Golang中的指针、结构体、方法、方法集和接口/">Golang中的指针、结构体、方法、方法集和接口</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/11/Python-KCP协议实例/">Python KCP协议实例</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/09/14/Teensy之生成Payload/">Teensy之生成Payload</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/09/14/Teensy之简单代码编写/">Teensy之简单代码编写</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/09/14/Teensy之开发环境部署及基本用法/">Teensy之开发环境部署及基本用法</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/08/28/MySQL报错注入/">MySQL报错注入</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/08/28/内网端口转发及穿透/">内网端口转发及穿透</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/28/Python编写socks5服务器/">Python编写socks5服务器</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/19/Python沙箱逃逸总结/">Python沙箱逃逸总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/02/27/如何恢复丢失的Python源代码如果它还在内存中运行/">如何恢复丢失的Python源代码如果它还在内存中运行</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/02/08/pathlib：文件系统路径作为对象/">pathlib：文件系统路径作为对象</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio：异步IO、事件循环和并发/">asyncio：异步IO、事件循环和并发</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之调试asyncio/">asyncio之调试asyncio</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之协程结合线程和进程/">asyncio之协程结合线程和进程</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之接收Unix信号/">asyncio之接收Unix信号</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之使用子进程/">asyncio之使用子进程</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之与DNS服务进行交互/">asyncio之与DNS服务进行交互</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之使用SSL/">asyncio之使用SSL</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之使用协程和流的异步I-O/">asyncio之使用协程和流的异步I/O</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之协议抽象类的异步I-O/">asyncio之协议抽象类的异步I/O</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之同步原语/">asyncio之同步原语</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之用控制结构组建协程/">asyncio之用控制结构组建协程</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之并发执行Tasks/">asyncio之并发执行Tasks</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之异步生产结果/">asyncio之异步生产结果</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之定时调度常规函数/">asyncio之定时调度常规函数</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之使用协程处理多任务/">asyncio之使用协程处理多任务</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/asyncio之异步并发的概念/">asyncio之异步并发的概念</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/Python上下文管理器/">Python上下文管理器</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/Python-importlib讲解/">Python importlib讲解</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/第七章-用Cython包装C库/">第七章 用Cython包装C库</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/16/第六章-组织Cython代码/">第六章 组织Cython代码</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/10/第五章-Cython和扩展类型/">第五章 Cython和扩展类型</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/31/第四章-Cython实践：N-body模拟/">第四章 Cython实践：N-body模拟</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/31/Python性能分析与调试/">Python性能分析与调试</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/17/第三章-深入Cython/">第三章 深入Cython</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/03/第二章-编译和运行Cython代码/">第二章 编译和运行Cython代码</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/02/第一章-Cython简介/">第一章 Cython简介</a></li></ul>
-
-
-
-
-    <script>
-        
-    </script>
 </div>
       <footer id="footer">
     <div class="outer">
